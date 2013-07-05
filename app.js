@@ -9,6 +9,8 @@ var express = require('express')
   , http = require('http')
   , path = require('path');
 
+var api = require('./routes/api');
+
 var app = express();
 
 // all environments
@@ -32,6 +34,11 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/users', user.list);
+
+//identify api routes
+app.get('/api/agencies/', api.agencies.list);
+app.get('/api/agencies/:agency_id', api.agencies.get);
+app.get('/api/agencies/:agency_id/routes', api.routes.get);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
