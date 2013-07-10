@@ -1,5 +1,5 @@
 {
-  "name": "tringuide-ph-app",
+  "name": "trainguide-ph-app",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -9,6 +9,8 @@
     "express": "3.3.3",
     "jade": "*",
     "less-middleware": "*",
-    "mongoose": "~3.6.13"
+    "mongoose": "~3.6.13",
+    "gtfs": "0.0.4",
+    "async": "~0.2.9"
   }
 }
