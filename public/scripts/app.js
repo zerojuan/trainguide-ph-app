@@ -1,7 +1,7 @@
 
-angular.module("trainguide", []);
+angular.module("trainguideServices", []);
+angular.module("uiModule", ["trainguideServices"]);
+angular.module("trainguide.controllers", []);
 
-angular.module("trainguide")
-  .controller("MainCtrl", function($scope){
-    $scope.message = "This is a message";
-  });
+
+angular.module("trainguide", ["google-maps", "trainguide.controllers"]);

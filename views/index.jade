@@ -1,12 +1,21 @@
 extends layout
 
 block content
-  div(ng-app="trainguide")
-    div(ng-controller="MainCtrl")
-      h1= message
-      p Welcome to {{message}} #{title}
+	div(ng-app="trainguide")
+		div(ng-controller="MainCtrl")
+			h1= message
+			p Welcome to {{message}} #{title}
 
 block scripts
-  script(src='./components/jquery/jquery.js')
-  script(src='./components/AngularJS/angular.js')
-  script(src='./scripts/app.js')
+	script(src='./components/jquery/jquery.js')
+	script(src='./components/AngularJS/angular.js')
+	script(src='./scripts/app.js')
+	script(src='./scripts/controllers/main.js')
+	script(src='./scripts/services/common.js')
+	script(src='./scripts/directives/trainguide-gmaps.js')
+	script(src='./scripts/directives/ui/lines.js')
+	script(src='./scripts/directives/ui/linestops.js')
+	script(src='./scripts/directives/ui/radiogroup.js')
+	script(src='./scripts/directives/ui/slide.js')
+	script(src='./scripts/directives/ui/slidegroup.js')
+	script(src='./scripts/directives/ui/slideshow.js')
