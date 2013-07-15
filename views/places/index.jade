@@ -1,0 +1,35 @@
+extends ../layouts/layout
+
+block content
+  h2 All Places
+  div
+    if(!places.error)
+      table.pure-table.pure-table-horizontal
+        thead
+          tr
+            th Name
+            th Station
+            th Distance
+            th Map
+            th Coordinates
+            th Category
+            th Links
+        tbody
+          each place in places 
+            tr
+              td #{place.name}
+              td #{place.station}
+              td #{place.distance}
+              td #{place.map}
+              td #{place.coordinates.lng},#{place.coordinates.lat}
+              td #{place.category}
+              td: a(href='/places/#{place.id}').pure-button.pure-button-primary Show
+                  a(href='/places/#{place.id}/delete').pure-button.pure-button-primary.delete-place Delete
+    else
+      h4 #{places.error}
+
+  div
+    a(href='/places/new') Add New Place
+
+block append scripts
+  script(src='/scripts/include_delete.js')
