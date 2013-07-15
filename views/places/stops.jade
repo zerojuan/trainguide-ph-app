@@ -1,0 +1,4 @@
+select(name='stop', id='stop', required)
+  option(value='') -- Select Stop --
+  each value, key in station
+    option(id='val', value='#{value.name}') #{value.name}

@@ -1,0 +1,17 @@
+extends ../layouts/layout
+
+block content
+
+  h2 Edit Place
+  div
+    //- form(method='PUT', action='/places/' + place._id + '/edit').pure-form.pure-form-aligned#input-place
+    form(method='POST', action='/places/preview').pure-form.pure-form-aligned#input-place
+      include partial
+    div#preview-div
+
+block append scripts
+  script.
+    var formMethod='PUT'
+      , formAction='/places/#{place._id}/edit';
+  script(src='/scripts/populate_stops.js')
+  script(src='/scripts/populate_preview.js')

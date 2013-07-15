@@ -1,0 +1,56 @@
+mixin inputField(label, name)
+  .pure-control-group
+    label #{label}
+    if(place)
+      val = (name=='coordinates') ? (place[name].lng+','+place[name].lat) : place[name]
+      input(type='text', name=name, value=val, required)
+    else
+      input(type='text', name=name, required)
+
+mixin selectStation
+  .pure-control-group
+    label Station
+    if(place)
+      st = place.station.split(':')
+    select(name='station', id='station', required)
+      option(value='') -- Select Station --
+      each value, key in stations //- e.g. key=0, value={LRT1: [...]}
+        //- - console.log(key, stations[key])
+        each stn, idx in value 
+          //- - console.log(value, idx, stn)
+          if(place)
+            option(id='stnkey', value='#{idx}', selected=(st[0]=='#{idx}')) #{idx}
+          else
+            option(id='stnkey', value='#{idx}') #{idx}
+    span#stops
+      if(place)
+        select(name='stop', id='stop', required)
+          option(value='') -- Select Stop --
+          each value, key in stations
+            each val, idx in value 
+              if(st[0]==idx)
+                each stn, k in val
+                  option(id='stnkey', value='#{stn.name}', selected=(st[1]=='#{stn.name}')) #{stn.name}
+
+mixin selectCategory
+  .pure-control-group
+    label Category
+    select(name='category', id='category')
+      option(value='') -- Select Category --
+      each value, key in categories
+        if(place)
+          option(id='catkey', value='#{value}', selected=(place.category=='#{value}')) #{value}
+        else
+          option(id='catkey', value='#{value}') #{value}
+
+fieldset
+  mixin inputField('Name', 'name')
+  mixin selectStation
+  mixin inputField('Distance', 'distance')
+  mixin inputField('Map', 'map')
+  mixin inputField('Coordinates', 'coordinates')
+  mixin selectCategory
+  .pure-controls
+    input(type='submit', id='preview', value='Preview').pure-button.pure-button-primary
+    //- input(type='button', value='Back to all places', onclick='document.location.href="/places"').pure-button
+    a(href='/places').pure-button Back to 'All Places' page

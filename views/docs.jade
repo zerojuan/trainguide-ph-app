@@ -1,4 +1,4 @@
-extends layout
+extends layouts/layout
 
 block content
   div(ng-app="trainguide")
@@ -6,7 +6,5 @@ block content
       h1= message
       p Welcome to {{message}} #{title}
 
-block scripts
-  script(src='./components/jquery/jquery.js')
-  script(src='./components/AngularJS/angular.js')
+block append scripts
   script(src='./scripts/docs.js')
