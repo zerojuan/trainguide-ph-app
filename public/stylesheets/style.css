@@ -1,5 +1,13 @@
+html {
+  height: 100%;
+}
+.container {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
 body {
-  padding: 50px;
+  height: 100%;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 a {
