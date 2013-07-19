@@ -124,6 +124,25 @@ module.exports = {
       })
     });
   },
+  search: function(req, res){
+    console.log('search!!!');
+    var qry = new RegExp(req.query.queryStr, 'i');
+    var arr = [
+      {name: qry}, 
+      {station: qry}, 
+      {distance: qry}, 
+      {map: qry}, 
+      {coordinates: qry}, 
+      {category: qry}, 
+    ];
+
+    Place.find({$or: arr}, function(err, places){
+      if(err)
+        console.log(err);
+      console.log('arr:', arr, 'places: ', places);
+      res.render('places/search', { places: places });
+    })
+  },
   _loadPlace: function(req, res, next, pId){
     console.log('_loadPlace!!!', pId);
     Place.findOne({ _id: pId }, function(err, docs){

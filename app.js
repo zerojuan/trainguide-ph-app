@@ -55,6 +55,7 @@ app.get('/api/trips/:trip_id/calendar', api.calendar.list);
 
 //places
 app.get('/places', places.index);
+app.get('/places/search-place', places.search);
 app.get('/places/new', places.new);
 app.get('/places/station-stops', places.stops);
 app.post('/places/preview', places.preview);
