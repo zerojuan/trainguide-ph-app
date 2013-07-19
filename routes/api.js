@@ -1,12 +1,5 @@
-/**
- * Created with JetBrains WebStorm.
- * User: Julius
- * Date: 7/5/13
- * Time: 2:13 PM
- * To change this template use File | Settings | File Templates.
- */
 
-var gtfs = require('gtfs');
+var gtfs = require('gtfs-2');
 var async = require('async');
 
 module.exports = {
