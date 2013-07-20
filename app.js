@@ -14,6 +14,7 @@ mongoose.createConnection(process.env.MONGOHQ_URL);
 
 var api = require('./routes/api');
 var places = require('./routes/place');
+var viewer = require('./routes/viewer');
 
 var app = express();
 
@@ -36,6 +37,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
+
+app.get('/viewer', viewer.index);
 
 app.get('/', routes.index);
 app.get('/users', user.list);

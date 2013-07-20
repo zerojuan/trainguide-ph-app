@@ -3,8 +3,8 @@ extends layouts/layout
 block content
 	div(ng-app="trainguide")
 		div(ng-controller="MainCtrl")
-			div.container(ng-controller="GMapCtrl")
-				div.google-map(center="centerProperty",
+			.container(ng-controller="GMapCtrl")
+				.google-map(center="centerProperty",
 					zoom="zoomProperty",
 					paths="pathsProperty",
 					stop-markers="stopMarkersProperty",
@@ -35,13 +35,11 @@ block content
 
 
 
-block scripts
+block append scripts
 	script(src="https://maps.googleapis.com/maps/api/js?libraries=geometry&key=AIzaSyAeFiH4LhZTvKbXDNr2I8TrL9MauXt02PQ&sensor=true")
 	script(src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/src/infobox.js")
-	script(src='./components/jquery/jquery.js')
 	script(src="./components/jquery.svg/jquery.svg.js")
-	script(src='./components/AngularJS/angular.js')
-	script(src='./scripts/app.js')
+	script(src='./scripts/main-app.js')
 	script(src='./scripts/controllers/main.js')
 	script(src='./scripts/controllers/gmap.js')
 	script(src='./scripts/services/common.js')
