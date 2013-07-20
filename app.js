@@ -46,6 +46,7 @@ if ('development' == app.get('env')) {
 app.get('/viewer', viewer.index);
 
 app.get('/', routes.index);
+app.get('/views', routes.partials);
 app.get('/users', user.list);
 
 //identify api routes

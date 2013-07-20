@@ -14,10 +14,9 @@ a {
   color: #00B7FF;
 }
 table {
-  width: 1300px;
+  width: 100%;
   table-layout: fixed;
 }
 table td {
-  max-width: 600px;
   word-wrap: break-word;
 }

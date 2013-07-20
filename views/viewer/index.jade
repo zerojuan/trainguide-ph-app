@@ -7,15 +7,7 @@ block content
         li.name
           h1
             a TrainguidePH API Viewer
-    section.main
-      .row
-        .large-12.columns
-          h1 Agencies
-      .row
-        .large-9.push-3.columns
-          h3 Hello Yo
-        .large-3.pull-9.columns
-          p Most of the data here are contained.
+    section.main(ng-view)
 
 block append scripts
   script(src='/scripts/viewer-app.js')

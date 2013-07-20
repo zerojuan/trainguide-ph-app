@@ -1,0 +1,16 @@
+.row
+  h1 {{header}}
+.row
+  .large-12.columns
+    table
+      thead
+        th ID
+        th Name
+        th Description
+      tbody
+        tr(ng-repeat="agency in agencies")
+          td
+            a(href="#/{{agency.agency_id}}/routes") {{agency.agency_id}}
+          td {{agency.agency_name}}
+          td
+            a(href="{{agency.agency_url}}") {{agency.agency_url}}
