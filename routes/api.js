@@ -3,7 +3,6 @@ var gtfs = require('gtfs-2');
 var async = require('async');
 
 module.exports = {
-	//TODO: Identify api routes
 	agencies: {
 		list: function(req, res){
 			//RETURN LIST OF AGENCIES

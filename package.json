@@ -10,7 +10,7 @@
     "jade": "*",
     "less-middleware": "*",
     "mongoose": "~3.6.13",
-    "gtfs-2": "0.0.4",
+    "gtfs-2": "0.0.5",
     "async": "~0.2.9"
   },
 	"engines":{

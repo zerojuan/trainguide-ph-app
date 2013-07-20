@@ -20,7 +20,7 @@ module.exports = {
   },
   new: function(req, res){
     var newParams = { 
-      stations: constants.STATION, 
+      stations: constants.STATION,
       categories: constants.CATEGORY 
     }
     res.render('places/new', newParams );
