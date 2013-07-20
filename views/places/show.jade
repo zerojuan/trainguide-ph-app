@@ -2,28 +2,31 @@ extends ../layouts/layout
 
 block content
 
-  h2 New Place Added
-  div
-    table.pure-table.pure-table-bordered
-      tbody
-        tr
-          td Name:
-          td #{place.name}
-        tr
-          td Station:
-          td #{place.station}
-        tr
-          td Distance:
-          td #{place.distance}
-        tr
-          td Map:
-          td #{place.map}
-        tr
-          td Coordinates:
-          td #{place.coordinates.lng},#{place.coordinates.lat}
-        tr
-          td Category:
-          td #{place.category}
-  .pure-controls
-    a(href='/places/' + place._id + '/edit').pure-button.pure-button-primary Edit
-    a(href='/places').pure-button Back to 'All Places' page
+	h2 New Place Added
+	div
+		table.pure-table.pure-table-bordered
+			tbody
+				tr
+					td Name:
+					td #{place.name}
+				tr
+					td Station:
+					td #{place.station}
+				tr
+					td Distance:
+					td #{place.distance}
+				tr
+					td Website:
+					td #{place.website}
+				tr
+					td Map:
+					td #{place.map}
+				tr
+					td Coordinates:
+					td #{place.coordinates.lng},#{place.coordinates.lat}
+				tr
+					td Category:
+					td #{place.category}
+	.pure-controls
+		a(href='/places/' + place._id + '/edit').pure-button.pure-button-primary Edit
+		a(href='/places').pure-button Back to 'All Places' page

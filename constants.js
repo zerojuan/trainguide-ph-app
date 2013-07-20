@@ -292,6 +292,7 @@ module.exports = {
     'Furniture Shop',
     'Gas Station',
     'Hardware',
+    'Hotel',
     'Jeepney Terminal',
     'KTV',
     'Mall',

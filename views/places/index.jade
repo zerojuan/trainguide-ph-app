@@ -1,42 +1,46 @@
 extends ../layouts/layout
 
 block content
-  form.pure-form#search-form
-    input(type='text', required).pure-input-rounded.search-input
-    button(type='submit').pure-button Search
+	form.pure-form#search-form
+		input(type='text', required).pure-input-rounded.search-input
+		button(type='submit').pure-button Search
 
-  #search-div
+	#search-div
 
-  h2 All Places
-  div
-    if(!places.error)
-      table.pure-table.pure-table-horizontal
-        thead
-          tr
-            th Name
-            th Station
-            th Distance
-            th Map
-            th Coordinates
-            th Category
-            th Links
-        tbody
-          each place in places 
-            tr
-              td #{place.name}
-              td #{place.station}
-              td #{place.distance}
-              td #{place.map}
-              td #{place.coordinates.lng},#{place.coordinates.lat}
-              td #{place.category}
-              td: a(href='/places/#{place.id}').pure-button.pure-button-primary Show
-                  a(href='/places/#{place.id}/delete').pure-button.pure-button-primary.delete-place Delete
-    else
-      h4 #{places.error}
+	br
+		
+	div
+		a(href='/places/new') Add New Place
 
-  div
-    a(href='/places/new') Add New Place
+	h2 All Places
+	div
+		if(!places.error)
+			table.pure-table.pure-table-horizontal
+				thead
+					tr
+						th Name
+						th Station
+						th Distance
+						th Website
+						th Map
+						th Coordinates
+						th Category
+						th Links
+				tbody
+					each place in places 
+						tr
+							td #{place.name}
+							td #{place.station}
+							td #{place.distance}
+							td #{place.website}
+							td #{place.map}
+							td #{place.coordinates.lng},#{place.coordinates.lat}
+							td #{place.category}
+							td: a(href='/places/#{place.id}').pure-button.pure-button-primary Show
+									a(href='/places/#{place.id}/delete').pure-button.pure-button-primary.delete-place Delete
+		else
+			h4 #{places.error}
 
 block append scripts
-  script(src='/scripts/include_delete.js')
-  script(src='/scripts/get_place.js')
+	script(src='/scripts/include_delete.js')
+	script(src='/scripts/get_place.js')

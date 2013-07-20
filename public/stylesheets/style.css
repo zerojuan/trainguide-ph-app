@@ -13,6 +13,10 @@ body {
 a {
   color: #00B7FF;
 }
+table {
+  width: 1300px;
+  table-layout: fixed;
+}
 table td {
   max-width: 600px;
   word-wrap: break-word;

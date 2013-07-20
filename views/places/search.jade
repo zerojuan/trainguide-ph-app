@@ -1,22 +1,22 @@
 if(places.length > 0)
-  h2 Results:
-  table.pure-table.pure-table-horizontal
-    thead
-      tr
-        th Name
-        th Station
-        th Distance
-        th Map
-        th Coordinates
-        th Category
-    tbody
-      each place in places 
-        tr
-          td #{place.name}
-          td #{place.station}
-          td #{place.distance}
-          td #{place.map}
-          td #{place.coordinates.lng},#{place.coordinates.lat}
-          td #{place.category}
+	h2 Results:
+	table.pure-table.pure-table-horizontal
+		thead
+			tr
+				th Name
+				th Station
+				th Distance
+				th Map
+				th Coordinates
+				th Category
+		tbody
+			each place in places 
+				tr
+					td #{place.name}
+					td #{place.station}
+					td #{place.distance}
+					td #{place.map}
+					td #{place.coordinates.lng},#{place.coordinates.lat}
+					td #{place.category}
 else
-  | No data found.
+	| No data found.

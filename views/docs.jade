@@ -1,10 +1,10 @@
 extends layouts/layout
 
 block content
-  div(ng-app="trainguide")
-    div(ng-controller="MainCtrl")
-      h1= message
-      p Welcome to {{message}} #{title}
+	div(ng-app="trainguide")
+		div(ng-controller="MainCtrl")
+			h1= message
+			p Welcome to {{message}} #{title}
 
 block append scripts
-  script(src='./scripts/docs.js')
+	script(src='./scripts/docs.js')

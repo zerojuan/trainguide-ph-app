@@ -1,46 +1,50 @@
 mixin hiddenForm(name, value)
-  input(type='hidden', name=name, value='#{value}')
+	input(type='hidden', name=name, value='#{value}')
 
 if(formMethod==='POST')
-  h2 Preview New Place
+	h2 Preview New Place
 else
-  h2 Preview Edit Place
+	h2 Preview Edit Place
 
 div
-  //- form(method='POST', action='/places').pure-form.pure-form-aligned
-  form(method='POST', action=formAction).pure-form.pure-form-aligned
-    if(formMethod==='PUT')
-      input(name='_method', value='PUT', type='hidden')
-    mixin hiddenForm('name', place.name)
-    mixin hiddenForm('station', place.station)
-    mixin hiddenForm('stop', place.stop)
-    mixin hiddenForm('distance', place.distance)
-    mixin hiddenForm('map', place.map)
-    mixin hiddenForm('coordinates', place.coordinates)
-    mixin hiddenForm('category', place.category)
-    table.pure-table.pure-table-bordered
-      tbody
-        tr
-          td Name:
-          td #{place.name}
-        tr
-          td Station:
-          td #{place.station}
-        tr
-          td Stop:
-          td #{place.stop}
-        tr
-          td Distance:
-          td #{place.distance}
-        tr
-          td Map:
-          td #{place.map}
-        tr
-          td Coordinates:
-          td #{place.coordinates}
-        tr
-          td Category:
-          td #{place.category}
-    .pure-controls
-      input(type='submit', name='save', value='Save').pure-button.pure-button-primary
-      input(type='button', id='cancel', value='Cancel').pure-button
+	//- form(method='POST', action='/places').pure-form.pure-form-aligned
+	form(method='POST', action=formAction).pure-form.pure-form-aligned
+		if(formMethod==='PUT')
+			input(name='_method', value='PUT', type='hidden')
+		mixin hiddenForm('name', place.name)
+		mixin hiddenForm('station', place.station)
+		mixin hiddenForm('stop', place.stop)
+		mixin hiddenForm('distance', place.distance)
+		mixin hiddenForm('website', place.website)
+		mixin hiddenForm('map', place.map)
+		mixin hiddenForm('coordinates', place.coordinates)
+		mixin hiddenForm('category', place.category)
+		table.pure-table.pure-table-bordered
+			tbody
+				tr
+					td Name:
+					td #{place.name}
+				tr
+					td Station:
+					td #{place.station}
+				tr
+					td Stop:
+					td #{place.stop}
+				tr
+					td Distance:
+					td #{place.distance}
+				tr
+					td Website:
+					td #{place.website}
+				tr
+					td Map:
+					td #{place.map}
+				tr
+					td Coordinates:
+					td #{place.coordinates}
+				tr
+					td Category:
+					td #{place.category}
+		.pure-controls
+			input(type='submit', name='save', value='Save').pure-button.pure-button-primary
+			input(type='button', id='cancel', value='Cancel').pure-button

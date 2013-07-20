@@ -2,15 +2,15 @@ extends ../layouts/layout
 
 block content
 
-  h2 New Place
-  div
-    form(method='POST', action='/places/preview').pure-form.pure-form-aligned#input-place
-      include partial
-    div#preview-div
+	h2 New Place
+	div
+		form(method='POST', action='/places/preview').pure-form.pure-form-aligned#input-place
+			include partial
+		div#preview-div
 
 block append scripts
-  script.
-    var formMethod='POST'
-      , formAction='/places';
-  script(src='/scripts/populate_stops.js')
-  script(src='/scripts/populate_preview.js')
+	script.
+		var formMethod='POST'
+			, formAction='/places';
+	script(src='/scripts/populate_stops.js')
+	script(src='/scripts/populate_preview.js')

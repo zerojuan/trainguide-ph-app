@@ -60,6 +60,7 @@ module.exports = {
     place.name = b.name;
     place.station = b.station + ':' + b.stop;
     place.distance = b.distance;
+    place.website = b.website;
     place.map = b.map;
     var loc = b.coordinates.split(',');
     place.coordinates = { lng: loc[0], lat: loc[1] };
@@ -94,6 +95,7 @@ module.exports = {
       place.name = b.name;
       place.station = b.station + ':' + b.stop;
       place.distance = b.distance;
+      place.website = b.website;
       place.map = b.map;
       var loc = b.coordinates.split(',');
       place.coordinates = { lng: loc[0], lat: loc[1] };
@@ -130,7 +132,8 @@ module.exports = {
     var arr = [
       {name: qry}, 
       {station: qry}, 
-      {distance: qry}, 
+      {distance: qry},  
+      {website: qry}, 
       {map: qry}, 
       {coordinates: qry}, 
       {category: qry}, 

@@ -5,6 +5,7 @@ var PlaceSchema = new Schema({
   name: String,
   station: String,
   distance: String,
+  website: String,
   map: String,
   coordinates: {
     lng: Number,
