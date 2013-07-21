@@ -10,7 +10,12 @@ var express = require('express')
   , http = require('http')
   , path = require('path');
 
-mongoose.createConnection(process.env.MONGOHQ_URL);
+var options = {
+	server: {},
+	replset: {}
+};
+options.server.socketOptions = options.replset.socketOptions = {keepAlive: 1};
+mongoose.createConnection(process.env.MONGOHQ_URL, options);
 
 var api = require('./routes/api');
 var places = require('./routes/place');
@@ -41,6 +46,7 @@ if ('development' == app.get('env')) {
 app.get('/viewer', viewer.index);
 
 app.get('/', routes.index);
+app.get('/views', routes.partials);
 app.get('/users', user.list);
 
 //identify api routes

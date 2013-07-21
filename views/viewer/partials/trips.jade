@@ -1,0 +1,32 @@
+.row
+  h1
+    a(href="#/") {{agencyId}} &nbsp;
+    a(href="#/{{agencyId}}/routes") {{routeId}} &nbsp;
+    | Trips
+.row
+  .large-12.columns
+    table
+      thead
+        th Trip_ID
+        th Start
+        th End
+        th M
+        th T
+        th W
+        th Th
+        th F
+        th S
+        th Su
+      tbody
+        tr(ng-repeat="trip in trips")
+          td
+            a(href="#/{{agencyId}}/routes/{{routeId}}/trips/{{trip.trip_id}}/stops") {{trip.trip_id}}
+          td {{trip.calendar.start_date}}
+          td {{trip.calendar.end_date}}
+          td {{trip.calendar.monday}}
+          td {{trip.calendar.tuesday}}
+          td {{trip.calendar.wednesday}}
+          td {{trip.calendar.thursday}}
+          td {{trip.calendar.friday}}
+          td {{trip.calendar.saturday}}
+          td {{trip.calendar.sunday}}

@@ -49,11 +49,28 @@ module.exports = {
 			var route = req.routeId;
 			// console.log(route);
 			if(route != null){
-				gtfs.Trip.find({ route_id: route.route_id }, function(err, data){
+				gtfs.Trip.find({ route_id: route.route_id }, function(err, trips){
 					// console.log('ERR', err);
 					// console.log('trip data', data);
-					if(data)
-						res.send(data);
+					if(trips){
+						async.map(trips, function(trip, next){
+							gtfs.Calendar.findOne({service_id: trip.service_id}, function(err, calendar){
+								var locTrip = trip.toObject();
+								if(calendar){
+									locTrip.calendar = calendar;
+									locTrip.test = 1;
+									console.log("Adding calendar...", locTrip);
+								}
+								next(err, locTrip);
+							});
+						}, function(err, result){
+							if(err){
+								res.send(err);
+							}else{
+								res.send(result);
+							}
+						})
+					}
 				});
 			}else{
 				res.send(res.error);
@@ -81,15 +98,14 @@ module.exports = {
 				gtfs.StopTime.find({ trip_id: trip.trip_id }, null, { sort: 'stop_sequence' }, function(err, stoptimeData){
 					if(stoptimeData != null){
 						async.map(stoptimeData, function(stopObj, next){
-							var stop = {};
+							var stop = stopObj.toObject();
 							gtfs.Stop.findOne({ stop_id: stopObj.stop_id }, function(err, stopData){
 								if(stopData != null){
 									// console.log('stopObj', stopObj.stop_id, 'stopData', stopData.stop_id, (stopObj.stop_id == stopData.stop_id));
-									stop["stop_time"] = stopObj;
-									stop["stop_details"] = stopData;
+									stop.details = stopData;
 									// console.log(stop);
 								}	
-								next(err, { stop: stop});
+								next(err, stop);
 							});
 						},function(err, result){
 							if(err){
