@@ -8,6 +8,7 @@ app.config(['$routeProvider', '$locationProvider', function($routeProvider, $loc
 		.when('/', {templateUrl: '/views/?url=viewer.partials.agencies', controller: 'ViewerCtrl'})
 		.when('/:agency/routes', {templateUrl: '/views/?url=viewer.partials.routes', controller: 'RouteCtrl'})
 		.when('/:agency/routes/:route/trips', {templateUrl: '/views/?url=viewer.partials.trips', controller: 'TripsCtrl'})
+		.when('/:agency/routes/:route/trips/:trip/stops', {templateUrl: '/views/?url=viewer.partials.stops', controller: 'StopsCtrl'})
 		.otherwise({
 			redirectTo: '/'
 		});
@@ -60,5 +61,22 @@ angular.module("viewerApp")
 			})
 			.error(function(data, status){
 				console.log('Error happened');
+			});
+	}])
+	.controller("StopsCtrl", ['$scope', '$http', '$routeParams', function($scope, $http, $routeParams){
+		$scope.agencyId = $routeParams.agency;
+		$scope.routeId = $routeParams.route;
+		$scope.tripId = $routeParams.trip;
+		$scope.url = 'api/trips/'+$scope.tripId+'/stops';
+
+		$http({
+			method: 'GET',
+			url: $scope.url	})
+			.success(function(data){
+				console.log(data);
+				$scope.stops = data;
+			})
+			.error(function(data, status){
+
 			});
 	}]);
