@@ -1,4 +1,9 @@
 module.exports = {
+	AGENCIES: [
+		{ agency_id: 'LRTA' },
+		{ agency_id: 'MRTC' },
+		{ agency_id: 'PNR' }
+	],
   STATION : [
     {
       "LRT1" : [
