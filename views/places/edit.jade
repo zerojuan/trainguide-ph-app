@@ -13,6 +13,8 @@ block content
 block append scripts
 	script.
 		var formMethod='PUT'
-			, formAction='/places/#{place._id}/edit';
+			, formAction='/places/#{place._id}/edit'
+			, selectedStop='#{place.stop.name}'
+			, selectedLineId='#{place.line.route_id}';
 	script(src='/scripts/standalone/populate_stops.js')
 	script(src='/scripts/standalone/populate_preview.js')

@@ -12,8 +12,11 @@ div
 		if(formMethod==='PUT')
 			input(name='_method', value='PUT', type='hidden')
 		mixin hiddenForm('name', place.name)
-		mixin hiddenForm('station', place.station)
-		mixin hiddenForm('stop', place.stop)
+		mixin hiddenForm('lineId', place.line._id)
+		mixin hiddenForm('stopId', place.stop._id)
+		mixin hiddenForm('lineName', place.line.route_short_name)
+		mixin hiddenForm('routeId', place.line.route_id)		
+		mixin hiddenForm('stopName', place.stop.stop_name)
 		mixin hiddenForm('distance', place.distance)
 		mixin hiddenForm('website', place.website)
 		mixin hiddenForm('map', place.map)
@@ -25,11 +28,11 @@ div
 					td Name:
 					td #{place.name}
 				tr
-					td Station:
-					td #{place.station}
+					td Line:
+					td #{place.line.route_short_name}
 				tr
 					td Stop:
-					td #{place.stop}
+					td #{place.stop.stop_name}
 				tr
 					td Distance:
 					td #{place.distance}

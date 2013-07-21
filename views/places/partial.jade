@@ -21,24 +21,24 @@ mixin selectStation
 				.small-3.columns
 					label.right.inline Station
 					if(place)
-						st = place.station.split(':')
 				.small-9.columns
-					select(name='station', id='station', required)
-						option(value='') -- Select Station --
-						each value, key in stations
+					select(name='line', id='line', required)
+						option(value='') -- Select Line --
+						//- - console.log('place!!!!'+place.line)
+						each value, key in lines
 							if(place)
-								option(id='stnkey', value='#{key}', selected=(st[0]=='#{key}')) #{value}
+								option(id='stnkey', value='#{key}', selected=(place.line.name=='#{value}')) #{value}
 							else
 								option(id='stnkey', value='#{key}') #{value}
 					span#stops
-						if(place)
-							select(name='stop', id='stop', required)
-								option(value='') -- Select Stop --
-								each value, key in stations
-									each val, idx in value 
-										if(st[0]==idx)
-											each stn, k in val
-												option(id='stnkey', value='#{stn.name}', selected=(st[1]=='#{stn.name}')) #{stn.name}
+					//- 	if(place)
+					//- 		select(name='stop', id='stop', required)
+					//- 			option(value='') -- Select Stop --
+					//- 			each value, key in lines
+					//- 				each val, idx in value 
+					//- 					if(st[0]==idx)
+					//- 						each stn, k in val
+					//- 							option(id='stnkey', value='#{stn.name}', selected=(place.stop=='#{stn.name}')) #{stn.name}
 
 mixin selectCategory
 	.row

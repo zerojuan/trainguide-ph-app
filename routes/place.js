@@ -17,80 +17,94 @@ module.exports = {
     });
   },
   show: function(req, res){
-    console.log('show!!!', req.place);
-    res.render('places/show', { place: req.place });
+    // console.log('show!!!', req.place);
+    console.log("REQ PLACE: ", req.place);
+    var place = req.place;
+    console.log('place!', place);
+    res.render('places/show', { place: place });  
   },
   new: function(req, res){
     var trains = [{ agency_id: 'LRTA' }, { agency_id: 'MRTC' }, { agency_id: 'PNR' }];
-    var stations = {};
+    var lines = {};
     gtfs.Route.find({$or: trains}, null, {sort: 'route_id'}, function(err, data){
-      if(data != null){
+      if(data){
         // console.log('routes data', data);
         for (var i = 0; i < data.length; i++) {
-          stations[data[i].route_id] = data[i].route_short_name;
+          lines[data[i].route_id] = data[i].route_short_name;
         };
 
-        console.log(stations);
+        console.log(lines);
         var newParams = { 
-          stations: stations,
+          lines: lines,
           categories: constants.CATEGORY 
         }
         res.render('places/new', newParams );  
       }else{
-        res.render('No data');  
+        res.send('Error: ' + error);
       }
     });
   },
   stops: function(req, res){
     var selected = req.query.selectedStn;
-    var station;
     console.log('SELECTED: ', selected);
     gtfs.Route.findOne({route_id: selected}, function(err, route){
-      console.log('route!!!', route);
-      if(route!= null){
-        async.map(route, function(routeObj, next){
-          gtfs.StopTime.findOne({route_id: routeObj.route_id}, function(err, trip){
-            console.log('trip!!!', trip);
-            if(trip!=null){
-              async.map(trip, function(tripObj, next){
-                gtfs.Stop.findOne({stop_id: tripObj.stop_id}, function(err, stop){
-                  console.log('stop!!!', stop);
-                  // res.render('places/stops', { station: station });
-                  next(err, stop);
-                });
-              }, function(err, result){
-                if(err){
-                  res.send(err);
-                }else{
-                  res.send(result); 
-                }
+      // console.log('route!!!', route);
+      if(route){
+          gtfs.Trip.find({route_id: route.route_id}, function(err, trips){
+            // console.log('trip!!!', trips[0]);
+            if(trips){
+              gtfs.StopTime.find({trip_id: trips[0].trip_id}, function(err, stops){
+                // console.log('stop!!!', stops);
+                async.map(stops, function(stopObj, next){
+                  var stop = {};
+                  stop.stop_id = stopObj.stop_id;
+                  gtfs.Stop.findOne({stop_id: stopObj.stop_id}, function(err, stopData){
+                    if(stopData){
+                      stop.name = stopData.stop_name;
+                    };
+                    next(err, stop);
+                  })
+                }, function(err, result){
+                  if(err){
+                    res.send(err);
+                  }else{
+                    res.send(result);
+                  }
+                })
+                   
               });
             }
-            next(err, trip);
           });
-        }, function(err, result){
-          console.log('error! ', err, 'result! ', result);
-          if(err){
-            res.send(err);
-          }else{
-            res.send('places/stops', { station: result }); 
-          }
-        }); 
       }else{
         res.send('No data');
       }
     });
   },
   preview: function(req, res){
+    var place = req.body.place;
     var previewParams = { 
-      place: req.body.place,
+      place: place,
       formMethod: req.body.formMethod,
       formAction: req.body.formAction
     }
-    // console.log('preview req.body', place);
-    // console.log('previewParams', previewParams);
-    
-    res.render('places/preview', previewParams);
+    console.log('place!!!', place);
+
+    gtfs.Route.findOne({route_id: place.line}, function(err, route){
+      if(route){
+        place.line = route; 
+        gtfs.Stop.findOne({stop_id: place.stop}, function(err, stop){
+          if(stop){
+            place.stop = stop;
+            // console.log('preview req.body', place);
+            // console.log('previewParams', previewParams);
+            
+            res.render('places/preview', previewParams); 
+          }else{
+            res.send('Error: ' + err);
+          }
+        });
+      }
+    });
   },
   create: function(req, res){
     // console.log('create req.body', req.body);
@@ -98,7 +112,15 @@ module.exports = {
     var place = new Place();
 
     place.name = b.name;
-    place.station = b.station + ':' + b.stop;
+    place.line = {
+      line_id: b.lineId,
+      name: b.lineName,
+      route_id: b.routeId
+    };
+    place.stop = {
+      stop_id: b.stopId,
+      name: b.stopName
+    };
     place.distance = b.distance;
     place.website = b.website;
     place.map = b.map;
@@ -106,6 +128,7 @@ module.exports = {
     place.coordinates = { lng: loc[0], lat: loc[1] };
     place.category = b.category;
 
+    console.log(place);
     place.save(function(err, place){
       if(err)
         console.log(err);
@@ -113,12 +136,26 @@ module.exports = {
     });
   },
   edit: function(req, res){
-    var editParams = { 
-      place: req.place,
-      stations: constants.STATION, 
-      categories: constants.CATEGORY 
-    }
-    res.render('places/edit', editParams);
+    var trains = [{ agency_id: 'LRTA' }, { agency_id: 'MRTC' }, { agency_id: 'PNR' }];
+    var lines = {};
+    gtfs.Route.find({$or: trains}, null, {sort: 'route_id'}, function(err, data){
+      if(data != null){
+        // console.log('routes data', data);
+        for (var i = 0; i < data.length; i++) {
+          lines[data[i].route_id] = data[i].route_short_name;
+        };
+
+        console.log(lines);
+        var editParams = { 
+          place: req.place,
+          lines: lines, 
+          categories: constants.CATEGORY 
+        }
+        res.render('places/edit', editParams); 
+      }else{
+        res.send('Error: ' + error);
+      }
+    });
   },
   update: function(req, res){
     console.log('update!!!');
@@ -133,7 +170,15 @@ module.exports = {
       }
 
       place.name = b.name;
-      place.station = b.station + ':' + b.stop;
+      place.line = {
+        line_id: b.lineId,
+        name: b.lineName,
+        route_id: b.routeId
+      };
+      place.stop = {
+        stop_id: b.stopId,
+        name: b.stopName
+      };
       place.distance = b.distance;
       place.website = b.website;
       place.map = b.map;
@@ -171,7 +216,8 @@ module.exports = {
     var qry = new RegExp(req.query.queryStr, 'i');
     var arr = [
       {name: qry}, 
-      {station: qry}, 
+      {line: qry}, 
+      {stop: qry}, 
       {distance: qry},  
       {website: qry}, 
       {map: qry}, 

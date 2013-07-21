@@ -37,7 +37,7 @@ block content
 					each place in places 
 						tr
 							td #{place.name}
-							td #{place.station}
+							td #{place.line.name}-#{place.stop.name}
 							td #{place.distance}
 							td #{place.website}
 							td #{place.map}

@@ -1,9 +1,18 @@
 var mongoose = require('mongoose'),
-  Schema = mongoose.Schema;
+  Schema = mongoose.Schema,
+  ObjectId = Schema.ObjectId;
 
 var PlaceSchema = new Schema({
   name: String,
-  station: String,
+  line: {
+    line_id: ObjectId,
+    route_id: String,
+    name: String
+  },
+  stop: {
+    stop_id: ObjectId,
+    name: String
+  },
   distance: String,
   website: String,
   map: String,

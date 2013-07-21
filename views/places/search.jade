@@ -13,7 +13,7 @@ if(places.length > 0)
 			each place in places 
 				tr
 					td #{place.name}
-					td #{place.station}
+					td #{place.line.route_short_name} #{place.stop.stop_name}
 					td #{place.distance}
 					td #{place.map}
 					td #{place.coordinates.lng},#{place.coordinates.lat}
