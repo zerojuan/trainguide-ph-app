@@ -2,13 +2,13 @@ mixin hiddenForm(name, value)
 	input(type='hidden', name=name, value='#{value}')
 
 if(formMethod==='POST')
-	h2 Preview New Place
+	h2.subheader Preview New Place
 else
-	h2 Preview Edit Place
+	h2.subheader Preview Edit Place
 
 div
 	//- form(method='POST', action='/places').pure-form.pure-form-aligned
-	form(method='POST', action=formAction).pure-form.pure-form-aligned
+	form(method='POST', action=formAction)
 		if(formMethod==='PUT')
 			input(name='_method', value='PUT', type='hidden')
 		mixin hiddenForm('name', place.name)
@@ -19,7 +19,7 @@ div
 		mixin hiddenForm('map', place.map)
 		mixin hiddenForm('coordinates', place.coordinates)
 		mixin hiddenForm('category', place.category)
-		table.pure-table.pure-table-bordered
+		table
 			tbody
 				tr
 					td Name:
@@ -45,6 +45,8 @@ div
 				tr
 					td Category:
 					td #{place.category}
-		.pure-controls
-			input(type='submit', name='save', value='Save').pure-button.pure-button-primary
-			input(type='button', id='cancel', value='Cancel').pure-button
+		
+		.row
+			.small-5.small-centered.columns
+				input(type='submit', name='save', value='Save').button
+				input(type='button', id='cancel', value='Cancel').button

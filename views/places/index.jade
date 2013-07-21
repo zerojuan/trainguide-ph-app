@@ -1,21 +1,28 @@
 extends ../layouts/layout
 
 block content
-	form.pure-form#search-form
-		input(type='text', required).pure-input-rounded.search-input
-		button(type='submit').pure-button Search
+	nav.top-bar
+		form#search-form
+			.row
+				.right.large-6.columns
+					.row-collapse
+						.small-10.columns
+							input(type='text', required).pure-input-rounded.search-input
+						.small-2.columns
+							button(type='submit').pure-button Search
 
 	#search-div
 
 	br
 		
-	div
-		a(href='/places/new') Add New Place
+	.row
+		.small-3.small-centered.columns
+			a(href='/places/new').button Add New Place
 
-	h2 All Places
+	h2.top-bar.subheader All Places
 	div
 		if(!places.error)
-			table.pure-table.pure-table-horizontal
+			table
 				thead
 					tr
 						th Name
@@ -36,11 +43,11 @@ block content
 							td #{place.map}
 							td #{place.coordinates.lng},#{place.coordinates.lat}
 							td #{place.category}
-							td: a(href='/places/#{place.id}').pure-button.pure-button-primary Show
-									a(href='/places/#{place.id}/delete').pure-button.pure-button-primary.delete-place Delete
+							td: a(href='/places/#{place.id}').button Show
+									a(href='/places/#{place.id}/delete').button.delete-place Delete
 		else
-			h4 #{places.error}
+			h4.subheader.small-1.small-centered.columns #{places.error}
 
 block append scripts
-  script(src='/scripts/standalone/include_delete.js')
-  script(src='/scripts/standalone/get_place.js')
+	script(src='/scripts/standalone/include_delete.js')
+	script(src='/scripts/standalone/get_place.js')

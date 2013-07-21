@@ -4,7 +4,7 @@ $(document).ready(function(){
   var stationElem = $("#station");
   var stopElem = stationElem.parent().find("span");
   stationElem.change(function(evt){
-    var selected = stationElem.find("#stnkey:selected").text();
+    var selected = stationElem.find("#stnkey:selected").val();
     // console.log(selected);
     // stopElem.html(selected);
 

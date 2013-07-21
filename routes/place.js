@@ -1,6 +1,8 @@
-var Place = require('../models/place');
-var constants = require('../constants');
-var mapRegEx = new RegExp('Reg = /^https?\:\/\/(www\.|maps\.)?google\.[a-z]+\/maps\/?\?([^&]+&)*(ll=-?[0-9]{1,2}\.[0-9]+,-?[0-9]{1,2}\.[0-9]+|q=[^&]+)+($|&)/');
+var Place = require('../models/place')
+  , gtfs = require('gtfs-2')
+  , async = require('async')
+  , constants = require('../constants')
+  , mapRegEx = new RegExp('Reg = /^https?\:\/\/(www\.|maps\.)?google\.[a-z]+\/maps\/?\?([^&]+&)*(ll=-?[0-9]{1,2}\.[0-9]+,-?[0-9]{1,2}\.[0-9]+|q=[^&]+)+($|&)/');
 
 module.exports = {
   index: function(req, res){
@@ -19,27 +21,65 @@ module.exports = {
     res.render('places/show', { place: req.place });
   },
   new: function(req, res){
-    var newParams = { 
-      stations: constants.STATION,
-      categories: constants.CATEGORY 
-    }
-    res.render('places/new', newParams );
+    var trains = [{ agency_id: 'LRTA' }, { agency_id: 'MRTC' }, { agency_id: 'PNR' }];
+    var stations = {};
+    gtfs.Route.find({$or: trains}, null, {sort: 'route_id'}, function(err, data){
+      if(data != null){
+        // console.log('routes data', data);
+        for (var i = 0; i < data.length; i++) {
+          stations[data[i].route_id] = data[i].route_short_name;
+        };
+
+        console.log(stations);
+        var newParams = { 
+          stations: stations,
+          categories: constants.CATEGORY 
+        }
+        res.render('places/new', newParams );  
+      }else{
+        res.render('No data');  
+      }
+    });
   },
   stops: function(req, res){
     var selected = req.query.selectedStn;
     var station;
-    // console.log('SELECTED: ', selected);
-    for (var i = 0; i < constants.STATION.length; i++) {
-      var stnKey = constants.STATION[i];
-      // console.log(stnKey);
-      for(item in stnKey){
-        if(selected === item){
-          station = stnKey[item];
-          // console.log(station); 
-        }
+    console.log('SELECTED: ', selected);
+    gtfs.Route.findOne({route_id: selected}, function(err, route){
+      console.log('route!!!', route);
+      if(route!= null){
+        async.map(route, function(routeObj, next){
+          gtfs.StopTime.findOne({route_id: routeObj.route_id}, function(err, trip){
+            console.log('trip!!!', trip);
+            if(trip!=null){
+              async.map(trip, function(tripObj, next){
+                gtfs.Stop.findOne({stop_id: tripObj.stop_id}, function(err, stop){
+                  console.log('stop!!!', stop);
+                  // res.render('places/stops', { station: station });
+                  next(err, stop);
+                });
+              }, function(err, result){
+                if(err){
+                  res.send(err);
+                }else{
+                  res.send(result); 
+                }
+              });
+            }
+            next(err, trip);
+          });
+        }, function(err, result){
+          console.log('error! ', err, 'result! ', result);
+          if(err){
+            res.send(err);
+          }else{
+            res.send('places/stops', { station: result }); 
+          }
+        }); 
+      }else{
+        res.send('No data');
       }
-    };
-    res.render('places/stops', { station: station });
+    });
   },
   preview: function(req, res){
     var previewParams = { 

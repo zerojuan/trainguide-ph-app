@@ -1,50 +1,59 @@
 mixin inputField(label, name)
-	.pure-control-group
-		label #{label}
-		isRequired = true
-		if(name==='website')
-			isRequired = false
-		if(place)
-			val = (name=='coordinates') ? (place[name].lng+','+place[name].lat) : place[name]
-			input(type='text', name=name, value=val, required=isRequired)
-		else
-			input(type='text', name=name, required=isRequired)
+	.row
+		.small-8
+			.row
+				.small-3.columns
+					label.right.inline #{label}
+					isRequired = true
+					if(name==='website')
+						isRequired = false
+				.small-9.columns
+					if(place)
+						val = (name=='coordinates') ? (place[name].lng+','+place[name].lat) : place[name]
+						input(type='text', name=name, value=val, required=isRequired)
+					else
+						input(type='text', name=name, required=isRequired)
 
 mixin selectStation
-	.pure-control-group
-		label Station
-		if(place)
-			st = place.station.split(':')
-		select(name='station', id='station', required)
-			option(value='') -- Select Station --
-			each value, key in stations //- e.g. key=0, value={LRT1: [...]}
-				//- - console.log(key, stations[key])
-				each stn, idx in value 
-					//- - console.log(value, idx, stn)
+	.row
+		.small-8
+			.row
+				.small-3.columns
+					label.right.inline Station
 					if(place)
-						option(id='stnkey', value='#{idx}', selected=(st[0]=='#{idx}')) #{idx}
-					else
-						option(id='stnkey', value='#{idx}') #{idx}
-		span#stops
-			if(place)
-				select(name='stop', id='stop', required)
-					option(value='') -- Select Stop --
-					each value, key in stations
-						each val, idx in value 
-							if(st[0]==idx)
-								each stn, k in val
-									option(id='stnkey', value='#{stn.name}', selected=(st[1]=='#{stn.name}')) #{stn.name}
+						st = place.station.split(':')
+				.small-9.columns
+					select(name='station', id='station', required)
+						option(value='') -- Select Station --
+						each value, key in stations
+							if(place)
+								option(id='stnkey', value='#{key}', selected=(st[0]=='#{key}')) #{value}
+							else
+								option(id='stnkey', value='#{key}') #{value}
+					span#stops
+						if(place)
+							select(name='stop', id='stop', required)
+								option(value='') -- Select Stop --
+								each value, key in stations
+									each val, idx in value 
+										if(st[0]==idx)
+											each stn, k in val
+												option(id='stnkey', value='#{stn.name}', selected=(st[1]=='#{stn.name}')) #{stn.name}
 
 mixin selectCategory
-	.pure-control-group
-		label Category
-		select(name='category', id='category')
-			option(value='') -- Select Category --
-			each value, key in categories
-				if(place)
-					option(id='catkey', value='#{value}', selected=(place.category=='#{value}')) #{value}
-				else
-					option(id='catkey', value='#{value}') #{value}
+	.row
+		.small-8
+			.row
+				.small-3.columns
+					label.right.inline Category
+				.small-9.columns
+					select(name='category', id='category')
+						option(value='') -- Select Category --
+						each value, key in categories
+							if(place)
+								option(id='catkey', value='#{value}', selected=(place.category=='#{value}')) #{value}
+							else
+								option(id='catkey', value='#{value}') #{value}
 
 fieldset
 	mixin inputField('Name', 'name')
@@ -54,7 +63,8 @@ fieldset
 	mixin inputField('Map', 'map')
 	mixin inputField('Coordinates', 'coordinates')
 	mixin selectCategory
-	.pure-controls
-		input(type='submit', id='preview', value='Preview').pure-button.pure-button-primary
-		//- input(type='button', value='Back to all places', onclick='document.location.href="/places"').pure-button
-		a(href='/places').pure-button Back to 'All Places' page
+	.row
+		.small-5.small-centered.columns
+			input(type='submit', id='preview', value='Preview').button
+			//- input(type='button', value='Back to all places', onclick='document.location.href="/places"').pure-button
+			a(href='/places').button Back to 'All Places' page

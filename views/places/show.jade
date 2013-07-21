@@ -2,9 +2,9 @@ extends ../layouts/layout
 
 block content
 
-	h2 New Place Added
+	nav.top-bar
 	div
-		table.pure-table.pure-table-bordered
+		table
 			tbody
 				tr
 					td Name:
@@ -27,6 +27,7 @@ block content
 				tr
 					td Category:
 					td #{place.category}
-	.pure-controls
-		a(href='/places/' + place._id + '/edit').pure-button.pure-button-primary Edit
-		a(href='/places').pure-button Back to 'All Places' page
+	.row
+		.small-5.small-centered.columns
+			a(href='/places/' + place._id + '/edit').button Edit
+			a(href='/places').button Back to 'All Places' page

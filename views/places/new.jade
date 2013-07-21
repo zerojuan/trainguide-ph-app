@@ -2,15 +2,16 @@ extends ../layouts/layout
 
 block content
 
-	h2 New Place
+	nav.top-bar
+	h2.subheader New Place
 	div
-		form(method='POST', action='/places/preview').pure-form.pure-form-aligned#input-place
+		form(method='POST', action='/places/preview')#input-place
 			include partial
 		div#preview-div
 
 block append scripts
-  script.
-    var formMethod='POST'
-      , formAction='/places';
-  script(src='/scripts/standalone/populate_stops.js')
-  script(src='/scripts/standalone/populate_preview.js')
+	script.
+		var formMethod='POST'
+			, formAction='/places';
+	script(src='/scripts/standalone/populate_stops.js')
+	script(src='/scripts/standalone/populate_preview.js')
