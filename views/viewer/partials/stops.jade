@@ -1,19 +1,19 @@
 .row
-  h1
-    a(href="#/") {{agencyId}} &nbsp;
-    a(href="#/{{agencyId}}/routes") {{routeId}} &nbsp;
-    a(href="#/{{agencyId}}/routes/{{routeId}}/trips") {{tripId}} &&nbsp
-    | Stops
+	h1
+		a(href="#/") {{agencyId}} &nbsp;
+		a(href="#/{{agencyId}}/routes") {{routeId}} &nbsp;
+		a(href="#/{{agencyId}}/routes/{{routeId}}/trips") {{tripId}} &nbsp
+		| Stops
 .row
-  .large-12.columns
-    table
-      thead
-        th StopId
-        th Name
-        th Coords
-      tbody
-        tr(ng-repeat="stop in stops")
-          td
-            a(href="#/{{agencyId}}/routes/{{routeId}}/trips/{{trip.trip_id}}/stops") {{stop.stop_id}}
-          td {{stop.details.stop_name}}
-          td {{stop.details.stop_lat}}, {{stop.details.stop_lon}}
+	.large-12.columns
+		table
+			thead
+				th StopId
+				th Name
+				th Coords
+			tbody
+				tr(ng-repeat="stop in stops")
+					td
+						a(href="#/{{agencyId}}/routes/{{routeId}}/trips/{{trip.trip_id}}/stops") {{stop.stop_id}}
+					td {{stop.details.stop_name}}
+					td {{stop.details.stop_lat}}, {{stop.details.stop_lon}}

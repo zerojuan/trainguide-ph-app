@@ -1,20 +1,22 @@
 .row
-  h1 {{agencyId}} Routes
+	h1
+		a(href="#/") {{agencyId}} &nbsp;
+		| Routes
 .row
-  .large-12.columns
-    table
-      thead
-        th ID
-        th Short Name
-        th Long Name
-        th Description
-        th URL
-      tbody
-        tr(ng-repeat="route in routes")
-          td
-            a(href="#/{{agencyId}}/routes/{{route.route_id}}/trips") {{route.route_id}}
-          td {{route.route_short_name}}
-          td {{route.route_long_name}}
-          td {{route.route_desc}}
-          td
-            a(href="{{route.route_url}}") {{route.route_url}}
+	.large-12.columns
+		table
+			thead
+				th ID
+				th Short Name
+				th Long Name
+				th Description
+				th URL
+			tbody
+				tr(ng-repeat="route in routes")
+					td
+						a(href="#/{{agencyId}}/routes/{{route.route_id}}/trips") {{route.route_id}}
+					td(style="background: \#{{route.route_color}};") {{route.route_short_name}}
+					td {{route.route_long_name}}
+					td {{route.route_desc}}
+					td
+						a(href="{{route.route_url}}") {{route.route_url}}

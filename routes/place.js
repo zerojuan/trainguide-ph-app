@@ -32,8 +32,8 @@ module.exports = {
     res.render('places/show', { place: place });  
   },
   new: function(req, res){
-    var trains = [{ agency_id: 'LRTA' }, { agency_id: 'MRTC' }, { agency_id: 'PNR' }];
-    var lines = {};
+    var trains = constants.AGENCIES;
+    var stations = {};
     gtfs.Route.find({$or: trains}, null, {sort: 'route_id'}, function(err, data){
       if(data){
         // console.log('routes data', data);
