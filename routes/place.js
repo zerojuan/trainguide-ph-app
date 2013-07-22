@@ -7,14 +7,22 @@ var Place = require('../models/place')
 module.exports = {
   index: function(req, res){
     console.log('index!!!');
-    var places = Place.find({}, function(err, docs){
-      if(Object.keys(docs).length > 0){
-        // console.log('PLACES: ', docs);
-      }else{
-        docs.error = 'No data';
-      }
-      res.render('places/index', { places: docs } );
+    Place.find({}, null, { skip: 0, limit: 5 }, function(err, docs) {
+        if(Object.keys(docs).length > 0){
+          // console.log('PLACES: ', docs);
+        }else{
+          docs.error = 'No data';
+        }
+        res.render('places/index', { places: docs } );
     });
+    // var places = Place.find({}, function(err, docs){
+    //   if(Object.keys(docs).length > 0){
+    //     // console.log('PLACES: ', docs);
+    //   }else{
+    //     docs.error = 'No data';
+    //   }
+    //   res.render('places/index', { places: docs } );
+    // });
   },
   show: function(req, res){
     // console.log('show!!!', req.place);
@@ -231,6 +239,20 @@ module.exports = {
       console.log('arr:', arr, 'places: ', places);
       res.render('places/search', { places: places });
     })
+  },
+  paginate: function(req, res){
+    console.log('paginate!!!');
+    var start = req.query.start;
+    var limit = req.query.limit;
+    console.log(start, limit, '!!!!');
+    Place.find({}, null, { skip: start, limit: limit }, function(err, docs) {
+      if(Object.keys(docs).length > 0){
+        // console.log('PLACES: ', docs);
+      }else{
+        docs.error = 'No data';
+      }
+      res.send(docs);
+    });
   },
   _loadPlace: function(req, res, next, pId){
     console.log('_loadPlace!!!', pId);

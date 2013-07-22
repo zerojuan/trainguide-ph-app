@@ -40,21 +40,6 @@ mixin selectStation
 					//- 						each stn, k in val
 					//- 							option(id='stnkey', value='#{stn.name}', selected=(place.stop=='#{stn.name}')) #{stn.name}
 
-mixin selectCategory
-	.row
-		.small-8
-			.row
-				.small-3.columns
-					label.right.inline Category
-				.small-9.columns
-					select(name='category', id='category')
-						option(value='') -- Select Category --
-						each value, key in categories
-							if(place)
-								option(id='catkey', value='#{value}', selected=(place.category=='#{value}')) #{value}
-							else
-								option(id='catkey', value='#{value}') #{value}
-
 fieldset
 	mixin inputField('Name', 'name')
 	mixin selectStation
@@ -62,7 +47,7 @@ fieldset
 	mixin inputField('Website', 'website')
 	mixin inputField('Map', 'map')
 	mixin inputField('Coordinates', 'coordinates')
-	mixin selectCategory
+	include category
 	.row
 		.small-5.small-centered.columns
 			input(type='submit', id='preview', value='Preview').button

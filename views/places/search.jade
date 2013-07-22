@@ -6,17 +6,23 @@ if(places.length > 0)
 				th Name
 				th Station
 				th Distance
+				th Website
 				th Map
 				th Coordinates
 				th Category
+				th Links
 		tbody
 			each place in places 
 				tr
 					td #{place.name}
-					td #{place.line.route_short_name} #{place.stop.stop_name}
+					td #{place.line.name}-#{place.stop.name}
 					td #{place.distance}
-					td #{place.map}
+					td: a(href='#{place.website}') #{place.website}
+					td: a(href='#{place.map}') #{place.map}
 					td #{place.coordinates.lng},#{place.coordinates.lat}
 					td #{place.category}
+					td: a(href='/places/#{place.id}').button Show
+							a(href='/places/#{place.id}/edit').button Edit
+							a(href='/places/#{place.id}/delete').button.delete-place Delete
 else
 	| No data found.

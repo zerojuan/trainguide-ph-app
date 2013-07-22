@@ -22,7 +22,7 @@ block content
 	h2.top-bar.subheader All Places
 	div
 		if(!places.error)
-			table
+			table#place-tbl
 				thead
 					tr
 						th Name
@@ -39,15 +39,22 @@ block content
 							td #{place.name}
 							td #{place.line.name}-#{place.stop.name}
 							td #{place.distance}
-							td #{place.website}
-							td #{place.map}
+							td: a(href='#{place.website}') #{place.website}
+							td: a(href='#{place.map}') #{place.map}
 							td #{place.coordinates.lng},#{place.coordinates.lat}
 							td #{place.category}
 							td: a(href='/places/#{place.id}').button Show
+									a(href='/places/#{place.id}/edit').button Edit
 									a(href='/places/#{place.id}/delete').button.delete-place Delete
+			.row
+				.small-3.small-centered.columns
+					a(href='#').button#load-btn Load more...
 		else
 			h4.subheader.small-1.small-centered.columns #{places.error}
 
 block append scripts
+	script.
+		var totalPlaces = #{places.length}
 	script(src='/scripts/standalone/include_delete.js')
 	script(src='/scripts/standalone/get_place.js')
+	script(src='/scripts/standalone/paginate_place.js')

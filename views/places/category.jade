@@ -1,0 +1,16 @@
+mixin selectCategory
+  .row
+    .small-8
+      .row
+        .small-3.columns
+          label.right.inline Category
+        .small-9.columns
+          select(name='category', id='category')
+            option(value='') -- Select Category --
+            each value, key in categories
+              if(place)
+                option(id='catkey', value='#{value}', selected=(place.category=='#{value}')) #{value}
+              else
+                option(id='catkey', value='#{value}') #{value}
+
+mixin selectCategory
