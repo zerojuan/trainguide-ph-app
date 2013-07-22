@@ -19,9 +19,10 @@ block content
 		.small-3.small-centered.columns
 			a(href='/places/new').button Add New Place
 
-	h2.top-bar.subheader All Places
+	include category
+	h2.top-bar.subheader Places
 	div
-		if(!places.error)
+		if(places)
 			table#place-tbl
 				thead
 					tr
@@ -48,13 +49,12 @@ block content
 									a(href='/places/#{place.id}/delete').button.delete-place Delete
 			.row
 				.small-3.small-centered.columns
-					a(href='#').button#load-btn Load more...
+					#load-btn
+					//- a(href='#').button#load-btn Load more...
 		else
 			h4.subheader.small-1.small-centered.columns #{places.error}
 
 block append scripts
-	script.
-		var totalPlaces = #{places.length}
 	script(src='/scripts/standalone/include_delete.js')
 	script(src='/scripts/standalone/get_place.js')
 	script(src='/scripts/standalone/paginate_place.js')

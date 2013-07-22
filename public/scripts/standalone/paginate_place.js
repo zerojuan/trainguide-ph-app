@@ -3,28 +3,41 @@ $(document).ready(function(){
   var limit = 5;
   var counter = 1;
   var btnDiv = $('#load-btn').parent();
+  var btn = '<a href="#" class="button" id="load-btn">Load more...</a>';
+  var categoryElem = $('#category');
+  var selected = '';
 
-  //define click event function
-  var loadPlaces = function(){
+  categoryElem.change(function(evt){
+    selected = categoryElem.find('#catkey:selected').val();
+    loadPlaces(selected, 0);
+  });
+
+
+  var clickLoad = function(){
     $('#load-btn').click(function(evt) {
-      evt.preventDefault();
-      var morePlaces = '';
-      var btn = $(this).parent().html();
-
       console.log(counter);
+      evt.preventDefault();
+      loadPlaces(selected, (counter*limit));
+      counter++;
+    }); 
+  }
 
-      $(this).parent().html('<h3>Loading...</h3>');
+  //define event function
+  var loadPlaces = function(selectedCategory, start){
+    var morePlaces = '';
+    btnDiv.html('<h3>Loading...</h3>');
+    $.ajax({
+      type: "GET",
+      url: "/places/paginate-place",
+      data: {
+        limit: limit,
+        start: start,
+        category: selectedCategory
+      }
+    }).done(function(msg){
+      console.log('PAGINATE OK: ', msg);
 
-      $.ajax({
-        type: "GET",
-        url: "/places/paginate-place",
-        data: {
-          limit: limit,
-          start: (counter*limit)
-        }
-      }).done(function(msg){
-        console.log('PAGINATE OK: ', msg);
-
+      if(msg.length > 0){
         for (var i = 0; i < msg.length; i++) {
           var place = msg[i];
           morePlaces += '<tr><td>'+place.name+'</td>'+
@@ -39,22 +52,20 @@ $(document).ready(function(){
               '<a href="/places/'+place._id+'/edit" class="button">Edit</a>'+
               '<a href="/places/'+place._id+'/delete" class="button delete-place">Delete</a>'+
             '</td></tr>';
-        };
-        $('#place-tbl tbody').append(morePlaces);
-        btnDiv.html(btn);
-        //call function to bind in dynamically added link
-        loadPlaces();
+        }
+        $('#no-data').remove();
+        $('#place-tbl tbody').append(morePlaces); 
 
-      }).fail(function(msg){
-        console.log('PAGINATE NOT OK: ', msg);
+        btnDiv.html(btn).on('click', clickLoad());
+      }else{
+        $('#place-tbl tbody').html('<tr id="no-data"><td colspan="8">No Data</td>/tr>');
+        btnDiv.html('');
+      }
+    }).fail(function(msg){
+      console.log('PAGINATE NOT OK: ', msg);
 
-        $('#place-tbl tbody').append('<tr><td>No More Data</td>/tr>');
-      });
-
-      counter++;
+      $('#place-tbl tbody').append('<tr id="no-data"><td colspan="8">No More Data</td>/tr>');
+      btnDiv.html('');
     });
   };
-
-  //call the function to execute click event
-  loadPlaces();
 });

@@ -7,14 +7,16 @@ var Place = require('../models/place')
 module.exports = {
   index: function(req, res){
     console.log('index!!!');
-    Place.find({}, null, { skip: 0, limit: 5 }, function(err, docs) {
-        if(Object.keys(docs).length > 0){
-          // console.log('PLACES: ', docs);
-        }else{
-          docs.error = 'No data';
-        }
-        res.render('places/index', { places: docs } );
-    });
+    // Place.find({}, null, { skip: 0, limit: 5 }, function(err, docs) {
+    //     if(Object.keys(docs).length > 0){
+    //       // console.log('PLACES: ', docs);
+    //     }else{
+    //       docs.error = 'No data';
+    //     }
+    //     res.render('places/index', { places: docs } );
+    // });
+
+    res.render('places/index', { places: [], categories: constants.CATEGORY });
     // var places = Place.find({}, function(err, docs){
     //   if(Object.keys(docs).length > 0){
     //     // console.log('PLACES: ', docs);
@@ -33,7 +35,7 @@ module.exports = {
   },
   new: function(req, res){
     var trains = constants.AGENCIES;
-    var stations = {};
+    var lines = {};
     gtfs.Route.find({$or: trains}, null, {sort: 'route_id'}, function(err, data){
       if(data){
         // console.log('routes data', data);
@@ -244,8 +246,9 @@ module.exports = {
     console.log('paginate!!!');
     var start = req.query.start;
     var limit = req.query.limit;
+    var category = req.query.category;
     console.log(start, limit, '!!!!');
-    Place.find({}, null, { skip: start, limit: limit }, function(err, docs) {
+    Place.find({ category: category }, null, { skip: start, limit: limit }, function(err, docs) {
       if(Object.keys(docs).length > 0){
         // console.log('PLACES: ', docs);
       }else{
