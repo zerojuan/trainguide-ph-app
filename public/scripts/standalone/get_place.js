@@ -16,6 +16,7 @@ $(document).ready(function(){
     }).done(function(msg){
       console.log('SEARCH OK ', msg);
       search.html(msg);
+      util.clickDelete();
     }).fail(function(msg){
       console.log('SEARCH NOT OK ', msg);
     });

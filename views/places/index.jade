@@ -20,7 +20,7 @@ block content
 			a(href='/places/new').button Add New Place
 
 	include category
-	h2.top-bar.subheader Places
+	h2.subheader Places
 	div
 		if(places)
 			table#place-tbl
@@ -33,6 +33,7 @@ block content
 						th Map
 						th Coordinates
 						th Category
+						th Sub Category
 						th Links
 				tbody
 					each place in places 
@@ -44,6 +45,7 @@ block content
 							td: a(href='#{place.map}') #{place.map}
 							td #{place.coordinates.lng},#{place.coordinates.lat}
 							td #{place.category}
+							td #{place.subcategory}
 							td: a(href='/places/#{place.id}').button Show
 									a(href='/places/#{place.id}/edit').button Edit
 									a(href='/places/#{place.id}/delete').button.delete-place Delete
@@ -55,6 +57,6 @@ block content
 			h4.subheader.small-1.small-centered.columns #{places.error}
 
 block append scripts
-	script(src='/scripts/standalone/include_delete.js')
+	script(src='/scripts/standalone/places_util.js')
 	script(src='/scripts/standalone/get_place.js')
 	script(src='/scripts/standalone/paginate_place.js')

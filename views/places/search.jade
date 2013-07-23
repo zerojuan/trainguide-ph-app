@@ -1,5 +1,5 @@
 if(places.length > 0)
-	h2.subheader Results:
+	h2.subheader Result: #{places.length} record(s)
 	table
 		thead
 			tr
@@ -10,6 +10,7 @@ if(places.length > 0)
 				th Map
 				th Coordinates
 				th Category
+				th Sub Category
 				th Links
 		tbody
 			each place in places 
@@ -21,6 +22,7 @@ if(places.length > 0)
 					td: a(href='#{place.map}') #{place.map}
 					td #{place.coordinates.lng},#{place.coordinates.lat}
 					td #{place.category}
+					td #{place.subcategory}
 					td: a(href='/places/#{place.id}').button Show
 							a(href='/places/#{place.id}/edit').button Edit
 							a(href='/places/#{place.id}/delete').button.delete-place Delete

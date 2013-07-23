@@ -5,7 +5,7 @@ mixin selectCategory
         .small-3.columns
           label.right.inline Category
         .small-9.columns
-          select(name='category', id='category')
+          select(name='category', id='category', required)
             option(value='') -- Select Category --
             each value, key in categories
               if(place)

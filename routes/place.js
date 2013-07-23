@@ -15,8 +15,13 @@ module.exports = {
     //     }
     //     res.render('places/index', { places: docs } );
     // });
-
-    res.render('places/index', { places: [], categories: constants.CATEGORY });
+    var indexParams = { 
+      places: [], 
+      categories: constants.CATEGORY,
+      subcategories: constants.SUBCATEGORY
+    };
+  
+    res.render('places/index', indexParams);
     // var places = Place.find({}, function(err, docs){
     //   if(Object.keys(docs).length > 0){
     //     // console.log('PLACES: ', docs);
@@ -46,7 +51,8 @@ module.exports = {
         console.log(lines);
         var newParams = { 
           lines: lines,
-          categories: constants.CATEGORY 
+          categories: constants.CATEGORY,
+          subcategories: constants.SUBCATEGORY
         }
         res.render('places/new', newParams );  
       }else{
@@ -137,6 +143,7 @@ module.exports = {
     var loc = b.coordinates.split(',');
     place.coordinates = { lng: loc[0], lat: loc[1] };
     place.category = b.category;
+    place.subcategory = b.subcategory;
 
     console.log(place);
     place.save(function(err, place){
@@ -146,7 +153,7 @@ module.exports = {
     });
   },
   edit: function(req, res){
-    var trains = [{ agency_id: 'LRTA' }, { agency_id: 'MRTC' }, { agency_id: 'PNR' }];
+    var trains = constants.AGENCIES;
     var lines = {};
     gtfs.Route.find({$or: trains}, null, {sort: 'route_id'}, function(err, data){
       if(data != null){
@@ -159,7 +166,8 @@ module.exports = {
         var editParams = { 
           place: req.place,
           lines: lines, 
-          categories: constants.CATEGORY 
+          categories: constants.CATEGORY,
+          subcategories: constants.SUBCATEGORY
         }
         res.render('places/edit', editParams); 
       }else{
@@ -195,6 +203,7 @@ module.exports = {
       var loc = b.coordinates.split(',');
       place.coordinates = { lng: loc[0], lat: loc[1] };
       place.category = b.category;
+      place.subcategory = b.subcategory;
 
       place.save(function(err, affected){
         if(err)
@@ -233,9 +242,10 @@ module.exports = {
       {map: qry}, 
       {coordinates: qry}, 
       {category: qry}, 
+      {subcategory: qry} 
     ];
 
-    Place.find({$or: arr}, function(err, places){
+    Place.find({ $or: arr }, null, { sort: '_id' }, function(err, places){
       if(err)
         console.log(err);
       console.log('arr:', arr, 'places: ', places);
@@ -248,7 +258,7 @@ module.exports = {
     var limit = req.query.limit;
     var category = req.query.category;
     console.log(start, limit, '!!!!');
-    Place.find({ category: category }, null, { skip: start, limit: limit }, function(err, docs) {
+    Place.find({ category: category }, null, { sort: '_id', skip: start, limit: limit }, function(err, docs) {
       if(Object.keys(docs).length > 0){
         // console.log('PLACES: ', docs);
       }else{

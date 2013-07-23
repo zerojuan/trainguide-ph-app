@@ -20,7 +20,8 @@ var PlaceSchema = new Schema({
     lng: Number,
     lat: Number
   },
-  category: String
+  category: String,
+  subcategory: String
 });
 
 module.exports = mongoose.model('Place', PlaceSchema);

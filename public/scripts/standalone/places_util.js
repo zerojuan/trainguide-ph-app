@@ -1,6 +1,6 @@
-$(document).ready(function(){
-  console.log('include_delete loaded!');
+var util = {};
 
+util.clickDelete = function(){
   $('.delete-place').on('click', function(evt){
     evt.preventDefault();
     if(confirm('Are you sure?')){
@@ -21,5 +21,5 @@ $(document).ready(function(){
       .end()
       .submit();
     }
-  });
-});
+  })
+};

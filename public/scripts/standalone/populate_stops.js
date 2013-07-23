@@ -11,6 +11,8 @@ $(document).ready(function(){
   });
 
   var populateStops = function(selectedLine){
+    var previewBtn = $('#preview');
+    previewBtn.attr('disabled', 'disabled').val('Loading stops...');
     $.ajax({
       type: "GET",
       url: "/places/station-stops",
@@ -30,6 +32,7 @@ $(document).ready(function(){
       }
       selectStr+='</select>';
       stopElem.html(selectStr);
+      previewBtn.removeAttr('disabled').val('Preview');
     }).fail(function(msg){
       console.log("POPULATE NOT OK ", msg);
     });

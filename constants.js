@@ -1,9 +1,9 @@
 module.exports = {
-	AGENCIES: [
-		{ agency_id: 'LRTA' },
-		{ agency_id: 'MRTC' },
-		{ agency_id: 'PNR' }
-	],
+  AGENCIES: [
+    { agency_id: 'LRTA' },
+    { agency_id: 'MRTC' },
+    { agency_id: 'PNR' }
+  ],
   STATION : [
     {
       "LRT1" : [
@@ -267,6 +267,22 @@ module.exports = {
     }
   ],
   CATEGORY : [
+    'Dining',
+    'Entertainment',
+    'Government Building',
+    'Hospital',
+    'Hotel',
+    'Office',
+    'Religion',
+    'Residential',
+    'Schools',
+    'Services',
+    'Shopping',
+    'Sightseeing',
+    'Sports',
+    'Transport Terminal'
+  ],
+  SUBCATEGORY : [
     'Amusement',
     'Auto/Car Shop',
     'Bake Shop',
@@ -297,7 +313,6 @@ module.exports = {
     'Furniture Shop',
     'Gas Station',
     'Hardware',
-    'Hotel',
     'Jeepney Terminal',
     'KTV',
     'Mall',

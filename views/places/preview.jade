@@ -22,6 +22,7 @@ div
 		mixin hiddenForm('map', place.map)
 		mixin hiddenForm('coordinates', place.coordinates)
 		mixin hiddenForm('category', place.category)
+		mixin hiddenForm('subcategory', place.subcategory)
 		table
 			tbody
 				tr
@@ -48,6 +49,9 @@ div
 				tr
 					td Category:
 					td #{place.category}
+				tr
+					td Sub Category:
+					td #{place.subcategory}
 		
 		.row
 			.small-5.small-centered.columns

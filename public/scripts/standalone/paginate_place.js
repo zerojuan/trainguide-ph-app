@@ -47,6 +47,7 @@ $(document).ready(function(){
             '<td><a href="'+place.map+'">'+place.map+'</a></td>'+
             '<td>'+place.coordinates.lng+','+place.coordinates.lat+'</td>'+
             '<td>'+place.category+'</td>'+
+            '<td>'+place.subcategory+'</td>'+
             '<td>'+
               '<a href="/places/'+place._id+'" class="button">Show</a>'+
               '<a href="/places/'+place._id+'/edit" class="button">Edit</a>'+
@@ -57,14 +58,15 @@ $(document).ready(function(){
         $('#place-tbl tbody').append(morePlaces); 
 
         btnDiv.html(btn).on('click', clickLoad());
+        util.clickDelete();
       }else{
-        $('#place-tbl tbody').html('<tr id="no-data"><td colspan="8">No Data</td>/tr>');
+        $('#place-tbl tbody').html('<tr id="no-data"><td colspan="9">No Data</td>/tr>');
         btnDiv.html('');
       }
     }).fail(function(msg){
       console.log('PAGINATE NOT OK: ', msg);
 
-      $('#place-tbl tbody').append('<tr id="no-data"><td colspan="8">No More Data</td>/tr>');
+      $('#place-tbl tbody').append('<tr id="no-data"><td colspan="9">No More Data</td>/tr>');
       btnDiv.html('');
     });
   };
