@@ -292,6 +292,7 @@ module.exports = {
     'Bike Shop',
     'Bills Payment',
     'Bookstore',
+    'Bridal Shop',
     'Bus Terminal',
     'Bus/FX Terminal',
     'Bus/Jeepney Terminal',

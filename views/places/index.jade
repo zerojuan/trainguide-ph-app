@@ -36,19 +36,7 @@ block content
 						th Sub Category
 						th Links
 				tbody
-					each place in places 
-						tr
-							td #{place.name}
-							td #{place.line.name}-#{place.stop.name}
-							td #{place.distance}
-							td: a(href='#{place.website}') #{place.website}
-							td: a(href='#{place.map}') #{place.map}
-							td #{place.coordinates.lng},#{place.coordinates.lat}
-							td #{place.category}
-							td #{place.subcategory}
-							td: a(href='/places/#{place.id}').button Show
-									a(href='/places/#{place.id}/edit').button Edit
-									a(href='/places/#{place.id}/delete').button.delete-place Delete
+					
 			.row
 				.small-3.small-centered.columns
 					#load-btn

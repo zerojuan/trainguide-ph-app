@@ -51,7 +51,7 @@ mixin selectSubCategory
 						option(value='') -- Select Category --
 						each value, key in subcategories
 							if(place)
-								option(id='subcatkey', value='#{value}', selected=(place.category=='#{value}')) #{value}
+								option(id='subcatkey', value='#{value}', selected=(place.subcategory=='#{value}')) #{value}
 							else
 								option(id='subcatkey', value='#{value}') #{value}
 

@@ -19,7 +19,8 @@ if(places.length > 0)
 					td #{place.line.name}-#{place.stop.name}
 					td #{place.distance}
 					td: a(href='#{place.website}') #{place.website}
-					td: a(href='#{place.map}') #{place.map}
+					td: a(href='#{place.map}')
+						img(src='/images/map.png')
 					td #{place.coordinates.lng},#{place.coordinates.lat}
 					td #{place.category}
 					td #{place.subcategory}

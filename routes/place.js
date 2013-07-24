@@ -141,7 +141,7 @@ module.exports = {
     place.website = b.website;
     place.map = b.map;
     var loc = b.coordinates.split(',');
-    place.coordinates = { lng: loc[0], lat: loc[1] };
+    place.coordinates = { lng: loc[1], lat: loc[0] };
     place.category = b.category;
     place.subcategory = b.subcategory;
 
@@ -201,7 +201,7 @@ module.exports = {
       place.website = b.website;
       place.map = b.map;
       var loc = b.coordinates.split(',');
-      place.coordinates = { lng: loc[0], lat: loc[1] };
+      place.coordinates = { lng: loc[1], lat: loc[0] };
       place.category = b.category;
       place.subcategory = b.subcategory;
 

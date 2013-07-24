@@ -20,7 +20,8 @@ block content
 					td #{place.website}
 				tr
 					td Map:
-					td #{place.map}
+					td: a(href='#{place.map}')
+						img(src='/images/map.png')
 				tr
 					td Coordinates:
 					td #{place.coordinates.lng},#{place.coordinates.lat}

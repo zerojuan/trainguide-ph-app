@@ -44,7 +44,7 @@ $(document).ready(function(){
             '<td>'+place.line.name+'-'+place.stop.name+'</td>'+
             '<td>'+place.distance+'</td>'+
             '<td><a href="'+place.website+'">'+place.website+'</a></td>'+
-            '<td><a href="'+place.map+'">'+place.map+'</a></td>'+
+            '<td><a href="'+place.map+'"><img src="/images/map.png"/></a></td>'+
             '<td>'+place.coordinates.lng+','+place.coordinates.lat+'</td>'+
             '<td>'+place.category+'</td>'+
             '<td>'+place.subcategory+'</td>'+
