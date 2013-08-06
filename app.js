@@ -20,6 +20,7 @@ mongoose.createConnection(process.env.MONGOHQ_URL, options);
 var api = require('./routes/api');
 var places = require('./routes/place');
 var viewer = require('./routes/viewer');
+var generator = require('./routes/generator');
 
 var app = express();
 
@@ -48,6 +49,8 @@ app.get('/viewer', viewer.index);
 app.get('/', routes.index);
 app.get('/views', routes.partials);
 app.get('/users', user.list);
+
+app.get('/generatestatic', generator.generateStaticData);
 
 //identify api routes
 app.get('/api/agencies', api.agencies.list);
