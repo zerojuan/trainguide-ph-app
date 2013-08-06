@@ -1,9 +1,15 @@
 module.exports = {
-  AGENCIES: [
-    { agency_id: 'LRTA' },
-    { agency_id: 'MRTC' },
-    { agency_id: 'PNR' }
-  ],
+	AGENCIES: [
+		{ agency_id: 'LRTA' },
+		{ agency_id: 'MRTC' },
+		{ agency_id: 'PNR' }
+	],
+	ROUTE_IDS: {
+		LRT1 : 'ROUTE_880747',
+		LRT2 : 'ROUTE_880801',
+		MRT : 'ROUTE_880854',
+		PNR : 'ROUTE_880872'
+	},
   STATION : [
     {
       "LRT1" : [
@@ -293,7 +299,6 @@ module.exports = {
     'Bills Payment',
     'Bingo',
     'Bookstore',
-    'Bridal Shop',
     'Bus Terminal',
     'Bus/FX Terminal',
     'Bus/Jeepney Terminal',
@@ -315,6 +320,7 @@ module.exports = {
     'Furniture Shop',
     'Gas Station',
     'Hardware',
+    'Hotel',
     'Jeepney Terminal',
     'KTV',
     'Mall',
