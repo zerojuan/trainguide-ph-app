@@ -122,7 +122,7 @@ module.exports = {
       }
     });
   },
-  create: function(req, res){
+  create: function(req, res, next){
     // console.log('create req.body', req.body);
     var b = req.body;
     var place = new Place();
@@ -147,8 +147,11 @@ module.exports = {
 
     console.log(place);
     place.save(function(err, place){
-      if(err)
+      if(err){
         console.log(err);
+        next(err);
+      }
+        
       res.redirect('/places/' + place._id);
     });
   },

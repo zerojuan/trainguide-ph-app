@@ -1,0 +1,58 @@
+slide-group(selected-item='selectedItem').slide-group
+		slide(title='Line')
+			.title-box
+				h2 Line
+					span  view
+			.content-box
+				lines(lines='lines', selected-line='selectedLine', selected-stop='selectedItem.stop')
+				.content-inner
+					#stop-content
+
+						slideshow(images='selectedItem.images')
+			
+						.sights-box
+							h3 Sightseeing
+							ul
+								li(ng-repeat='sight in selectedItem.stop.sights')
+									div
+										span.name {{sight.name}}
+										span.distance{{sight.distance}} km
+								li(ng-show='!selectedItem.stop.sights.length') No sights near the area.
+
+						.shops-box
+							h3 Shopping
+							ul
+								li(ng-repeat='shop in selectedItem.stop.shops')
+									div
+										span.name {{shop.name}}
+										span.distance {{shop.distance}} km
+								li(ng-show='!selectedItem.stop.shops.length') No shops near the area.
+					#line-content
+						line-stops(selected-line='selectedLine')
+
+		slide(title='Places')
+			.title-box
+				h2 Places
+					span  to go
+			.content-box
+
+		slide(title='Featured')
+			.featured-box
+				.title-box
+					h2 Featured
+						span  places
+
+				.content-box
+					ul
+						li(ng-repeat='place in featuredPlaces')
+							.landmark
+								img(src='{{place.image}}').{{place.line}}
+								info
+									span
+										h4 {{place.name}}
+									span {{place.stop}}
+
+		slide(title='Tips')
+			.title-box
+				h2 Tips
+			.content-box

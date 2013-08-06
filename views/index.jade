@@ -2,7 +2,9 @@ extends layouts/layout
 
 block content
 	div(ng-app="trainguide")
-		div(ng-controller="MainCtrl")
+		div(ng-controller="MainCtrl	")
+			include slidegroup
+			include sidebar	
 			.container(ng-controller="GMapCtrl")
 				.google-map(center="centerProperty",
 					zoom="zoomProperty",
@@ -12,33 +14,13 @@ block content
 					longitude="clickedLongitudeProperty",
 					draggable="true",
 					style="height: 100%; width: 100%;")
-//			slide-group.slide-group(selected-item="selectedItem")
-//				slide(title="Line")
-//					div.title-box
-//						h2 Line
-//							span view
-//					div.content-box
-//						lines(lines="lines",
-//							selected-line="selectedLine",
-//							selected-stop="selectedItem.stop")
-//						div.content-inner
-//							div#stop-content
-//								slideshow(images="selectedItem.images")
-//								div.sights-box
-//									h3 Sightseeing
-//									ul
-//										li(ng-repeat="sight in selectedItem.stop.sights")
-//											div
-//												span.name {{sight.name}}
-//												span.distance {{sight.distance}} km
-//										li(ng-show="!selectedItem.stop.sights.length") No sights near the area.
-
-
 
 block append scripts
 	script(src="https://maps.googleapis.com/maps/api/js?libraries=geometry&key=AIzaSyAeFiH4LhZTvKbXDNr2I8TrL9MauXt02PQ&sensor=true")
 	script(src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/src/infobox.js")
+	script(src="./components/jquery/jquery.js")
 	script(src="./components/jquery.svg/jquery.svg.js")
+	script(src="./components/d3/d3.js")
 	script(src='./scripts/main-app.js')
 	script(src='./scripts/controllers/main.js')
 	script(src='./scripts/controllers/gmap.js')
