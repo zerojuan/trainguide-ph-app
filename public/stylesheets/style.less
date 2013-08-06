@@ -1,3 +1,14 @@
+@import url(./normalize.css);
+
+/* variables */
+
+@lrt1 : #fdc33c;
+@lrt2 : #ad86bc;
+@mrt : #5384c4;
+@pnr : #f28740;
+
+/* elements */
+
 html{
   height: 100%;
 }
@@ -10,7 +21,13 @@ html{
 
 body {
   height: 100%;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  // font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font-family: "Cabin", sans-serif;
+}
+
+h1, h2 {
+  font-family: "Cabin",sans-serif;
+  font-size: 19pt;
 }
 
 a {
@@ -23,5 +40,250 @@ table {
   td {
     word-wrap: break-word;
     text-align: center;
+  }
+}
+
+.clearfix{
+  clear: both;
+}
+
+/* sidebar */
+
+.sidebar{
+  width: 18%;
+  min-width: 260px;
+  max-width: 270px;
+  height: 100%;
+  position: fixed;
+  background: #fff;
+  float: right;
+  top: 0;
+  right: 0;
+  border-left: 1px solid #ccc;
+  z-index: 1;
+  .header{
+    font-size: 25pt;
+    margin: 5px 10px 10px 10px;
+    .title{
+      width: 60%;
+      float: left;
+      h1 {
+        font-weight: bold;
+      }
+      p {
+        font-size: 9pt;
+        line-height: 15px;
+      }
+    }
+    .logo{
+      float: right;
+    }
+  }
+  .content {
+    .control-tabs{
+      width: 100%;
+      border-top: 1px solid #ccc;
+      border-bottom: 1px solid #ccc;    
+      height: 33px;
+      ul{
+        list-style: none;
+        li{
+          display: inline;                    
+          a{               
+            float: left;        
+            padding-top: 7.5px;
+            padding-bottom: 8.5px;
+            width: 25%;                
+            text-align: center;                
+            color: #333;
+            &:hover{
+              background-color: #ddd;
+              color: white;
+            }
+            &.active{
+              background-color: #ccc;
+              color: white;
+            }
+
+          }
+        }
+      }
+    }
+    .directions {
+      margin: 5px;
+      input[type="text"] {
+        width: 100%;
+      }
+      select {
+        width: auto;
+      }
+    }
+  }
+  .footer{
+    position: absolute;
+    bottom: 10px;  
+    border-top: 1px solid #ccc;
+    width: 100%;
+    height: 20px;
+    padding-top: 5px;
+    text-align: center;
+    a{
+      padding: 0 10px;
+      padding-bottom: 5px;
+      span{      
+        font-size: 9pt;
+      }  
+    }  
+  }
+}
+
+/* line colors */
+
+
+.LRT1{
+  background: @lrt1;
+}
+
+li.LRT1.clicked{
+  background: @lrt1;
+  height: 200px;
+  p{
+    font-size: 12px;
+    color: black;
+    padding-left: 10px;
+    padding-top: 10px;
+  }
+}
+
+.LRT2{
+  background: @lrt2;
+}
+
+li.LRT2.clicked{
+  background: @lrt2;
+  height: 200px;
+  p{
+    font-size: 12px;
+    color: black;
+    padding-left: 10px;
+    padding-top: 10px;
+  }
+}
+
+.MRT{
+  background: @mrt;
+}
+
+li.MRT.clicked{
+  background: @mrt;
+  height: 200px;
+  p{
+    font-size: 12px;
+    color: black;
+    padding-left: 10px;
+    padding-top: 10px;
+  }
+}
+
+.PNR{
+  background: @pnr;
+}
+
+li.PNR.clicked{
+  background: @pnr;
+  height: 200px;
+  p{
+    font-size: 12px;
+    color: black;
+    padding-left: 10px;
+    padding-top: 10px;
+  }
+}
+
+/* slidegroup */
+
+.slide-group{
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #fff;
+  z-index: 1;
+  .slide{
+    display: none;
+  }
+  .active{
+    display:block;
+  }
+  .title-box, .stop-desc {
+    margin: 5px 10px;
+    h2{
+      font-weight: bold;    
+    }
+    p{
+      font-size: 9pt;   
+      line-height: 15px;
+    }
+    span {
+      font-weight: normal;
+      font-size: 13pt;
+    }
+  }
+
+  .stop-desc {
+    padding-bottom: 10px;
+    margin-top: 5px;
+    margin-right: 10px;
+    margin-bottom: 0px;
+    margin-left: 10px;
+    h2{
+      font-weight: normal;    
+      font-size: 13pt;
+    }
+    span {
+      font-weight: normal;
+      font-size: 9pt;
+    }
+  }
+  .content-box {
+    background-color: #eee;
+    width: 100%;
+    bottom: 0px;
+    top: 30px;
+    position: absolute;
+    border-top: 1px solid #ccc;
+    .line-nav {
+      // background: #fdc33c;
+      ul {
+        display: table;
+        table-layout: fixed;
+        width: 100%;
+        li {
+          display: table-cell;
+          text-align: center;
+          padding: 5px 5px;
+          font-weight: bolder;
+          color: #fff;
+          border-right: 3px solid #fff;
+          cursor: pointer;
+          &:last-child {
+            border-right: none;
+          }
+          &:hover, &.active {
+            color: #333;
+          }
+        }
+      }
+      table {
+        margin: 0 auto;
+        tr {
+          td {
+            font-size: 8pt;   
+            line-height: 15px;
+            padding-right: 5px;
+          }   
+        }
+      }
+    }
   }
 }

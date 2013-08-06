@@ -1,3 +1,6 @@
+@import url(./normalize.css);
+/* variables */
+/* elements */
 html {
   height: 100%;
 }
@@ -8,7 +11,12 @@ html {
 }
 body {
   height: 100%;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font-family: "Cabin", sans-serif;
+}
+h1,
+h2 {
+  font-family: "Cabin", sans-serif;
+  font-size: 19pt;
 }
 a {
   color: #00B7FF;
@@ -20,4 +28,230 @@ table {
 table td {
   word-wrap: break-word;
   text-align: center;
+}
+.clearfix {
+  clear: both;
+}
+/* sidebar */
+.sidebar {
+  width: 18%;
+  min-width: 260px;
+  max-width: 270px;
+  height: 100%;
+  position: fixed;
+  background: #fff;
+  float: right;
+  top: 0;
+  right: 0;
+  border-left: 1px solid #ccc;
+  z-index: 1;
+}
+.sidebar .header {
+  font-size: 25pt;
+  margin: 5px 10px 10px 10px;
+}
+.sidebar .header .title {
+  width: 60%;
+  float: left;
+}
+.sidebar .header .title h1 {
+  font-weight: bold;
+}
+.sidebar .header .title p {
+  font-size: 9pt;
+  line-height: 15px;
+}
+.sidebar .header .logo {
+  float: right;
+}
+.sidebar .content .control-tabs {
+  width: 100%;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  height: 33px;
+}
+.sidebar .content .control-tabs ul {
+  list-style: none;
+}
+.sidebar .content .control-tabs ul li {
+  display: inline;
+}
+.sidebar .content .control-tabs ul li a {
+  float: left;
+  padding-top: 7.5px;
+  padding-bottom: 8.5px;
+  width: 25%;
+  text-align: center;
+  color: #333;
+}
+.sidebar .content .control-tabs ul li a:hover {
+  background-color: #ddd;
+  color: white;
+}
+.sidebar .content .control-tabs ul li a.active {
+  background-color: #ccc;
+  color: white;
+}
+.sidebar .content .directions {
+  margin: 5px;
+}
+.sidebar .content .directions input[type="text"] {
+  width: 100%;
+}
+.sidebar .content .directions select {
+  width: auto;
+}
+.sidebar .footer {
+  position: absolute;
+  bottom: 10px;
+  border-top: 1px solid #ccc;
+  width: 100%;
+  height: 20px;
+  padding-top: 5px;
+  text-align: center;
+}
+.sidebar .footer a {
+  padding: 0 10px;
+  padding-bottom: 5px;
+}
+.sidebar .footer a span {
+  font-size: 9pt;
+}
+/* line colors */
+.LRT1 {
+  background: #fdc33c;
+}
+li.LRT1.clicked {
+  background: #fdc33c;
+  height: 200px;
+}
+li.LRT1.clicked p {
+  font-size: 12px;
+  color: black;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+.LRT2 {
+  background: #ad86bc;
+}
+li.LRT2.clicked {
+  background: #ad86bc;
+  height: 200px;
+}
+li.LRT2.clicked p {
+  font-size: 12px;
+  color: black;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+.MRT {
+  background: #5384c4;
+}
+li.MRT.clicked {
+  background: #5384c4;
+  height: 200px;
+}
+li.MRT.clicked p {
+  font-size: 12px;
+  color: black;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+.PNR {
+  background: #f28740;
+}
+li.PNR.clicked {
+  background: #f28740;
+  height: 200px;
+}
+li.PNR.clicked p {
+  font-size: 12px;
+  color: black;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+/* slidegroup */
+.slide-group {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #fff;
+  z-index: 1;
+}
+.slide-group .slide {
+  display: none;
+}
+.slide-group .active {
+  display: block;
+}
+.slide-group .title-box,
+.slide-group .stop-desc {
+  margin: 5px 10px;
+}
+.slide-group .title-box h2,
+.slide-group .stop-desc h2 {
+  font-weight: bold;
+}
+.slide-group .title-box p,
+.slide-group .stop-desc p {
+  font-size: 9pt;
+  line-height: 15px;
+}
+.slide-group .title-box span,
+.slide-group .stop-desc span {
+  font-weight: normal;
+  font-size: 13pt;
+}
+.slide-group .stop-desc {
+  padding-bottom: 10px;
+  margin-top: 5px;
+  margin-right: 10px;
+  margin-bottom: 0px;
+  margin-left: 10px;
+}
+.slide-group .stop-desc h2 {
+  font-weight: normal;
+  font-size: 13pt;
+}
+.slide-group .stop-desc span {
+  font-weight: normal;
+  font-size: 9pt;
+}
+.slide-group .content-box {
+  background-color: #eee;
+  width: 100%;
+  bottom: 0px;
+  top: 30px;
+  position: absolute;
+  border-top: 1px solid #ccc;
+}
+.slide-group .content-box .line-nav ul {
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+}
+.slide-group .content-box .line-nav ul li {
+  display: table-cell;
+  text-align: center;
+  padding: 5px 5px;
+  font-weight: bolder;
+  color: #fff;
+  border-right: 3px solid #fff;
+  cursor: pointer;
+}
+.slide-group .content-box .line-nav ul li:last-child {
+  border-right: none;
+}
+.slide-group .content-box .line-nav ul li:hover,
+.slide-group .content-box .line-nav ul li.active {
+  color: #333;
+}
+.slide-group .content-box .line-nav table {
+  margin: 0 auto;
+}
+.slide-group .content-box .line-nav table tr td {
+  font-size: 8pt;
+  line-height: 15px;
+  padding-right: 5px;
 }
