@@ -266,6 +266,7 @@ li.PNR.clicked{
           color: #fff;
           border-right: 3px solid #fff;
           cursor: pointer;
+          font-size: 11.6pt;
           &:last-child {
             border-right: none;
           }
@@ -276,14 +277,71 @@ li.PNR.clicked{
       }
       table {
         margin: 0 auto;
+        background: none;
         tr {
+          background: none;
           td {
             font-size: 8pt;   
             line-height: 15px;
+            padding-top: 0px;
             padding-right: 5px;
+            padding-bottom: 0px;
+            padding-left: 0px;
           }   
         }
       }
     }
+  }
+}
+
+/* d3 svg */
+
+rect, .vertical {
+  &.LRT1 {
+    fill: @lrt1;
+  }
+  &.LRT2 {
+    fill: @lrt2;
+  }
+  &.MRT {
+    fill: @mrt;
+  }
+  &.PNR {
+    fill: @pnr;
+  }
+}
+
+.stop, .transfer {
+  cursor: pointer;
+  fill: white;  
+  stroke-width: 2px;
+  &.LRT1 {
+    stroke: @lrt1;
+  }
+  &.LRT2 {
+    stroke: @lrt2;
+  }
+  &.MRT {
+    stroke: @mrt;
+  }
+  &.PNR {
+    stroke: @pnr;
+  }
+  &.transferee {
+    stroke: black;
+  }
+}
+
+.label, .transfer {
+  font-size: 0.6em;
+}
+
+.label {
+  text-anchor: end;
+}
+
+text {
+  &.transfer {
+    fill: black;
   }
 }

@@ -564,25 +564,6 @@
 					}
 				};
 
-				scope.previousSelectedStop = null;
-				scope.$on('handleBroadcast[selectedStop]', function(){
-					console.log('Broadcasting Stop');
-					scope.center = {
-						lat: CommonAppState.selectedStop.position.lat,
-						lng: CommonAppState.selectedStop.position.long
-					};
-					if(scope.previousSelectedStop){
-						if(scope.previousSelectedStop.name == CommonAppState.selectedStop.name){
-							scope.selectedWindow.close();
-							scope.selectedWindow = null;
-							scope.previousSelectedStop = null;
-							return;
-						}
-					}
-					scope.previousSelectedStop = CommonAppState.selectedStop;
-					scope.$apply();
-				});
-
 				// Put the map into the scope
 				scope.map = _m;
 				_m.draw();

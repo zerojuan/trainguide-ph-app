@@ -29,7 +29,7 @@ angular.module('uiModule').directive('lines', ['CommonAppState', function(Common
 			'<div class="line-nav clearfix {{selectedLine.name}}" ng-transclude>'+
 				'<ul>'+
 				'<li ng-repeat="i in lines" class="{{i.name}}" ng-class="{active:i.name == selectedLine.name}" ng-click="lineSelected(i)">'+
-				'{{i.properName}}'+
+				'{{i.shortName}}'+
 				'</li>'+
 				'</ul>'+
 				'<div class="stop-desc"></div>'+

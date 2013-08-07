@@ -239,6 +239,7 @@ li.PNR.clicked p {
   color: #fff;
   border-right: 3px solid #fff;
   cursor: pointer;
+  font-size: 11.6pt;
 }
 .slide-group .content-box .line-nav ul li:last-child {
   border-right: none;
@@ -249,9 +250,69 @@ li.PNR.clicked p {
 }
 .slide-group .content-box .line-nav table {
   margin: 0 auto;
+  background: none;
+}
+.slide-group .content-box .line-nav table tr {
+  background: none;
 }
 .slide-group .content-box .line-nav table tr td {
   font-size: 8pt;
   line-height: 15px;
+  padding-top: 0px;
   padding-right: 5px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+}
+/* d3 svg */
+rect.LRT1,
+.vertical.LRT1 {
+  fill: #fdc33c;
+}
+rect.LRT2,
+.vertical.LRT2 {
+  fill: #ad86bc;
+}
+rect.MRT,
+.vertical.MRT {
+  fill: #5384c4;
+}
+rect.PNR,
+.vertical.PNR {
+  fill: #f28740;
+}
+.stop,
+.transfer {
+  cursor: pointer;
+  fill: white;
+  stroke-width: 2px;
+}
+.stop.LRT1,
+.transfer.LRT1 {
+  stroke: #fdc33c;
+}
+.stop.LRT2,
+.transfer.LRT2 {
+  stroke: #ad86bc;
+}
+.stop.MRT,
+.transfer.MRT {
+  stroke: #5384c4;
+}
+.stop.PNR,
+.transfer.PNR {
+  stroke: #f28740;
+}
+.stop.transferee,
+.transfer.transferee {
+  stroke: black;
+}
+.label,
+.transfer {
+  font-size: 0.6em;
+}
+.label {
+  text-anchor: end;
+}
+text.transfer {
+  fill: black;
 }
