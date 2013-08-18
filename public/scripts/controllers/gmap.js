@@ -5,8 +5,8 @@ angular.module('trainguide.controllers')
 
 			/** the initial center of the map */
 			centerProperty: {
-				lat: 14.5833,
-				lng: 121
+				latitude: 14.5833,
+				longitude: 121
 			},
 
 			/** the initial zoom level of the map */
@@ -14,7 +14,7 @@ angular.module('trainguide.controllers')
 
 			/** list of markers to put in the map */
 			markersProperty: [],
-
+			refresh: true,
 			pathsProperty: [],
 			stopMarkersProperty : [],
 

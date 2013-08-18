@@ -4,7 +4,10 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', function(Co
 	return {
 		restrict : 'E',
 		transclude : true,
-		scope : {selectedLine : '=selectedLine'},
+		scope : {
+			selectedLine : '=selectedLine',
+			selectedStop: '=selectedStop'
+		},
 		link : function(scope, element, attr){
 			console.log(element);
 			var y = null;
@@ -67,7 +70,7 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', function(Co
 								return 5;
 							})
 							.on("click", function(d){
-								scope.selectedStop(d);
+								scope.onSelectedStop(d);
 							});
 						dots.exit().remove();
 						var text = svg.selectAll(".label")
@@ -112,15 +115,21 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', function(Co
 				}
 			});
 
-			scope.selectedStop = function(stop){
+			scope.onSelectedStop = function(stop){
 				console.log("Selected Stop ", stop, 'scope.selectedLine.stops', scope.selectedLine.stops);
 				for(var i in scope.selectedLine.stops){
 					stop.line = scope.selectedLine.stops[i].details.stop_name;	
 					// console.log('stop', stop, 'stop.line', stop.line);
 				}
 				console.log("BROADCASTING FROM LINESTOPS");
-				CommonAppState.prepForBroadcast("selectedStop", stop);
+				scope.selectedStop = stop;
+				scope.$apply();
+				//CommonAppState.prepForBroadcast("selectedStop", stop);
 			}
+
+			scope.$watch('selectedStop', function(newValue, oldValue){
+				console.log("Selected stop changed");
+			});
 		},
 		template :
 			'<div class="line-stops" ng-transclude>'+

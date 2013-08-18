@@ -54,7 +54,7 @@ exports.generateStaticData = function(req, res, next){
 			origin : origin,
 			destination : dest,
 			mode : 'transit',
-			sensor : true,
+//			sensor : true,
 			departure_time : departureTime
 		};
 		return qs.stringify(args);

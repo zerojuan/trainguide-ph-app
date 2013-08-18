@@ -4,7 +4,7 @@ slide-group(selected-item='selectedItem').slide-group
 				h2 Line
 					span  view
 			.content-box
-				lines(lines='lines', selected-line='selectedLine', selected-stop='selectedItem.stop')
+				lines(lines='lines', selected-line='selectedLine', selected-stop='selected.stop')
 				.content-inner
 					#stop-content
 
@@ -16,7 +16,7 @@ slide-group(selected-item='selectedItem').slide-group
 								li(ng-repeat='sight in selectedItem.stop.sights')
 									div
 										span.name {{sight.name}}
-										span.distance{{sight.distance}} km
+										span.distance {{sight.distance}} km
 								li(ng-show='!selectedItem.stop.sights.length') No sights near the area.
 
 						.shops-box
@@ -28,7 +28,7 @@ slide-group(selected-item='selectedItem').slide-group
 										span.distance {{shop.distance}} km
 								li(ng-show='!selectedItem.stop.shops.length') No shops near the area.
 					#line-content
-						line-stops(selected-line='selectedLine')
+						line-stops(selected-line='selectedLine', selected-stop='selected.stop')
 
 		slide(title='Places')
 			.title-box

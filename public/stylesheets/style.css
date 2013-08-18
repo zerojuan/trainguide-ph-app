@@ -316,3 +316,20 @@ rect.PNR,
 text.transfer {
   fill: black;
 }
+.stop-marker {
+  border: solid 4px;
+  background: #fff;
+  border-radius: 50%;
+}
+.PNR-marker {
+  border-color: #f28740;
+}
+.LRT1-marker {
+  border-color: #fdc33c;
+}
+.LRT2-marker {
+  border-color: #ad86bc;
+}
+.MRT-marker {
+  border-color: #5384c4;
+}

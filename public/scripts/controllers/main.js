@@ -1,13 +1,12 @@
-/**
- * Created with JetBrains WebStorm.
- * User: Julius
- * Date: 7/12/13
- * Time: 6:44 AM
- */
 
 angular.module('trainguide.controllers')
 	.controller('MainCtrl', ['$scope', '$http', 'CommonAppState', function($scope, $http, CommonAppState){
-		$scope.message = "Hello World";
+		$scope.selected = {
+			stop: null
+		};
+		$scope.$watch('selected.stop', function(){
+			console.log("Selected stop changed!!!!");
+		});
     $scope.menuItems = [
       {
         title: 'Line',
@@ -19,7 +18,7 @@ angular.module('trainguide.controllers')
       },
       {
         title: 'Featured',
-        selected: false,
+        selected: false
       },
       {
         title: 'Tips',
@@ -45,6 +44,10 @@ angular.module('trainguide.controllers')
         for(key in data){ 
           $scope.lines[key].name = key;
         }
+				$scope.lines.LRT1.color = "#fdc33c";
+				$scope.lines.LRT2.color = "#ad86bc";
+				$scope.lines.MRT.color = "#5384c4";
+				$scope.lines.PNR.color = "#f28740";
         $scope.selectedLine = $scope.lines.LRT1;
         $scope.getLineByName = function(name){
           for(var i in $scope.lines){
@@ -57,38 +60,5 @@ angular.module('trainguide.controllers')
         };
       });
 
-    $scope.$on('handleBroadcast[selectedLine]', function(){
-      console.log('Line has been selected:');   
-      $scope.selectedLine = CommonAppState.selectedLine;
-      var lineData = {
-        title : $scope.menuItems[0].title,
-        selected : true     
-      };
-      $scope.selectedItem = lineData;
-      $scope.$apply();
-    });
 
-    $scope.$on('handleBroadcast[selectedStop]', function(){   
-      console.log("Changing state...");
-      var lineData = {
-        title : $scope.menuItems[0].title,
-        selected : true,
-        stop : CommonAppState.selectedStop,
-        images : CommonAppState.selectedStop.details.image
-      };
-      $scope.selectedLine = $scope.getLineByName(lineData.stop.line);
-      console.log("Selected Line", $scope.selectedLine);
-      if($scope.previousSelectedStop && $scope.previousSelectedStop.name == CommonAppState.selectedStop.name){
-        //disable the stop selection
-        $scope.previousSelectedStop = null;
-        lineData.selected = false;
-        $scope.menuItems[0].selected = false;
-        $scope.selectedItem = lineData;
-      }else{
-        $scope.menuItems[0].selected = true;
-        $scope.selectedItem = lineData;
-        $scope.previousSelectedStop = CommonAppState.selectedStop;
-      }
-      $scope.$apply();
-    });
 	}]);
