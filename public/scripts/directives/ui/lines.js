@@ -12,7 +12,7 @@ angular.module('uiModule').directive('lines', ['CommonAppState', function(Common
 		link : function(scope, element){
 			scope.$watch("selectedStop", function(newValue, oldValue){
 				if(newValue){
-					element.find('.stop-desc').show().html('<h2>'+newValue.name+'</h2><span>'+newValue.details.description+'</span>');
+					element.find('.stop-desc').show().html('<h2>'+newValue.details.stop_name+'</h2>');
 					element.find('.line-desc').hide();
 				}else{
 					element.find('.line-desc').show();
@@ -21,8 +21,8 @@ angular.module('uiModule').directive('lines', ['CommonAppState', function(Common
 			});
 
 			scope.lineSelected = function(line){
-				console.log('Selected: ' + line.name);
-				CommonAppState.prepForBroadcast("selectedLine", line);
+				console.log('Selected: ' + line);
+				scope.selectedLine = line;
 			}
 		},
 		template :

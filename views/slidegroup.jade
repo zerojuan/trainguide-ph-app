@@ -1,10 +1,10 @@
-slide-group(selected-item='selectedItem').slide-group
+slide-group(selected-item='selectedItem', selected-line='selected.line').slide-group
 		slide(title='Line')
 			.title-box
 				h2 Line
 					span  view
 			.content-box
-				lines(lines='lines', selected-line='selectedLine', selected-stop='selected.stop')
+				lines(lines='lines', selected-line='selected.line', selected-stop='selected.stop')
 				.content-inner
 					#stop-content
 
@@ -28,7 +28,7 @@ slide-group(selected-item='selectedItem').slide-group
 										span.distance {{shop.distance}} km
 								li(ng-show='!selectedItem.stop.shops.length') No shops near the area.
 					#line-content
-						line-stops(selected-line='selectedLine', selected-stop='selected.stop')
+						line-stops(selected-line='selected.line', selected-stop='selected.stop')
 
 		slide(title='Places')
 			.title-box

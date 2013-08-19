@@ -1,13 +1,14 @@
 'use strict';
 
 angular.module('google-maps')
-	.directive('polylineDrawer', [function(){
+	.directive('polylineDrawer', ['CommonAppState', function(CommonAppState){
 		return {
 			require: '^googleMap',
 			restrict: 'E',
 			scope: {
 				paths: '=paths',
-				selectedStop: '=selectedStop'
+				selectedStop: '=selectedStop',
+				selectedLine : '=selectedLine'
 			},
 			link: function(scope, elm, attrs, gmapCtrl){
 				gmapCtrl.registerMapListener(scope);
@@ -54,11 +55,29 @@ angular.module('google-maps')
 					}
 				}
 
+				// scope.$on("handleBroadcast[selectedLine]", function(){
+				// 	scope.selectedLine = CommonAppState.selectedLine;
+				// 	console.log("scope.selectedLine!!!", scope.selectedLine);
+				// });
+
 				scope.$watch('selectedStop', function(newValue){
 					//center this to that stop
 					if(scope.selectedStop){
 						var position = new google.maps.LatLng(scope.selectedStop.details.stop_lat, scope.selectedStop.details.stop_lon);
 						scope.map.setCenter(position);
+
+						for(var line in scope.paths){
+							if(scope.selectedStop.details.stop_name.indexOf(line) != -1){
+								scope.selectedLine = scope.paths[line];
+							}else{
+								for(var stop in scope.paths[line].stops){
+									if(scope.selectedStop.details.stop_name.indexOf(scope.paths[line].stops[stop].details.stop_name) != -1){
+										scope.selectedLine = scope.paths[line];
+										break;
+									}
+								}
+							}
+						}
 					}
 
 				});

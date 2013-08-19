@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('uiModule').directive('slideGroup', [function(){
+angular.module('uiModule').directive('slideGroup', ['CommonAppState', function(CommonAppState){
 	return {
 		restrict : 'E',
 		transclude : true,
@@ -8,7 +8,8 @@ angular.module('uiModule').directive('slideGroup', [function(){
 			'<div ng-transclude>'+
 				'</div>',
 		scope : {
-			selectedItem : '=selectedItem'
+			selectedItem : '=selectedItem',
+			selectedLine : '=selectedLine'
 		},
 		controller : ['$scope', '$element', function($scope, $element){
 			var slides = $scope.slides = [];
@@ -70,6 +71,15 @@ angular.module('uiModule').directive('slideGroup', [function(){
 						}
 						slideOut();
 					}
+				}
+			});
+
+			$scope.$watch("selectedLine", function(newValue, oldValue){
+				if(newValue){
+					slideOut();
+					$('.slide[title="Line"]').addClass('active');
+					$elm.find('#stop-content').hide();
+					$elm.find('#line-content').show();	
 				}
 			});
 		},

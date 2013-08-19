@@ -2,7 +2,8 @@
 angular.module('trainguide.controllers')
 	.controller('MainCtrl', ['$scope', '$http', 'CommonAppState', function($scope, $http, CommonAppState){
 		$scope.selected = {
-			stop: null
+			stop: null,
+      line: null
 		};
 		$scope.$watch('selected.stop', function(){
 			console.log("Selected stop changed!!!!");
