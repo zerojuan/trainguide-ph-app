@@ -18,7 +18,7 @@ angular.module('uiModule').directive('radioGroup', [function(){
       '</div>',
     scope : {
       menuItems : '=menuItems',
-      selectedItemHandler : '&selectedItemHandler',
+      selectedItemHandler : '=selectedItemHandler',
       selectedItem : '=selectedItem',
       showDetails : '=showDetails'   
     },                
@@ -27,13 +27,8 @@ angular.module('uiModule').directive('radioGroup', [function(){
       scope.previousItem = null;      
       scope.navClick = function(item){        
         console.log("Previous Item: ", scope.previousItem);
-        for(var i in scope.menuItems){
-          if(scope.menuItems[i].title == item.title){
-            scope.menuItems[i].selected = !scope.menuItems[i].selected;
-          }else{
-            scope.menuItems[i].selected = false;
-          }
-         }
+
+				scope.selectedItemHandler(item);
         // if(scope.previousItem){
         //  scope.previousItem.selected = false;                    
         //  if(scope.previousItem.title == item.title){
@@ -46,8 +41,7 @@ angular.module('uiModule').directive('radioGroup', [function(){
         //  scope.previousItem = item;  
         // }
 
-        //item.selected = !item.selected;       
-        scope.selectedItemHandler();        
+        //item.selected = !item.selected;
 
         scope.showDetails = false;
         // console.log('radiogroup.js navClick showDetails', scope.showDetails);

@@ -8,8 +8,8 @@ angular.module('trainguide.controllers')
 		};
 		$scope.$watch('selected.stop', function(newValue){
       if(newValue){
-        $scope.menuItems[0].selected = true;
-        $scope.selectedItemhandler();  
+				$scope.menuItems[0].selected = false; //reset line sidebar
+        $scope.selectedItemHandler($scope.menuItems[0]);
       }
 		});
     $scope.menuItems = [
@@ -30,19 +30,27 @@ angular.module('trainguide.controllers')
         selected: false
       }];
     $scope.selectedItem = false;
-    $scope.selectedItemHandler = function(){
-      for(var i in this.menuItems){
-        var item = this.menuItems[i];
-        console.log(item);
-        if(item.selected){
-          if(item.title == 'Line' && !$scope.selected.line){
-            $scope.selected.line = $scope.lines.LRT1;
-          }
-          this.selectedItem = item;
-          return;
-        }
-      }
-      this.selectedItem = false;
+    $scope.selectedItemHandler = function(item){
+			for(var i in $scope.menuItems){
+				if($scope.menuItems[i].title == item.title){
+					$scope.menuItems[i].selected = !$scope.menuItems[i].selected;
+					if($scope.menuItems[i].selected){
+						if(item.title == 'Line' && !$scope.selected.line){
+							$scope.selected.line = $scope.lines.LRT1;
+						}
+						$scope.selectedItem = $scope.menuItems[i];
+					}else{
+						$scope.selectedItem = false;
+					}
+				}else{
+					$scope.menuItems[i].selected = false;
+				}
+			}
+			//if line is hidden, remove selected stop
+			if(!$scope.menuItems[0].selected){
+				$scope.selected.stop = null;
+			}
+
     };
 
     $http({method: 'GET', url: 'data/lines.data.json'}).
