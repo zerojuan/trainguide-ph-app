@@ -1,12 +1,16 @@
 
 angular.module('trainguide.controllers')
 	.controller('MainCtrl', ['$scope', '$http', 'CommonAppState', function($scope, $http, CommonAppState){
+    $scope.showDetails = false;
 		$scope.selected = {
 			stop: null,
       line: null
 		};
-		$scope.$watch('selected.stop', function(){
-			console.log("Selected stop changed!!!!");
+		$scope.$watch('selected.stop', function(newValue){
+      if(newValue){
+        $scope.menuItems[0].selected = true;
+        $scope.selectedItemhandler();  
+      }
 		});
     $scope.menuItems = [
       {
@@ -31,6 +35,9 @@ angular.module('trainguide.controllers')
         var item = this.menuItems[i];
         console.log(item);
         if(item.selected){
+          if(item.title == 'Line' && !$scope.selected.line){
+            $scope.selected.line = $scope.lines.LRT1;
+          }
           this.selectedItem = item;
           return;
         }
@@ -49,7 +56,6 @@ angular.module('trainguide.controllers')
 				$scope.lines.LRT2.color = "#ad86bc";
 				$scope.lines.MRT.color = "#5384c4";
 				$scope.lines.PNR.color = "#f28740";
-        $scope.selectedLine = $scope.lines.LRT1;
         $scope.getLineByName = function(name){
           for(var i in $scope.lines){
             console.log('i', i, 'name', name);

@@ -1,12 +1,12 @@
-slide-group(selected-item='selectedItem', selected-line='selected.line').slide-group
+slide-group(selected-item='selectedItem', selected-line='selected.line', show-details='showDetails').slide-group
 		slide(title='Line')
 			.title-box
 				h2 Line
 					span  view
 			.content-box
-				lines(lines='lines', selected-line='selected.line', selected-stop='selected.stop')
+				lines(lines='lines', selected-line='selected.line', selected-stop='selected.stop', show-details='showDetails')
 				.content-inner
-					#stop-content
+					#stop-content(ng-class="{true:'showdetails', false:'nodetails'}[showDetails]")
 
 						slideshow(images='selectedItem.images')
 			
@@ -27,8 +27,8 @@ slide-group(selected-item='selectedItem', selected-line='selected.line').slide-g
 										span.name {{shop.name}}
 										span.distance {{shop.distance}} km
 								li(ng-show='!selectedItem.stop.shops.length') No shops near the area.
-					#line-content
-						line-stops(selected-line='selected.line', selected-stop='selected.stop')
+					#line-content(ng-class="{true:'nodetails', false:'showdetails'}[showDetails]")
+						line-stops(selected-item="selectedItem", selected-line='selected.line', selected-stop='selected.stop', show-details='showDetails')
 
 		slide(title='Places')
 			.title-box

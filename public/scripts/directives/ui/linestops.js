@@ -5,8 +5,10 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', function(Co
 		restrict : 'E',
 		transclude : true,
 		scope : {
+			selectedItem: '=selectedItem',
 			selectedLine : '=selectedLine',
-			selectedStop: '=selectedStop'
+			selectedStop: '=selectedStop',
+			showDetails: '=showDetails'
 		},
 		link : function(scope, element, attr){
 			console.log(element);
@@ -25,6 +27,7 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', function(Co
 				.attr("y", 20);
 
 			scope.$watch('selectedLine', function(newValue, oldValue){
+				console.log('SELECTEDITEM!!!!!', scope.selectedItem);
 				if(newValue && newValue.stops){
 					console.log('svgHeight', svgHeight, 'linestops: ', newValue.stops);
 					y = d3.scale.linear()
@@ -116,19 +119,27 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', function(Co
 			});
 
 			scope.onSelectedStop = function(stop){
-				console.log("Selected Stop ", stop, 'scope.selectedLine.stops', scope.selectedLine.stops);
+				// console.log("Selected Stop ", stop, 'scope.selectedLine.stops', scope.selectedLine.stops);
 				for(var i in scope.selectedLine.stops){
 					stop.line = scope.selectedLine.stops[i].details.stop_name;	
 					// console.log('stop', stop, 'stop.line', stop.line);
 				}
 				console.log("BROADCASTING FROM LINESTOPS");
 				scope.selectedStop = stop;
-				scope.$apply();
+				// console.log("SELECTED Stop", scope.selectedStop);
 				//CommonAppState.prepForBroadcast("selectedStop", stop);
+				scope.showDetails = true;
+				// console.log('linestops.js onSelectedStop showDetails: ', scope.showDetails);
+				scope.$apply();
 			}
 
 			scope.$watch('selectedStop', function(newValue, oldValue){
-				console.log("Selected stop changed");
+				// console.log("Selected stop changed");
+				// console.log('SELECTED LINE!!!!!!!!!!!!!!', scope.selectedLine);
+				if(scope.selectedLine){
+					scope.showDetails = true;
+				}
+				// console.log('linestops.js selectedStop showDetails: ', scope.showDetails);
 			});
 		},
 		template :

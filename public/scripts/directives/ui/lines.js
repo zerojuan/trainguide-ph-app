@@ -7,7 +7,8 @@ angular.module('uiModule').directive('lines', ['CommonAppState', function(Common
 		scope : {
 			lines : '=lines',
 			selectedStop : '=selectedStop',
-			selectedLine : '=selectedLine'
+			selectedLine : '=selectedLine',
+			showDetails: '=showDetails'
 		},
 		link : function(scope, element){
 			scope.$watch("selectedStop", function(newValue, oldValue){
@@ -21,8 +22,10 @@ angular.module('uiModule').directive('lines', ['CommonAppState', function(Common
 			});
 
 			scope.lineSelected = function(line){
-				console.log('Selected: ' + line);
+				// console.log('Selected: ', line);
 				scope.selectedLine = line;
+				scope.showDetails = false;
+				// console.log('lines.js selectedStop showDetails: ', scope.showDetails);
 			}
 		},
 		template :

@@ -19,7 +19,8 @@ angular.module('uiModule').directive('radioGroup', [function(){
     scope : {
       menuItems : '=menuItems',
       selectedItemHandler : '&selectedItemHandler',
-      selectedItem : '=selectedItem'      
+      selectedItem : '=selectedItem',
+      showDetails : '=showDetails'   
     },                
     link: function(scope, elm, attr, ctrl){  
     console.log("Hello world");   
@@ -47,23 +48,28 @@ angular.module('uiModule').directive('radioGroup', [function(){
 
         //item.selected = !item.selected;       
         scope.selectedItemHandler();        
+
+        scope.showDetails = false;
+        // console.log('radiogroup.js navClick showDetails', scope.showDetails);
       }
 
-      scope.$watch("selectedItem", function(newValue, oldValue){
-        console.log("Changed Selected Item...", newValue);
+      // scope.$watch("selectedItem", function(newValue, oldValue){
+      //   console.log("Changed Selected Item...", newValue);
                 
-        if(newValue){
-          if(newValue.stop){
-            for(var i in scope.menuItems){
-              if(scope.menuItems[i].title == newValue.title){
-                scope.menuItems[i].selected = newValue.selected;
-              }else{
-                scope.menuItems[i].selected = false;
-              }
-            }   
-          }         
-        }         
-        });
+      //   if(newValue){
+      //     if(newValue.stop){
+      //       for(var i in scope.menuItems){
+      //         if(scope.menuItems[i].title == newValue.title){
+      //           scope.menuItems[i].selected = newValue.selected;
+      //         }else{
+      //           scope.menuItems[i].selected = false;
+      //         }
+      //       }   
+      //     }         
+      //   }      
+
+      //   // console.log('radiogroup.js selectedItem showDetails', scope.showDetails);
+      // });
     },
     replace: true
   }

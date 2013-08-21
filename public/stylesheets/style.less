@@ -291,7 +291,79 @@ li.PNR.clicked{
         }
       }
     }
+    div.showdetails {
+      display: block;
+    }
+    div.nodetails {
+      display: none;
+    }
   }
+
+  .images-box {
+    width: 100%;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    position: relative;  
+    display: inline-block;
+    padding-bottom: 10px;
+    h3 {
+      line-height: 2em;
+      background: #fff;
+      padding-left: 10px;
+    }
+    img {
+      width: 240px;
+      height: 150px;
+    }
+    .sub-image {
+      padding-bottom: 3px;
+      li{
+        .image-group {
+          width: 243px;        
+          img {
+            float: left;
+            width: 78px;
+            height: 60px;
+            padding-right: 3px;
+            padding-top: 3px;
+          }
+        }    
+      }
+    }    
+  }
+
+  .slideshow-content{
+    margin: 10px;
+  }
+
+  .sights-box {
+    border-bottom: 1px solid #ccc;
+  }
+
+  .sights-box, .shops-box {
+    padding-bottom: 10px;
+    h3 {
+      line-height: 2em;
+      background: #fff;
+      padding-left: 10px;
+    }
+    ul{
+      padding: 5px 20px;
+      li {
+        font-size: 9pt;   
+        line-height: 15px;
+        clear: both;
+        .name {
+          float: left;
+          width: 80%;
+        }
+        .distance {
+          float: right;
+        } 
+      } 
+    }
+  }
+
 }
 
 /* d3 svg */

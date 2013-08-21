@@ -263,6 +263,77 @@ li.PNR.clicked p {
   padding-bottom: 0px;
   padding-left: 0px;
 }
+.slide-group .content-box div.showdetails {
+  display: block;
+}
+.slide-group .content-box div.nodetails {
+  display: none;
+}
+.slide-group .images-box {
+  width: 100%;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 10px;
+}
+.slide-group .images-box h3 {
+  line-height: 2em;
+  background: #fff;
+  padding-left: 10px;
+}
+.slide-group .images-box img {
+  width: 240px;
+  height: 150px;
+}
+.slide-group .images-box .sub-image {
+  padding-bottom: 3px;
+}
+.slide-group .images-box .sub-image li .image-group {
+  width: 243px;
+}
+.slide-group .images-box .sub-image li .image-group img {
+  float: left;
+  width: 78px;
+  height: 60px;
+  padding-right: 3px;
+  padding-top: 3px;
+}
+.slide-group .slideshow-content {
+  margin: 10px;
+}
+.slide-group .sights-box {
+  border-bottom: 1px solid #ccc;
+}
+.slide-group .sights-box,
+.slide-group .shops-box {
+  padding-bottom: 10px;
+}
+.slide-group .sights-box h3,
+.slide-group .shops-box h3 {
+  line-height: 2em;
+  background: #fff;
+  padding-left: 10px;
+}
+.slide-group .sights-box ul,
+.slide-group .shops-box ul {
+  padding: 5px 20px;
+}
+.slide-group .sights-box ul li,
+.slide-group .shops-box ul li {
+  font-size: 9pt;
+  line-height: 15px;
+  clear: both;
+}
+.slide-group .sights-box ul li .name,
+.slide-group .shops-box ul li .name {
+  float: left;
+  width: 80%;
+}
+.slide-group .sights-box ul li .distance,
+.slide-group .shops-box ul li .distance {
+  float: right;
+}
 /* d3 svg */
 rect.LRT1,
 .vertical.LRT1 {

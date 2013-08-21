@@ -8,7 +8,9 @@ angular.module('google-maps')
 			scope: {
 				paths: '=paths',
 				selectedStop: '=selectedStop',
-				selectedLine : '=selectedLine'
+				selectedLine : '=selectedLine',
+				showDetails: '=showDetails',
+				selectedItem: '=selectedItem'
 			},
 			link: function(scope, elm, attrs, gmapCtrl){
 				gmapCtrl.registerMapListener(scope);
@@ -55,14 +57,12 @@ angular.module('google-maps')
 					}
 				}
 
-				// scope.$on("handleBroadcast[selectedLine]", function(){
-				// 	scope.selectedLine = CommonAppState.selectedLine;
-				// 	console.log("scope.selectedLine!!!", scope.selectedLine);
-				// });
-
 				scope.$watch('selectedStop', function(newValue){
 					//center this to that stop
-					if(scope.selectedStop){
+					if(scope.selectedStop){			
+						scope.showDetails = true;
+						// console.log('polyline-drawer.js selectedStop showDetails: ', scope.showDetails);
+
 						var position = new google.maps.LatLng(scope.selectedStop.details.stop_lat, scope.selectedStop.details.stop_lon);
 						scope.map.setCenter(position);
 
