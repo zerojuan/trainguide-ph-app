@@ -23,10 +23,10 @@ angular.module('uiModule').directive('radioGroup', [function(){
       showDetails : '=showDetails'   
     },                
     link: function(scope, elm, attr, ctrl){  
-    console.log("Hello world");   
+    // console.log("Hello world");   
       scope.previousItem = null;      
       scope.navClick = function(item){        
-        console.log("Previous Item: ", scope.previousItem);
+        // console.log("Previous Item: ", scope.previousItem);
 
 				scope.selectedItemHandler(item);
         // if(scope.previousItem){
@@ -62,7 +62,7 @@ angular.module('uiModule').directive('radioGroup', [function(){
       //     }         
       //   }      
 
-      //   // console.log('radiogroup.js selectedItem showDetails', scope.showDetails);
+        console.log('radiogroup.js selectedItem', scope.selectedItem);
       // });
     },
     replace: true
