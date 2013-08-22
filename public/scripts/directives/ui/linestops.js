@@ -135,9 +135,12 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', function(Co
 
 			scope.$watch('selectedStop', function(newValue, oldValue){
 				// console.log("Selected stop changed");
-				// console.log('SELECTED LINE!!!!!!!!!!!!!!', scope.selectedLine);
+				// console.log('SELECTED LINE!!!!!!!!!!!!!!', scope.selectedLine, 'selectedStop', scope.selectedStop);
 				if(scope.selectedLine){
 					scope.showDetails = true;
+				}
+				if(scope.selectedStop == null){
+					scope.showDetails = false;
 				}
 				// console.log('linestops.js selectedStop showDetails: ', scope.showDetails);
 			});

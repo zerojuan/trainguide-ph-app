@@ -19,6 +19,21 @@ angular.module('google-maps')
 					scope.map = map;
 				}
 
+				var setLine = function(){
+					for(var line in scope.paths){
+						if(scope.selectedStop.details.stop_name.indexOf(line) != -1){
+							scope.selectedLine = scope.paths[line];
+						}else{
+							for(var lineStop in scope.paths[line].stops){
+								if(scope.selectedStop.details.stop_name.indexOf(scope.paths[line].stops[lineStop].details.stop_name) != -1){
+									scope.selectedLine = scope.paths[line];
+									break;
+								}
+							}
+						}
+					}
+				}
+
 				var div = function(name){
 					var m = document.createElement('DIV');
 					m.innerHTML = '<div class="stop-marker '+name+'-marker" style="width: 20px; height: 20px;"></div>';
@@ -50,6 +65,7 @@ angular.module('google-maps')
 
 							google.maps.event.addListener(marker, 'click', function(){
 								scope.selectedStop = stop;
+								setLine();
 								scope.$apply('selectedStop');
 							});
 						});
@@ -66,18 +82,7 @@ angular.module('google-maps')
 						var position = new google.maps.LatLng(scope.selectedStop.details.stop_lat, scope.selectedStop.details.stop_lon);
 						scope.map.setCenter(position);
 
-						for(var line in scope.paths){
-							if(scope.selectedStop.details.stop_name.indexOf(line) != -1){
-								scope.selectedLine = scope.paths[line];
-							}else{
-								for(var stop in scope.paths[line].stops){
-									if(scope.selectedStop.details.stop_name.indexOf(scope.paths[line].stops[stop].details.stop_name) != -1){
-										scope.selectedLine = scope.paths[line];
-										break;
-									}
-								}
-							}
-						}
+						setLine();
 					}
 
 				});

@@ -266,7 +266,11 @@ li.PNR.clicked p {
 .slide-group .content-box div.showdetails {
   display: block;
 }
-.slide-group .content-box div.nodetails {
+.slide-group .content-box table.showdetails {
+  display: table;
+}
+.slide-group .content-box div.nodetails,
+.slide-group .content-box table.nodetails {
   display: none;
 }
 .slide-group .images-box {

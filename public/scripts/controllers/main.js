@@ -36,7 +36,9 @@ angular.module('trainguide.controllers')
 					$scope.menuItems[i].selected = !$scope.menuItems[i].selected;
 					if($scope.menuItems[i].selected){
 						if(item.title == 'Line' && !$scope.selected.line){
+              console.log('main.js $scope.selected.line', $scope.selected.line);
 							$scope.selected.line = $scope.lines.LRT1;
+              $scope.showDetails = false;
 						}
 						$scope.selectedItem = $scope.menuItems[i];
 					}else{
@@ -49,6 +51,7 @@ angular.module('trainguide.controllers')
 			//if line is hidden, remove selected stop
 			if(!$scope.menuItems[0].selected){
 				$scope.selected.stop = null;
+        $scope.showDetails = false;
 			}
 
     };
