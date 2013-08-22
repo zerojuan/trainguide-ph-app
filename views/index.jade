@@ -15,6 +15,7 @@ block content
 					draggable="true",
 					style="height: 100%; width: 100%;")
 					polyline-drawer(paths="lines", selected-line='selected.line', selected-stop="selected.stop", show-details='showDetails', selected-item="selectedItem")
+			ng-view
 
 block append scripts
 	script(src="https://maps.googleapis.com/maps/api/js?libraries=geometry&key=AIzaSyAeFiH4LhZTvKbXDNr2I8TrL9MauXt02PQ&sensor=true")

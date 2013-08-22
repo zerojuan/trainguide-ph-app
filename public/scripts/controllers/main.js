@@ -1,6 +1,7 @@
 
 angular.module('trainguide.controllers')
-	.controller('MainCtrl', ['$scope', '$http', 'CommonAppState', function($scope, $http, CommonAppState){
+	.controller('MainCtrl', ['$scope', '$http', '$route', 'CommonAppState', function($scope, $http, $route, CommonAppState){
+
     $scope.showDetails = false;
 		$scope.selected = {
 			stop: null,
