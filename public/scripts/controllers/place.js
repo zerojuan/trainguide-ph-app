@@ -1,13 +1,17 @@
 angular.module('trainguide.controllers')
-  .controller('PlaceCtrl', ['$scope', '$http', function($scope, $http){
+  .controller('PlaceCtrl', ['$scope', '$http', 'PlacesService', function($scope, $http, PlacesService){
+		$scope.places = [];
+
     $scope.getPlaces = function(qry){
-      
-      $http.get('/places/search-place', qry)
-        .success(function(data, status) {
-          scope.hospitals = JSON.stringify(data);
-        })
-        .error(function(data, status, headers, config) {
-          console.log('ERROR!!!!!!', data, status, headers, config);
-        }); 
-    }
+
+			PlacesService.getPlacesByCategory(qry.queryStr,
+				function(data) {
+					$scope.places = data.places;
+				}
+				,
+				function(data, status, headers, config) {
+					console.log('ERROR!!!!!!', data, status, headers, config);
+				}
+			);
+    };
   }]);

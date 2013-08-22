@@ -11,6 +11,8 @@ angular.module('trainguide.controllers')
       if(newValue){
 				$scope.menuItems[0].selected = false; //reset line sidebar
         $scope.selectedItemHandler($scope.menuItems[0]);
+
+
       }
 		});
     $scope.menuItems = [

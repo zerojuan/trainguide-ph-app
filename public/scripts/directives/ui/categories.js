@@ -1,29 +1,34 @@
 'use strict';
 
-angular.module('uiModule').directive('categories', ['$http', 'CommonAppState', function($http, CommonAppState){
+angular.module('uiModule').directive('categories', ['CommonAppState', function(CommonAppState){
   return {
     restrict : 'E',
     transclude : true,
     scope : {
-      selectedItem : '=selectedItem'
+      selectedItem : '=',
+			onQueryPlaces : '=',
+			places : '='
     },
     link : function(scope, element){
       console.log('scope.selectedItem', scope.selectedLine);
       scope.$watch("selectedItem", function(newValue, oldValue){
-        console.log('categories.js scope.selectedItem', newValue);
         if(newValue.title == 'Places'){
           var qry = {
               format: 'json',
               queryStr: 'hospital'
           }
-          console.log('qry!!!!!!!', qry);
-          
+					scope.onQueryPlaces(qry);
         }
-
       });
     },
     template :
-      '<div>HELLO!!!{{scope.hospitals}}</div>',
+      '<div>' +
+				'<ul>' +
+				'	<li ng-repeat="place in places">' +
+				'		<p>{{place.name}}</p>' +
+				'</li>' +
+				'</ul>' +
+			'</div>',
     replace : true
   }
 }]);
