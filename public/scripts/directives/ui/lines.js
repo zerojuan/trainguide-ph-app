@@ -19,6 +19,7 @@ angular.module('uiModule').directive('lines', ['CommonAppState', function(Common
 				// 	element.find('.line-desc').show();
 				// 	element.find('.stop-desc').hide();
 				// }
+				console.log('lines.js selectedStop', scope.selectedStop);
 			});
 
 			scope.lineSelected = function(line){

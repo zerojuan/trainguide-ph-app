@@ -234,26 +234,34 @@ module.exports = {
     });
   },
   search: function(req, res){
-    console.log('search!!!');
-    var qry = new RegExp(req.query.queryStr, 'i');
-    var arr = [
-      {name: qry}, 
-      {line: qry}, 
-      {stop: qry}, 
-      {distance: qry},  
-      {website: qry}, 
-      {map: qry}, 
-      {coordinates: qry}, 
-      {category: qry}, 
-      {subcategory: qry} 
-    ];
+    console.log('search!!!', req.query.queryStr);
+    if(req.query.queryStr){
+      var qry = new RegExp(req.query.queryStr, 'i');
+      var arr = [
+        {name: qry}, 
+        {line: qry}, 
+        {stop: qry}, 
+        {distance: qry},  
+        {website: qry}, 
+        {map: qry}, 
+        {coordinates: qry}, 
+        {category: qry}, 
+        {subcategory: qry} 
+      ];
 
-    Place.find({ $or: arr }, null, { sort: '_id' }, function(err, places){
-      if(err)
-        console.log(err);
-      console.log('arr:', arr, 'places: ', places);
-      res.render('places/search', { places: places });
-    })
+      console.log('arr:', arr);
+      Place.find({ $or: arr }, null, { sort: '_id' }, function(err, places){
+        if(err)
+          console.log(err);
+        console.log('places: ', places);
+        console.log('req.query.format', req.query.format);
+        if(req.query.format){
+          res.json({ places: places });
+        }else{
+          res.render('places/search', { places: places }); 
+        }
+      }) 
+    }
   },
   paginate: function(req, res){
     console.log('paginate!!!');

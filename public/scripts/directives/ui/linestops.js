@@ -11,7 +11,7 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', function(Co
 			showDetails: '=showDetails'
 		},
 		link : function(scope, element, attr){
-			console.log(element);
+			// console.log(element);
 			var y = null;
 			var svgHeight = $(window).height() - 130;
 			var svg = d3.select("#line-stop-svg").append("svg")
@@ -27,9 +27,9 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', function(Co
 				.attr("y", 20);
 
 			scope.$watch('selectedLine', function(newValue, oldValue){
-				console.log('SELECTEDITEM!!!!!', scope.selectedItem);
+				// console.log('SELECTEDITEM!!!!!', scope.selectedItem);
 				if(newValue && newValue.stops){
-					console.log('svgHeight', svgHeight, 'linestops: ', newValue.stops);
+					// console.log('svgHeight', svgHeight, 'linestops: ', newValue.stops);
 					y = d3.scale.linear()
 								.domain([0, newValue.stops.length-1])
 								.range([0, svgHeight-30]);
@@ -142,7 +142,7 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', function(Co
 				if(scope.selectedStop == null){
 					scope.showDetails = false;
 				}
-				// console.log('linestops.js selectedStop showDetails: ', scope.showDetails);
+				console.log('linestops.js selectedStop: ', scope.selectedStop);
 			});
 		},
 		template :

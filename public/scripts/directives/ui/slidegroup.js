@@ -34,7 +34,7 @@ angular.module('uiModule').directive('slideGroup', ['CommonAppState', function(C
 			}
 
 			this.addSlide = function(slide){
-				console.log("SLIDE: ", slide);
+				// console.log("SLIDE: ", slide);
 				//if(slides.length == 0) $scope.select(slide);
 				slides.push(slide);
 			}
@@ -42,7 +42,7 @@ angular.module('uiModule').directive('slideGroup', ['CommonAppState', function(C
 		link: function($scope, $elm, $attr){
 			var slideOut = function(callback){
 				var width = $('.sidebar').width();
-				console.log('Sliding out:', width);
+				// console.log('Sliding out:', width);
 				$($elm).css('right', width+'px');
 				$($elm).css('width', width+'px');	
 			}
@@ -55,7 +55,7 @@ angular.module('uiModule').directive('slideGroup', ['CommonAppState', function(C
 			}
 
 			$scope.$watch("selectedItem", function(newValue, oldValue){
-				console.log("Selected Item Changed", newValue);
+				// console.log("Selected Item Changed", newValue);
 				if(newValue === false){
 					slideIn();
 				}else{
@@ -77,7 +77,7 @@ angular.module('uiModule').directive('slideGroup', ['CommonAppState', function(C
 						}
 						slideOut();
 					}
-					// console.log('slidegroup.js selectedItem showDetails: ', $scope.showDetails);
+					console.log('slidegroup.js selectedItem: ', $scope.selectedItem);
 				}
 			});
 
