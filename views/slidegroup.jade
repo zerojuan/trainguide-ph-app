@@ -35,7 +35,8 @@ slide-group(selected-item='selectedItem', selected-stop='selected.stop', selecte
 				h2 Places
 					span  to go
 			.content-box(ng-controller='PlaceCtrl')
-				categories(selected-item="selectedItem", on-query-places="getPlaces", places="places")
+				categories(categories="categories", selected-category="selected.category")
+				places(selected-category='selected.category', get-places-count="getPlaces", on-query-places="getLimitedPlaces", places="places", active-categories="activeCategories")
 
 		slide(title='Featured')
 			.featured-box

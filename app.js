@@ -15,7 +15,19 @@ var options = {
 	replset: {}
 };
 options.server.socketOptions = options.replset.socketOptions = {keepAlive: 1};
-mongoose.createConnection(process.env.MONGOHQ_URL, options);
+
+mongoose.connection.on('open', function(){
+  console.log('Connected to database');
+});
+
+mongoose.connection.on('error', function(err){
+  console.log('Connection could not connect');
+  console.log(err);
+});
+
+// mongoose.createConnection(process.env.MONGOHQ_URL, options);
+console.log('connecting to database: ' + process.env.MONGOHQ_URL);
+mongoose.connect(process.env.MONGOHQ_URL);
 
 var api = require('./routes/api');
 var places = require('./routes/place');

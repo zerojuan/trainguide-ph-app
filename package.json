@@ -9,7 +9,7 @@
     "express": "3.3.3",
     "jade": "*",
     "less-middleware": "*",
-    "mongoose": "~3.6.13",
+    "mongoose": "~3.6.17",
     "gtfs-2": "0.0.5",
     "async": "~0.2.9",
     "request": "~2.25.0"

@@ -142,7 +142,7 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', function(Co
 				if(scope.selectedStop == null){
 					scope.showDetails = false;
 				}
-				console.log('linestops.js selectedStop: ', scope.selectedStop);
+				// console.log('linestops.js selectedStop: ', scope.selectedStop);
 			});
 		},
 		template :

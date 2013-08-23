@@ -269,7 +269,8 @@ module.exports = {
     var limit = req.query.limit;
     var category = req.query.category;
     console.log(start, limit, '!!!!');
-    Place.find({ category: category }, null, { sort: '_id', skip: start, limit: limit }, function(err, docs) {
+    // Place.find({ category: category }, null, { sort: '_id', skip: start, limit: limit }, function(err, docs) {
+    Place.find({ category: category }, null, { sort: 'name', skip: start, limit: limit }, function(err, docs) {
       if(Object.keys(docs).length > 0){
         // console.log('PLACES: ', docs);
       }else{

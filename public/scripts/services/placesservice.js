@@ -12,5 +12,15 @@ angular.module('trainguideServices')
 					});
 			}
 
+			PlacesService.getPlacesByLimitedCategory = function(category, start, limit, callback, err){
+				$http({method: 'GET', url: '/places/paginate-place/?category='+category+'&start='+start+'&limit='+limit})
+					.success(function(data, status) {
+						callback(data, status);
+					})
+					.error(function(data, status, headers, config) {
+						err(data, status, headers, config);
+					});
+			}
+
 			return PlacesService;
 	}]);

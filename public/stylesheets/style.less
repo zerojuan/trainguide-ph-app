@@ -6,6 +6,18 @@
 @lrt2 : #ad86bc;
 @mrt : #5384c4;
 @pnr : #f28740;
+@gray : #ccc;
+
+@font-face {
+  font-family: 'icomoon';
+  src:url('fonts/icomoon.eot');
+  src:url('fonts/icomoon.eot?#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.woff') format('woff'),
+    url('fonts/icomoon.ttf') format('truetype'),
+    url('fonts/icomoon.svg#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
 
 /* elements */
 
@@ -55,11 +67,11 @@ table {
   max-width: 270px;
   height: 100%;
   position: fixed;
-  background: #fff;
+  background: white;
   float: right;
   top: 0;
   right: 0;
-  border-left: 1px solid #ccc;
+  border-left: 1px solid @gray;
   z-index: 1;
   .header{
     font-size: 25pt;
@@ -82,8 +94,8 @@ table {
   .content {
     .control-tabs{
       width: 100%;
-      border-top: 1px solid #ccc;
-      border-bottom: 1px solid #ccc;    
+      border-top: 1px solid @gray;
+      border-bottom: 1px solid @gray;    
       height: 33px;
       ul{
         list-style: none;
@@ -101,7 +113,7 @@ table {
               color: white;
             }
             &.active{
-              background-color: #ccc;
+              background-color: @gray;
               color: white;
             }
 
@@ -122,7 +134,7 @@ table {
   .footer{
     position: absolute;
     bottom: 10px;  
-    border-top: 1px solid #ccc;
+    border-top: 1px solid @gray;
     width: 100%;
     height: 20px;
     padding-top: 5px;
@@ -207,7 +219,7 @@ li.PNR.clicked{
   right: 0;
   top: 0;
   bottom: 0;
-  background: #fff;
+  background: white;
   z-index: 1;
   .slide{
     display: none;
@@ -251,7 +263,7 @@ li.PNR.clicked{
     bottom: 0px;
     top: 30px;
     position: absolute;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid @gray;
     .line-nav {
       // background: #fdc33c;
       ul {
@@ -263,8 +275,8 @@ li.PNR.clicked{
           text-align: center;
           padding: 5px 5px;
           font-weight: bolder;
-          color: #fff;
-          border-right: 3px solid #fff;
+          color: white;
+          border-right: 3px solid white;
           cursor: pointer;
           font-size: 11.6pt;
           &:last-child {
@@ -300,18 +312,92 @@ li.PNR.clicked{
     div.nodetails, table.nodetails {
       display: none;
     }
+    .categories-list {
+      > div {
+        background-color: white;
+        border-bottom: 1px solid @gray;
+        ul {
+          width: 80%;
+          margin: 0 auto;
+          li {
+            display: table-cell;
+            margin: 0 auto;
+            text-align: center;
+            padding: 5px 5px;
+            font-weight: bolder;
+            cursor: pointer;
+            font-size: 1.5em;
+            i {
+              border: 1px solid @gray;
+              padding: 3px;
+            }
+          }
+          div.down-btn {
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid gray;
+            cursor: pointer;
+            width: 0px;
+            position: relative;
+            // float: left;
+            z-index: 1;
+            top: 37px;
+            left: 6px;
+          }
+        }
+      }
+      h6 {
+        background-color: white;
+        padding: 10px;
+      }
+    }
+    .block, .antiscroll-inner, .places-list {
+      width: 250px;
+      height: 500px;
+    }
+    .antiscroll-wrap {
+      .block {
+        .antiscroll-inner {
+          .places-list {
+            padding: 20px 10px;
+            ul {
+              display: inline-block;
+              width: 100%;
+              .name {
+                float: left;
+                width: 65%;
+                font-size: 0.9em;
+              }
+              .dist {
+                float: left;
+                padding-left: 20px;
+                font-size: 0.9em;
+              }  
+              .square {
+                float: right;
+                width: 10px;
+                height: 10px;
+              }
+            } 
+            a {
+              float: right;
+            }
+          }
+        }
+      }
+    }
   }
 
   .images-box {
     width: 100%;
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
+    border-top: 1px solid @gray;
+    border-bottom: 1px solid @gray;
     position: relative;  
     display: inline-block;
     padding-bottom: 10px;
     h3 {
       line-height: 2em;
-      background: #fff;
+      background: white;
       padding-left: 10px;
     }
     img {
@@ -340,14 +426,14 @@ li.PNR.clicked{
   }
 
   .sights-box {
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid @gray;
   }
 
   .sights-box, .shops-box {
     padding-bottom: 10px;
     h3 {
       line-height: 2em;
-      background: #fff;
+      background: white;
       padding-left: 10px;
     }
     ul{
@@ -356,13 +442,13 @@ li.PNR.clicked{
         font-size: 9pt;   
         line-height: 15px;
         clear: both;
-        .name {
-          float: left;
-          width: 80%;
-        }
-        .distance {
-          float: right;
-        } 
+        // .name {
+        //   float: left;
+        //   width: 80%;
+        // }
+        // .distance {
+        //   float: right;
+        // } 
       } 
     }
   }
@@ -423,7 +509,7 @@ text {
 
 .stop-marker{
   border: solid 4px;
-  background: #fff;
+  background: white;
   border-radius: 50%;
 }
 
@@ -441,4 +527,52 @@ text {
 
 .MRT-marker{
   border-color: #5384c4;
+}
+
+/* font styles */
+
+.icon-close, .icon-sights, .icon-shopping, .icon-hotel, .icon-blogger, 
+.icon-twitter, .icon-facebook, .icon-box-add, .icon-office, .icon-transfer, .icon-hospital {
+  float: right;
+  font-family: 'icomoon';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+}
+.icon-close:before {
+  content: "\e000";
+}
+.icon-sights:before {
+  content: "\e001";
+}
+.icon-shopping:before {
+  content: "\e002";
+}
+.icon-hotel:before {
+  content: "\e003";
+}
+.icon-blogger:before {
+  content: "\e004";
+}
+.icon-twitter:before {
+  content: "\e005";
+}
+.icon-facebook:before {
+  content: "\e006";
+}
+.icon-box-add:before {
+  content: "\e007";
+}
+.icon-office:before {
+  content: "\e008";
+}
+.icon-transfer:before {
+  content: "\e009";
+}
+.icon-hospital:before {
+  content: "\e00a";
 }

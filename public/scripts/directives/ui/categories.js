@@ -5,30 +5,30 @@ angular.module('uiModule').directive('categories', ['CommonAppState', function(C
     restrict : 'E',
     transclude : true,
     scope : {
-      selectedItem : '=',
-			onQueryPlaces : '=',
-			places : '='
+      categories : '=',
+      selectedCategory : '='
     },
     link : function(scope, element){
-      console.log('scope.selectedItem', scope.selectedLine);
-      scope.$watch("selectedItem", function(newValue, oldValue){
-        if(newValue.title == 'Places'){
-          var qry = {
-              format: 'json',
-              queryStr: 'hospital'
-          }
-					scope.onQueryPlaces(qry);
-        }
+      scope.$watch("selectedCategory", function(newValue, oldValue){
+        console.log('selectedCategory', newValue);
       });
+
+      scope.setCategory = function(category){
+        scope.selectedCategory = category;
+      }
     },
     template :
-      '<div>' +
-				'<ul>' +
-				'	<li ng-repeat="place in places">' +
-				'		<p>{{place.name}}</p>' +
-				'</li>' +
-				'</ul>' +
-			'</div>',
+      '<div class="categories-list" ng-transclude>'+
+        '<div>'+
+          '<ul>'+
+            '<li ng-show="category.icon" ng-repeat="category in categories">'+
+              '<i class="{{category.icon}}" ng-click="setCategory(category.name)"></i>'+
+              '<div ng-show="selectedCategory==category.name" class="down-btn"></div>'+
+            '</li>'+
+          '</ul>'+
+        '</div>'+
+        '<h6>{{selectedCategory}}</h6>'+
+      '</div>',
     replace : true
   }
 }]);

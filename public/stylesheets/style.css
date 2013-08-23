@@ -1,5 +1,12 @@
 @import url(./normalize.css);
 /* variables */
+@font-face {
+  font-family: 'icomoon';
+  src: url('fonts/icomoon.eot');
+  src: url('fonts/icomoon.eot?#iefix') format('embedded-opentype'), url('fonts/icomoon.woff') format('woff'), url('fonts/icomoon.ttf') format('truetype'), url('fonts/icomoon.svg#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
 /* elements */
 html {
   height: 100%;
@@ -39,11 +46,11 @@ table td {
   max-width: 270px;
   height: 100%;
   position: fixed;
-  background: #fff;
+  background: white;
   float: right;
   top: 0;
   right: 0;
-  border-left: 1px solid #ccc;
+  border-left: 1px solid #cccccc;
   z-index: 1;
 }
 .sidebar .header {
@@ -66,8 +73,8 @@ table td {
 }
 .sidebar .content .control-tabs {
   width: 100%;
-  border-top: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #cccccc;
+  border-bottom: 1px solid #cccccc;
   height: 33px;
 }
 .sidebar .content .control-tabs ul {
@@ -89,7 +96,7 @@ table td {
   color: white;
 }
 .sidebar .content .control-tabs ul li a.active {
-  background-color: #ccc;
+  background-color: #cccccc;
   color: white;
 }
 .sidebar .content .directions {
@@ -104,7 +111,7 @@ table td {
 .sidebar .footer {
   position: absolute;
   bottom: 10px;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #cccccc;
   width: 100%;
   height: 20px;
   padding-top: 5px;
@@ -176,7 +183,7 @@ li.PNR.clicked p {
   right: 0;
   top: 0;
   bottom: 0;
-  background: #fff;
+  background: white;
   z-index: 1;
 }
 .slide-group .slide {
@@ -224,7 +231,7 @@ li.PNR.clicked p {
   bottom: 0px;
   top: 30px;
   position: absolute;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #cccccc;
 }
 .slide-group .content-box .line-nav ul {
   display: table;
@@ -236,8 +243,8 @@ li.PNR.clicked p {
   text-align: center;
   padding: 5px 5px;
   font-weight: bolder;
-  color: #fff;
-  border-right: 3px solid #fff;
+  color: white;
+  border-right: 3px solid white;
   cursor: pointer;
   font-size: 11.6pt;
 }
@@ -273,17 +280,84 @@ li.PNR.clicked p {
 .slide-group .content-box table.nodetails {
   display: none;
 }
+.slide-group .content-box .categories-list > div {
+  background-color: white;
+  border-bottom: 1px solid #cccccc;
+}
+.slide-group .content-box .categories-list > div ul {
+  width: 80%;
+  margin: 0 auto;
+}
+.slide-group .content-box .categories-list > div ul li {
+  display: table-cell;
+  margin: 0 auto;
+  text-align: center;
+  padding: 5px 5px;
+  font-weight: bolder;
+  cursor: pointer;
+  font-size: 1.5em;
+}
+.slide-group .content-box .categories-list > div ul li i {
+  border: 1px solid #cccccc;
+  padding: 3px;
+}
+.slide-group .content-box .categories-list > div ul div.down-btn {
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid gray;
+  cursor: pointer;
+  width: 0px;
+  position: relative;
+  z-index: 1;
+  top: 37px;
+  left: 6px;
+}
+.slide-group .content-box .categories-list h6 {
+  background-color: white;
+  padding: 10px;
+}
+.slide-group .content-box .block,
+.slide-group .content-box .antiscroll-inner,
+.slide-group .content-box .places-list {
+  width: 250px;
+  height: 500px;
+}
+.slide-group .content-box .antiscroll-wrap .block .antiscroll-inner .places-list {
+  padding: 20px 10px;
+}
+.slide-group .content-box .antiscroll-wrap .block .antiscroll-inner .places-list ul {
+  display: inline-block;
+  width: 100%;
+}
+.slide-group .content-box .antiscroll-wrap .block .antiscroll-inner .places-list ul .name {
+  float: left;
+  width: 65%;
+  font-size: 0.9em;
+}
+.slide-group .content-box .antiscroll-wrap .block .antiscroll-inner .places-list ul .dist {
+  float: left;
+  padding-left: 20px;
+  font-size: 0.9em;
+}
+.slide-group .content-box .antiscroll-wrap .block .antiscroll-inner .places-list ul .square {
+  float: right;
+  width: 10px;
+  height: 10px;
+}
+.slide-group .content-box .antiscroll-wrap .block .antiscroll-inner .places-list a {
+  float: right;
+}
 .slide-group .images-box {
   width: 100%;
-  border-top: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #cccccc;
+  border-bottom: 1px solid #cccccc;
   position: relative;
   display: inline-block;
   padding-bottom: 10px;
 }
 .slide-group .images-box h3 {
   line-height: 2em;
-  background: #fff;
+  background: white;
   padding-left: 10px;
 }
 .slide-group .images-box img {
@@ -307,7 +381,7 @@ li.PNR.clicked p {
   margin: 10px;
 }
 .slide-group .sights-box {
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #cccccc;
 }
 .slide-group .sights-box,
 .slide-group .shops-box {
@@ -316,7 +390,7 @@ li.PNR.clicked p {
 .slide-group .sights-box h3,
 .slide-group .shops-box h3 {
   line-height: 2em;
-  background: #fff;
+  background: white;
   padding-left: 10px;
 }
 .slide-group .sights-box ul,
@@ -328,15 +402,6 @@ li.PNR.clicked p {
   font-size: 9pt;
   line-height: 15px;
   clear: both;
-}
-.slide-group .sights-box ul li .name,
-.slide-group .shops-box ul li .name {
-  float: left;
-  width: 80%;
-}
-.slide-group .sights-box ul li .distance,
-.slide-group .shops-box ul li .distance {
-  float: right;
 }
 /* d3 svg */
 rect.LRT1,
@@ -393,7 +458,7 @@ text.transfer {
 }
 .stop-marker {
   border: solid 4px;
-  background: #fff;
+  background: white;
   border-radius: 50%;
 }
 .PNR-marker {
@@ -407,4 +472,59 @@ text.transfer {
 }
 .MRT-marker {
   border-color: #5384c4;
+}
+/* font styles */
+.icon-close,
+.icon-sights,
+.icon-shopping,
+.icon-hotel,
+.icon-blogger,
+.icon-twitter,
+.icon-facebook,
+.icon-box-add,
+.icon-office,
+.icon-transfer,
+.icon-hospital {
+  float: right;
+  font-family: 'icomoon';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+}
+.icon-close:before {
+  content: "\e000";
+}
+.icon-sights:before {
+  content: "\e001";
+}
+.icon-shopping:before {
+  content: "\e002";
+}
+.icon-hotel:before {
+  content: "\e003";
+}
+.icon-blogger:before {
+  content: "\e004";
+}
+.icon-twitter:before {
+  content: "\e005";
+}
+.icon-facebook:before {
+  content: "\e006";
+}
+.icon-box-add:before {
+  content: "\e007";
+}
+.icon-office:before {
+  content: "\e008";
+}
+.icon-transfer:before {
+  content: "\e009";
+}
+.icon-hospital:before {
+  content: "\e00a";
 }

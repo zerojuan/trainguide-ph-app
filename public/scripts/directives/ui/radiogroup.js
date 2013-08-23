@@ -62,7 +62,7 @@ angular.module('uiModule').directive('radioGroup', [function(){
       //     }         
       //   }      
 
-        console.log('radiogroup.js selectedItem', scope.selectedItem);
+        // console.log('radiogroup.js selectedItem', scope.selectedItem);
       // });
     },
     replace: true

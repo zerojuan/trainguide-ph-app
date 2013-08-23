@@ -77,7 +77,7 @@ angular.module('uiModule').directive('slideGroup', ['CommonAppState', function(C
 						}
 						slideOut();
 					}
-					console.log('slidegroup.js selectedItem: ', $scope.selectedItem);
+					// console.log('slidegroup.js selectedItem: ', $scope.selectedItem);
 				}
 			});
 
