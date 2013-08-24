@@ -24,6 +24,7 @@ angular.module('uiModule').directive('places', ['CommonAppState', function(Commo
           scope.places = [];       
           scope.loadPlaces(0, newValue); 
           scope.getPlacesCount(query);
+          $('.antiscroll-wrap').antiscroll();
         }
       });
 
