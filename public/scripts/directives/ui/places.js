@@ -21,7 +21,8 @@ angular.module('uiModule').directive('places', ['CommonAppState', function(Commo
         query.queryStr = newValue;
 
         if(newValue){
-          scope.places = [];       
+          scope.places = [];  
+          scope.counter = 0;     
           scope.loadPlaces(0, newValue); 
           scope.getPlacesCount(query);
         }
@@ -50,7 +51,7 @@ angular.module('uiModule').directive('places', ['CommonAppState', function(Commo
                   '<div class="{{place.line.line_name}} square"></div>' +
       				  '</li>' +
       				'</ul>' +
-              '<a ng-show="counter*5<=places.totalcount-5" ng-click="loadPlaces(counter=counter+1, selectedCategory)" ng-init="counter=0">More...</a>'+
+              '<a ng-show="counter*5<=places.totalcount-5" ng-click="loadPlaces(counter=counter+1, selectedCategory)">More...</a>'+
       			'</div>'+
           '</div>'+
         '</div>'+
