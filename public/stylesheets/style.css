@@ -320,14 +320,22 @@ li.PNR.clicked p {
 .slide-group .content-box .antiscroll-inner,
 .slide-group .content-box .places-list {
   width: 255px;
-  height: 540px;
+  height: 520px;
+}
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  .slide-group .content-box .block,
+  .slide-group .content-box .antiscroll-inner,
+  .slide-group .content-box .places-list {
+    height: 460px;
+  }
 }
 .slide-group .content-box .antiscroll-wrap .block .antiscroll-inner .places-list {
-  padding: 20px 10px;
+  padding: 10px;
 }
 .slide-group .content-box .antiscroll-wrap .block .antiscroll-inner .places-list ul {
   display: inline-block;
   width: 100%;
+  padding: 10px 0px;
 }
 .slide-group .content-box .antiscroll-wrap .block .antiscroll-inner .places-list ul .name {
   float: left;
@@ -344,8 +352,10 @@ li.PNR.clicked p {
   width: 10px;
   height: 10px;
 }
-.slide-group .content-box .antiscroll-wrap .block .antiscroll-inner .places-list a {
+.slide-group .content-box a {
+  font-size: bold;
   float: right;
+  padding: 10px;
 }
 .slide-group .images-box {
   width: 100%;
@@ -396,6 +406,8 @@ li.PNR.clicked p {
 .slide-group .sights-box ul,
 .slide-group .shops-box ul {
   padding: 5px 20px;
+  display: inline-block;
+  width: 100%;
 }
 .slide-group .sights-box ul li,
 .slide-group .shops-box ul li {

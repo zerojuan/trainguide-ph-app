@@ -353,16 +353,20 @@ li.PNR.clicked{
     }
     .block, .antiscroll-inner, .places-list {
       width: 255px;
-      height: 540px;
+      height: 520px;
+      @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+        height: 460px;
+      }
     }
     .antiscroll-wrap {
       .block {
         .antiscroll-inner {
           .places-list {
-            padding: 20px 10px;
+            padding: 10px;
             ul {
               display: inline-block;
               width: 100%;
+              padding: 10px 0px;
               .name {
                 float: left;
                 width: 65%;
@@ -379,12 +383,14 @@ li.PNR.clicked{
                 height: 10px;
               }
             } 
-            a {
-              float: right;
-            }
           }
         }
       }
+    }
+    a {
+      font-size: bold;
+      float: right;
+      padding: 10px;
     }
   }
 
@@ -438,6 +444,8 @@ li.PNR.clicked{
     }
     ul{
       padding: 5px 20px;
+      display: inline-block;
+      width: 100%;
       li {
         font-size: 9pt;   
         line-height: 15px;
