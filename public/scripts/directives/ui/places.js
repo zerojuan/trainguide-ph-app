@@ -24,7 +24,6 @@ angular.module('uiModule').directive('places', ['CommonAppState', function(Commo
           scope.places = [];       
           scope.loadPlaces(0, newValue); 
           scope.getPlacesCount(query);
-          $('.antiscroll-wrap').antiscroll();
         }
       });
 
@@ -36,6 +35,7 @@ angular.module('uiModule').directive('places', ['CommonAppState', function(Commo
           category: selectedCategory
         }
         scope.onQueryPlaces(qry);
+        $('.antiscroll-wrap').antiscroll();
       }
     },
     template :
