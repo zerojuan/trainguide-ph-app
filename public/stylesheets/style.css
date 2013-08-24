@@ -403,6 +403,15 @@ li.PNR.clicked p {
   line-height: 15px;
   clear: both;
 }
+.slide-group .sights-box ul li .name,
+.slide-group .shops-box ul li .name {
+  float: left;
+  width: 80%;
+}
+.slide-group .sights-box ul li .distance,
+.slide-group .shops-box ul li .distance {
+  float: right;
+}
 /* d3 svg */
 rect.LRT1,
 .vertical.LRT1 {

@@ -240,7 +240,7 @@ module.exports = {
       var arr = [
         {name: qry}, 
         {line: qry}, 
-        {stop: qry}, 
+        {'stop.name': qry}, 
         {distance: qry},  
         {website: qry}, 
         {map: qry}, 
@@ -253,8 +253,8 @@ module.exports = {
       Place.find({ $or: arr }, null, { sort: '_id' }, function(err, places){
         if(err)
           console.log(err);
-        console.log('places: ', places);
-        console.log('req.query.format', req.query.format);
+        // console.log('places: ', places);
+        // console.log('req.query.format', req.query.format);
         if(req.query.format){
           res.json({ places: places });
         }else{
@@ -268,13 +268,23 @@ module.exports = {
     var start = req.query.start;
     var limit = req.query.limit;
     var category = req.query.category;
+    var stop = req.query.stopname;
+    var arr = [ 
+      {category: category}
+    ];
+    if(stop)
+      arr.push({'stop.name': stop });
+
     console.log(start, limit, '!!!!');
+    console.log('arr:', arr);
     // Place.find({ category: category }, null, { sort: '_id', skip: start, limit: limit }, function(err, docs) {
-    Place.find({ category: category }, null, { sort: 'name', skip: start, limit: limit }, function(err, docs) {
+    // Place.find({ category: category }, null, { sort: 'name', skip: start, limit: limit }, function(err, docs) {
+    Place.find({ $and: arr }, null, { sort: 'name', skip: start, limit: limit }, function(err, docs) {
       if(Object.keys(docs).length > 0){
-        // console.log('PLACES: ', docs);
+        console.log('PLACES: ', docs);
       }else{
         docs.error = 'No data';
+        console.log('PLACES: ', err);
       }
       res.send(docs);
     });

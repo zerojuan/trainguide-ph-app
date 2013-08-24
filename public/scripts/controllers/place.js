@@ -1,68 +1,10 @@
 angular.module('trainguide.controllers')
   .controller('PlaceCtrl', ['$scope', '$http', 'LinesService', 'PlacesService', function($scope, $http, LinesService, PlacesService){    
-		$scope.places = [];
-    $scope.categories = [
-      {
-        name : 'Dining'
-      },
-      {
-        name : 'Entertainment'
-      },
-      {
-        name : 'Government Building'
-      },
-      {
-        name : 'Hospital', 
-        icon : 'icon-hospital'
-      },
-      {
-        name : 'Hotel', 
-        icon : 'icon-hotel'
-      },
-      {
-        name : 'Office', 
-        icon : 'icon-office'
-      },
-      {
-        name : 'Religion', 
-      },
-      {
-        name : 'Residential', 
-      },
-      {
-        name : 'School', 
-      },
-      {
-        name : 'Service', 
-      },
-      {
-        name : 'Shopping', 
-        icon : 'icon-shopping'
-      },
-      {
-        name : 'Sightseeing', 
-        icon : 'icon-sights'
-      },
-      {
-        name : 'Sports', 
-      },
-      {
-        name : 'Transport Terminal'
-      }
-    ];
+    $scope.places = [];
 
-    $scope.activeCategories = function(){
-      var result = [];
-      for(var i in $scope.categories){
-        if($scope.categories[i].icon)
-          result.push($scope.categories[i]);
-      }
-      return result;
-    }
-
-    var active = $scope.activeCategories();
+    $scope.activeCategories = PlacesService.activeCategories();
     $scope.selected = {
-      category : active[0].name
+      category : $scope.activeCategories[0].name
     }
 
     var lines = null;
@@ -89,7 +31,7 @@ angular.module('trainguide.controllers')
 
     $scope.getLimitedPlaces = function(qry){
 
-      PlacesService.getPlacesByLimitedCategory(qry.category, qry.start, qry.limit,
+      PlacesService.getPlacesByLimitedCategory(qry.category, qry.stopname, qry.start, qry.limit,
         function(data) {
           for(var item in data){
             for(key in lines){
@@ -99,7 +41,7 @@ angular.module('trainguide.controllers')
             }
             $scope.places.push(data[item]);
           }
-          console.log('getLimitedPlaces data', data, '$scope.places', $scope.places);
+          // console.log('getLimitedPlaces data', data, '$scope.places', $scope.places);
         },
         function(data, status, headers, config) {
           console.log('ERROR!!!!!!', data, status, headers, config);

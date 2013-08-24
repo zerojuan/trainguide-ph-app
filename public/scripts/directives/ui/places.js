@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('uiModule').directive('places', ['CommonAppState', function(CommonAppState){
+angular.module('uiModule').directive('places', function(){
   return {
     restrict : 'E',
     transclude : true,
@@ -8,12 +8,9 @@ angular.module('uiModule').directive('places', ['CommonAppState', function(Commo
       selectedCategory : '=',
       getPlacesCount : '=',
 			onQueryPlaces : '=',
-			places : '=',
-      activeCategories : '='
+			places : '='
     },
     link : function(scope, element){
-      var activeCategories = scope.activeCategories();
-      // console.log('activeCategories', activeCategories);
       var query = {};
 
       scope.$watch("selectedCategory", function(newValue, oldValue){
@@ -33,7 +30,8 @@ angular.module('uiModule').directive('places', ['CommonAppState', function(Commo
         var qry = {
           limit: limit,
           start: (counter*limit),
-          category: selectedCategory
+          category: selectedCategory,
+          stopname: ''
         }
         scope.onQueryPlaces(qry);
         $('.antiscroll-wrap').antiscroll();
@@ -58,4 +56,4 @@ angular.module('uiModule').directive('places', ['CommonAppState', function(Commo
       '</div>',
     replace : true
   }
-}]);
+});

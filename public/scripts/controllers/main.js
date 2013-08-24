@@ -1,11 +1,13 @@
 
 angular.module('trainguide.controllers')
-	.controller('MainCtrl', ['$scope', '$http', '$route', 'LinesService', 'CommonAppState', function($scope, $http, $route, LinesService, CommonAppState){
+	.controller('MainCtrl', ['$scope', '$http', '$route', 'LinesService', 'PlacesService', 'CommonAppState', function($scope, $http, $route, LinesService, PlacesService, CommonAppState){
 
     $scope.showDetails = false;
 		$scope.selected = {
 			stop: null,
-      line: null
+      line: null,
+      sights: null,
+      shops: null
 		};
 		$scope.$watch('selected.stop', function(newValue){
       if(newValue){
@@ -101,5 +103,44 @@ angular.module('trainguide.controllers')
       };
     });
 
+    $scope.getPlaces = function(qry){
+
+      PlacesService.getPlacesByCategory(qry.queryStr,
+        function(data) {
+          if(qry.category=='Sightseeing'){
+            $scope.selected.sights.totalcount = data.places.length;
+            console.log('$scope.selected.sights.totalcount', $scope.selected.sights.totalcount);
+          }
+          if(qry.category=='Shopping'){
+            $scope.selected.shops.totalcount = data.places.length;
+            console.log('$scope.selected.sights.totalcount', $scope.selected.sights.totalcount);
+          }
+        },
+        function(data, status, headers, config) {
+          console.log('ERROR!!!!!!', data, status, headers, config);
+        }
+      );
+    };
+
+    $scope.getLimitedPlaces = function(qry){
+
+      PlacesService.getPlacesByLimitedCategory(qry.category, qry.stopname, qry.start, qry.limit,
+        function(data) {
+          for(var item in data){
+            if(qry.category=='Sightseeing'){
+              $scope.selected.sights.push(data[item]); 
+              console.log('$scope.selected.sights.push(data[item]);', $scope.selected.sights);
+            }
+            if(qry.category=='Shopping'){
+              $scope.selected.shops.push(data[item]);
+              console.log('$scope.selected.shops.push(data[item]);', $scope.selected.shops);
+            }
+          }
+        },
+        function(data, status, headers, config) {
+          console.log('ERROR!!!!!!', data, status, headers, config);
+        }
+      );
+    };
 
 	}]);

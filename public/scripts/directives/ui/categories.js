@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('uiModule').directive('categories', ['CommonAppState', function(CommonAppState){
+angular.module('uiModule').directive('categories', function(){
   return {
     restrict : 'E',
     transclude : true,
@@ -12,6 +12,8 @@ angular.module('uiModule').directive('categories', ['CommonAppState', function(C
       scope.$watch("selectedCategory", function(newValue, oldValue){
         console.log('selectedCategory', newValue);
       });
+
+      console.log('categories', scope.categories);
 
       scope.setCategory = function(category){
         scope.selectedCategory = category;
@@ -31,4 +33,4 @@ angular.module('uiModule').directive('categories', ['CommonAppState', function(C
       '</div>',
     replace : true
   }
-}]);
+});
