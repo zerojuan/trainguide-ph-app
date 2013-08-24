@@ -5,7 +5,7 @@
 
 
 exports.index = function(req, res){
-  res.render('index', { title: 'Express'});
+  res.render('index', { title: 'Trainguide.PH'});
 };
 
 exports.partials = function(req, res){
