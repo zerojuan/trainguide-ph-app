@@ -33,30 +33,41 @@ angular.module('uiModule').directive('lines', ['CommonAppState', function(Common
 		template :
 			'<div class="line-nav clearfix {{selectedLine.name}}" ng-transclude>'+
 				'<ul>'+
-				'<li ng-repeat="i in lines" class="{{i.name}}" ng-class="{active:i.name == selectedLine.name}" ng-click="lineSelected(i)">'+
-				'{{i.shortName}}'+
-				'</li>'+
+					'<li ng-repeat="i in lines" class="{{i.name}}" ng-class="{active:i.name == selectedLine.name}" ng-click="lineSelected(i)">'+
+						'{{i.shortName}}'+
+					'</li>'+
 				'</ul>'+
 				'<div class="stop-desc" ng-class="{true:\'showdetails\', false:\'nodetails\'}[showDetails]"></div>'+
 				'<table class="line-desc" ng-class="{true:\'nodetails\', false:\'showdetails\'}[showDetails]">'+
-				'<tr>'+
-				'<td>Weekdays: {{selectedLine.weekdays}}</td>'+
-				'<td>Web: {{selectedLine.web}}</td>'+
-				'</tr>'+
-				'<tr>'+
-				'<td>Weekend: {{selectedLine.weekend}}</td>'+
-				'<td>Twitter: {{selectedLine.twitter}}</td>'+
-				'</tr>'+
-				'<tr>'+
-				'<td>Contact No.: {{selectedLine.contactNo}}</td>'+
-				'<td>Fare: {{selectedLine.fare}}</td>'+
-				'</tr>'+
-				'<tr>'+
-				'<td>Email: {{selectedLine.email}}</td>'+
-				'<td>Stored Value Card: {{selectedLine.svc}}</td>'+
-				'</tr>'+
+					'<tr>'+
+						'<td>Weekdays: {{selectedLine.weekdays}}</td>'+
+					'</tr>'+
+					'<tr>'+
+						'<td>Weekend: {{selectedLine.weekend}}</td>'+
+					'</tr>'+
+					'<tr>'+
+						'<td>Stored Value Card: {{selectedLine.svc}}</td>'+
+					'</tr>'+
 				'</table>'+
-				'</div>',
+				'<table class="contact-desc" ng-class="{true:\'nodetails\', false:\'showdetails\'}[showDetails]">'+
+					'<th>Contact</th>'+
+					'<tr>'+
+						'<td>Web: {{selectedLine.web}}</td>'+
+					'</tr>'+
+					'<tr>'+
+						'<td>Twitter: {{selectedLine.twitter}}</td>'+
+					'</tr>'+
+					'<tr>'+
+						'<td>Contact No.: {{selectedLine.contactNo}}</td>'+
+					'</tr>'+
+					'<tr>'+
+						'<td>Fare: {{selectedLine.fare}}</td>'+
+					'</tr>'+
+					'<tr>'+
+						'<td>Email: {{selectedLine.email}}</td>'+
+					'</tr>'+
+				'</table>'+
+			'</div>',
 		replace : true
 	}
 }]);
