@@ -1,7 +1,10 @@
 {
-  "name": "trainguide-ph-app",
-  "version": "0.0.0",
+  "name": "trainguide-ph-frontend",
+  "version": "0.0.1",
   "dependencies": {
-    "angular": "~1.2.0rc1"
+    "angular": "1.0.6",
+    "jquery": "~2.0.3",
+    "jquery.svg": "latest",
+    "d3": "~3.2.8"
   }
 }
