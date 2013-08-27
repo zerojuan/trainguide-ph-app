@@ -280,7 +280,6 @@ li.PNR.clicked p {
 .slide-group .content-box .line-nav ul li:hover,
 .slide-group .content-box .line-nav ul li.active {
   color: #333;
-  background-color: transparent;
 }
 .slide-group .content-box .line-nav ul li.active {
   background-color: transparent;
