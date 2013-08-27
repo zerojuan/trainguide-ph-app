@@ -6,6 +6,48 @@ var constants = require('../constants'),
 		async = require('async'),
 		fs = require('fs');
 
+exports.insertAdditionalData = function(req, res, next){
+//	constants.ROUTE_IDS.LRT1;
+//	constants.ROUTE_IDS.LRT2;
+//	constants.ROUTE_IDS.MRT;
+//	constants.ROUTE_IDS.PNR;
+
+	var insertDetails = function(routeId, details){
+		gtfs.Route.findOne({route_id: routeId}, function(err, route){
+			if(err){
+				next(err);
+			};
+
+			route.details = details;
+			route.save();
+		});
+	}
+
+	var transfers = [
+		[{name: 'EDSA PNR', line: 'PNR'}, {name: 'Magallanes MRT', line: 'MRT'}],
+		[{name: 'Santa Mesa PNR', line: 'PNR'}, {name: 'Pureza LRT', line: 'LRT2'}],
+		[{name: 'Blumentritt PNR', line: 'PNR'}, {name: 'Blumentritt LRT', line: 'LRT2'}],
+		[{name: 'Doroteo Jose LRT', line: 'LRT1'}, {name: 'Recto LRT', line: 'LRT2'}],
+		[{name: 'EDSA LRT', line: 'LRT1'}, {name: 'Taft MRT', line: 'MRT'}],
+		[{name: 'Cubao LRT', line: 'LRT2'}, {name: 'Cubao MRT', line: 'MRT'}]
+	];
+
+
+
+
+	//insert to Route data
+	var misc = [
+		{line: constants.ROUTE_IDS.LRT1, details: {}},
+		{line: constants.ROUTE_IDS.LRT2, details: {}},
+		{line: constants.ROUTE_IDS.MRT, details: {}},
+		{line: constants.ROUTE_IDS.PNR, details: {}}
+	];
+
+	for(var i = 0; i < misc.length; i++){
+		insertDetails(misc[i].line, misc[i].details);
+	}
+}
+
 exports.generateStaticData = function(req, res, next){
 	var trainAgencies = constants.AGENCIES;
 	var trainLines = {};
@@ -37,6 +79,7 @@ exports.generateStaticData = function(req, res, next){
 										longName: route.route_long_name,
 										description: route.route_description,
 										url: route.route_url,
+										details: route.details,
 										stops: result
 									}
 									callback(resultObj);

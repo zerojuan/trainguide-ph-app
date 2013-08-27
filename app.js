@@ -63,6 +63,7 @@ app.get('/views', routes.partials);
 app.get('/users', user.list);
 
 app.get('/generatestatic', generator.generateStaticData);
+app.get('/insertadditional', generator.insertAdditional);
 
 //identify api routes
 app.get('/api/agencies', api.agencies.list);
