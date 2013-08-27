@@ -7,6 +7,12 @@
   font-weight: normal;
   font-style: normal;
 }
+/* mixins */
+.trainlinks-colorstyle {
+  -webkit-text-fill-color: white;
+  -webkit-text-stroke-color: gray;
+  -webkit-text-stroke-width: 1px;
+}
 /* elements */
 html {
   height: 100%;
@@ -58,18 +64,40 @@ table td {
   margin: 5px 10px 10px 10px;
 }
 .sidebar .header .title {
-  width: 60%;
+  width: 35%;
   float: left;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 .sidebar .header .title h1 {
   font-weight: bold;
+  font-size: 0.7em;
 }
 .sidebar .header .title p {
   font-size: 9pt;
   line-height: 15px;
 }
 .sidebar .header .logo {
-  float: right;
+  float: left;
+}
+.sidebar .header .logo img {
+  width: 68px;
+  height: 68px;
+}
+.sidebar .header .train-links {
+  font-size: 0.7em;
+  top: 50px;
+  position: absolute;
+  left: 165px;
+}
+.sidebar .header .train-links span {
+  padding-left: 10px;
+  width: 30%;
+  display: inline-block;
+}
+.sidebar .header .train-links span a {
+  color: gray;
+  background-color: white;
 }
 .sidebar .content .control-tabs {
   width: 100%;
@@ -86,18 +114,16 @@ table td {
 .sidebar .content .control-tabs ul li a {
   float: left;
   padding-top: 7.5px;
-  padding-bottom: 8.5px;
+  padding-bottom: 2.5px;
   width: 25%;
   text-align: center;
   color: #333;
 }
 .sidebar .content .control-tabs ul li a:hover {
-  background-color: #ddd;
-  color: white;
+  border-bottom: 5px solid #5185bf;
 }
 .sidebar .content .control-tabs ul li a.active {
-  background-color: #cccccc;
-  color: white;
+  border-bottom: 5px solid #5185bf;
 }
 .sidebar .content .directions {
   margin: 5px;
@@ -243,8 +269,8 @@ li.PNR.clicked p {
   text-align: center;
   padding: 5px 5px;
   font-weight: bolder;
-  color: white;
-  border-right: 3px solid white;
+  background-color: #e5e5e5;
+  color: #5b5b5b;
   cursor: pointer;
   font-size: 11.6pt;
 }
@@ -254,6 +280,22 @@ li.PNR.clicked p {
 .slide-group .content-box .line-nav ul li:hover,
 .slide-group .content-box .line-nav ul li.active {
   color: #333;
+  background-color: transparent;
+}
+.slide-group .content-box .line-nav ul li.active {
+  background-color: transparent;
+}
+.slide-group .content-box .line-nav ul li.LRT1 {
+  border-bottom: 5px solid #fdc33c;
+}
+.slide-group .content-box .line-nav ul li.LRT2 {
+  border-bottom: 5px solid #ad86bc;
+}
+.slide-group .content-box .line-nav ul li.MRT {
+  border-bottom: 5px solid #5384c4;
+}
+.slide-group .content-box .line-nav ul li.PNR {
+  border-bottom: 5px solid #f28740;
 }
 .slide-group .content-box .line-nav table {
   margin: 0 auto;
@@ -505,7 +547,10 @@ text.transfer {
 .icon-box-add,
 .icon-office,
 .icon-transfer,
-.icon-hospital {
+.icon-hospital,
+.icon-twitter-2,
+.icon-facebook-2,
+.icon-blogger-2 {
   float: right;
   font-family: 'icomoon';
   speak: none;
@@ -548,4 +593,13 @@ text.transfer {
 }
 .icon-hospital:before {
   content: "\e00a";
+}
+.icon-twitter-2:before {
+  content: "\e00c";
+}
+.icon-facebook-2:before {
+  content: "\e00d";
+}
+.icon-blogger-2:before {
+  content: "\e00e";
 }

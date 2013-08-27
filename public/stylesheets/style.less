@@ -7,6 +7,9 @@
 @mrt : #5384c4;
 @pnr : #f28740;
 @gray : #ccc;
+@linkColor : #5185bf;
+@trainlineColor : #5b5b5b;
+@trainlineBg : #e5e5e5;
 
 @font-face {
   font-family: 'icomoon';
@@ -17,6 +20,20 @@
     url('fonts/icomoon.svg#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
+}
+
+/* mixins */
+
+.trainlinks-colorstyle {
+  -webkit-text-fill-color: white;
+  -webkit-text-stroke-color: gray;
+  -webkit-text-stroke-width: 1px;
+}
+
+.round-border (@weight: 2px){
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  border-radius: 7px;
 }
 
 /* elements */
@@ -77,10 +94,13 @@ table {
     font-size: 25pt;
     margin: 5px 10px 10px 10px;
     .title{
-      width: 60%;
+      width: 35%;
       float: left;
+      padding-left: 10px;
+      padding-right: 10px;
       h1 {
         font-weight: bold;
+        font-size: 0.7em;
       }
       p {
         font-size: 9pt;
@@ -88,7 +108,29 @@ table {
       }
     }
     .logo{
-      float: right;
+      float: left;
+      img {
+        width: 68px;
+        height: 68px;
+      }
+    }
+    .train-links {
+      font-size: 0.7em;
+      top: 50px;
+      position: absolute;
+      left: 165px;
+      span {
+        padding-left: 10px;
+        width: 30%;
+        display: inline-block;
+        a {
+          // .trainlinks-colorstyle;
+          color: gray;
+          background-color: white;
+          // border: 2px solid gray;
+          // .round-border (7px);
+        } 
+      }
     }
   }
   .content {
@@ -104,17 +146,15 @@ table {
           a{               
             float: left;        
             padding-top: 7.5px;
-            padding-bottom: 8.5px;
+            padding-bottom: 2.5px;
             width: 25%;                
             text-align: center;                
             color: #333;
             &:hover{
-              background-color: #ddd;
-              color: white;
+              border-bottom: 5px solid @linkColor;
             }
             &.active{
-              background-color: @gray;
-              color: white;
+              border-bottom: 5px solid @linkColor;
             }
 
           }
@@ -275,8 +315,8 @@ li.PNR.clicked{
           text-align: center;
           padding: 5px 5px;
           font-weight: bolder;
-          color: white;
-          border-right: 3px solid white;
+          background-color: @trainlineBg;
+          color: @trainlineColor;
           cursor: pointer;
           font-size: 11.6pt;
           &:last-child {
@@ -284,6 +324,22 @@ li.PNR.clicked{
           }
           &:hover, &.active {
             color: #333;
+            background-color: transparent;
+          }
+          &.active {
+            background-color: transparent;
+          }
+          &.LRT1{
+            border-bottom: 5px solid @lrt1;
+          }
+          &.LRT2{
+            border-bottom: 5px solid @lrt2;
+          }
+          &.MRT{
+            border-bottom: 5px solid @mrt;
+          }
+          &.PNR{
+            border-bottom: 5px solid @pnr;
           }
         }
       }
@@ -540,7 +596,8 @@ text {
 /* font styles */
 
 .icon-close, .icon-sights, .icon-shopping, .icon-hotel, .icon-blogger, 
-.icon-twitter, .icon-facebook, .icon-box-add, .icon-office, .icon-transfer, .icon-hospital {
+.icon-twitter, .icon-facebook, .icon-box-add, .icon-office, .icon-transfer, .icon-hospital,
+.icon-twitter-2, .icon-facebook-2, .icon-blogger-2 {
   float: right;
   font-family: 'icomoon';
   speak: none;
@@ -583,4 +640,13 @@ text {
 }
 .icon-hospital:before {
   content: "\e00a";
+}
+.icon-twitter-2:before {
+  content: "\e00c";
+}
+.icon-facebook-2:before {
+  content: "\e00d";
+}
+.icon-blogger-2:before {
+  content: "\e00e";
 }
