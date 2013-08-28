@@ -49,16 +49,21 @@ app.use(express.cookieParser('your secret here'));
 app.use(express.session());
 app.use(app.router);
 app.use(require('less-middleware')({ src: __dirname + '/public' }));
-app.use(express.static(path.join(__dirname, 'public')));
 
 // development only
 if ('development' == app.get('env')) {
+	app.use(express.static(path.join(__dirname, 'public')));
   app.use(express.errorHandler());
+}else{
+	app.use(express.static(path.join(__dirname, 'dist')));
 }
 
 app.get('/viewer', viewer.index);
 
-app.get('/', routes.index);
+app.get('/', function(req, res){
+	req.production = 'development' != app.get('env');
+	routes.index(req, res);
+});
 app.get('/views', routes.partials);
 app.get('/users', user.list);
 

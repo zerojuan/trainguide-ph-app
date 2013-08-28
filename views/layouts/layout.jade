@@ -2,10 +2,13 @@ doctype 5
 html
 	head
 		title= title
-		link(rel='stylesheet', href='/stylesheets/foundation.css')
-		link(rel='stylesheet', href='/stylesheets/style.css')      
-		link(rel='stylesheet', href='/stylesheets/antiscroll.css')
 		link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Cabin:400,500,700')
+		if !production
+			link(rel='stylesheet', href='/stylesheets/foundation.css')
+			link(rel='stylesheet', href='/stylesheets/style.css')
+			link(rel='stylesheet', href='/stylesheets/antiscroll.css')
+		else
+			link(rel='stylesheet', href='/stylesheets/main.css')
 	body
 		block content
 

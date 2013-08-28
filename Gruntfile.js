@@ -17,7 +17,15 @@ module.exports = function(grunt){
 	}catch(e){}
 
 	grunt.initConfig({
+		pkg: grunt.file.readJSON('package.json'),
 		yeoman: yeomanConfig,
+		'heroku-deploy' : {
+			production: {
+				deployTag: 'v<%= pkg.version %>',
+				pushTag: true,
+				origin: 'origin'
+			}
+		},
 		clean: {
 			dist: {
 				files : [{
@@ -45,7 +53,12 @@ module.exports = function(grunt){
 				files: {
 					'<%= yeoman.dist %>/scripts/scripts.js': [
 						'.tmp/scripts/{,*/}*.js',
-						'<%= yeoman.app %>/scripts/{,*/}*.js'
+						'<%= yeoman.app %>/scripts/*.js',
+						'<%= yeoman.app %>/scripts/controllers/{,*/}*.js',
+						'<%= yeoman.app %>/scripts/directives/{,*/}*.js',
+						'<%= yeoman.app %>/scripts/services/{,*/}*.js',
+						'<%= yeoman.app %>/scripts/standalone/{,*/}*.js'
+//						'<%= yeoman.app %>/scripts/{,*/}*.js'
 					]
 				}
 			}
@@ -132,7 +145,8 @@ module.exports = function(grunt){
 						'.htaccess',
 						'components/**/*',
 						'images/{,*/}*.{gif,webp,svg}',
-						'stylesheets/fonts/*'
+						'stylesheets/fonts/*',
+						'data/**/*'
 					]
 				}, {
 					expand: true,
@@ -154,7 +168,7 @@ module.exports = function(grunt){
 				files: [{
 					expand: true,
 					cwd: '<%= yeoman.dist %>/scripts',
-					src: '*.js',
+					src: ['./*.js', 'controllers/{,*/}*.js', 'directives/{,*/}*.js', 'services/{,*/}*.js', 'standalone/{,*/}*.js'],
 					dest: '<%= yeoman.dist %>/scripts'
 				}]
 			}
@@ -178,9 +192,15 @@ module.exports = function(grunt){
 		'cdnify',
 		'ngmin',
 		'cssmin',
-		'uglify',
-		'rev',
+		'imagemin',
+//		'uglify',
+//		'rev',
 		'usemin'
+	]);
+
+	grunt.registerTask('deploy', [
+		'build',
+		'heroku-deploy'
 	]);
 
 	grunt.registerTask('default', [
