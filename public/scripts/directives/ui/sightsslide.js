@@ -37,7 +37,7 @@ angular.module('uiModule').directive('sightsSlide', function(){
     },
     template :
     '<div class="sights-box">'+
-      '<h3>Sightseeing</h3>'+
+      '<div><h3>Sightseeing</h3><i class="icon-sights"></i></div>'+
       '<ul>'+
         '<li ng-repeat="sight in sights">'+
           '<div>'+

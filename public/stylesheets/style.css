@@ -22,6 +22,9 @@ html {
   width: 100%;
   position: absolute;
 }
+.container.adjust {
+  left: -300px;
+}
 body {
   height: 100%;
   font-family: "Cabin", sans-serif;
@@ -101,9 +104,8 @@ table td {
 }
 .sidebar .content .control-tabs {
   width: 100%;
-  border-top: 1px solid #cccccc;
-  border-bottom: 1px solid #cccccc;
-  height: 33px;
+  background-color: #e5e5e5;
+  height: 31px;
 }
 .sidebar .content .control-tabs ul {
   list-style: none;
@@ -117,7 +119,7 @@ table td {
   padding-bottom: 2.5px;
   width: 25%;
   text-align: center;
-  color: #333;
+  color: #333333;
 }
 .sidebar .content .control-tabs ul li a:hover {
   border-bottom: 5px solid #5185bf;
@@ -136,18 +138,27 @@ table td {
 }
 .sidebar .footer {
   position: absolute;
-  bottom: 10px;
-  border-top: 1px solid #cccccc;
+  bottom: 0px;
   width: 100%;
-  height: 20px;
+  height: 30px;
   padding-top: 5px;
   text-align: center;
+  background-color: #e5e5e5;
 }
-.sidebar .footer a {
-  padding: 0 10px;
+.sidebar .footer ul {
+  width: 100%;
+  margin: 0 auto;
+}
+.sidebar .footer ul li {
+  display: table-cell;
+  margin: 0 auto;
+}
+.sidebar .footer ul li a {
+  padding: 0 22px;
   padding-bottom: 5px;
+  color: #333333;
 }
-.sidebar .footer a span {
+.sidebar .footer ul li a span {
   font-size: 9pt;
 }
 /* line colors */
@@ -211,6 +222,7 @@ li.PNR.clicked p {
   bottom: 0;
   background: white;
   z-index: 1;
+  border-left: 1px solid #cccccc;
 }
 .slide-group .slide {
   display: none;
@@ -252,12 +264,10 @@ li.PNR.clicked p {
   font-size: 9pt;
 }
 .slide-group .content-box {
-  background-color: #eee;
   width: 100%;
   bottom: 0px;
   top: 30px;
   position: absolute;
-  border-top: 1px solid #cccccc;
 }
 .slide-group .content-box .line-nav ul {
   display: table;
@@ -279,7 +289,7 @@ li.PNR.clicked p {
 }
 .slide-group .content-box .line-nav ul li:hover,
 .slide-group .content-box .line-nav ul li.active {
-  color: #333;
+  color: #333333;
 }
 .slide-group .content-box .line-nav ul li.active {
   background-color: transparent;
@@ -300,6 +310,10 @@ li.PNR.clicked p {
   margin: 0 auto;
   background: none;
 }
+.slide-group .content-box .line-nav table th {
+  background-color: white;
+  font-weight: bold;
+}
 .slide-group .content-box .line-nav table tr {
   background: none;
 }
@@ -309,7 +323,23 @@ li.PNR.clicked p {
   padding-top: 0px;
   padding-right: 5px;
   padding-bottom: 0px;
-  padding-left: 0px;
+  padding-left: 10px;
+  text-align: left;
+}
+.slide-group .content-box .line-nav table.contact-desc {
+  left: 0px;
+  position: absolute;
+  top: 0px;
+  background-color: #e5e5e5;
+  border-left: 6px solid #cccccc;
+  width: 200px;
+  border-top: 1px solid #cccccc;
+  border-right: 1px solid #cccccc;
+  border-bottom: 1px solid #cccccc;
+  text-align: left;
+}
+.slide-group .content-box .line-nav table.contact-desc.active {
+  left: -200px;
 }
 .slide-group .content-box div.showdetails {
   display: block;
@@ -400,15 +430,13 @@ li.PNR.clicked p {
 }
 .slide-group .images-box {
   width: 100%;
-  border-top: 1px solid #cccccc;
-  border-bottom: 1px solid #cccccc;
   position: relative;
   display: inline-block;
   padding-bottom: 10px;
 }
 .slide-group .images-box h3 {
   line-height: 2em;
-  background: white;
+  background: #e5e5e5;
   padding-left: 10px;
 }
 .slide-group .images-box img {
@@ -431,18 +459,29 @@ li.PNR.clicked p {
 .slide-group .slideshow-content {
   margin: 10px;
 }
-.slide-group .sights-box {
-  border-bottom: 1px solid #cccccc;
-}
 .slide-group .sights-box,
 .slide-group .shops-box {
   padding-bottom: 10px;
 }
-.slide-group .sights-box h3,
-.slide-group .shops-box h3 {
+.slide-group .sights-box > div,
+.slide-group .shops-box > div {
+  background: #e5e5e5;
+  width: 100%;
+  height: 33px;
+}
+.slide-group .sights-box > div h3,
+.slide-group .shops-box > div h3 {
   line-height: 2em;
-  background: white;
   padding-left: 10px;
+  float: left;
+}
+.slide-group .sights-box > div i,
+.slide-group .shops-box > div i {
+  float: left;
+  right: 0px;
+  position: absolute;
+  padding-top: 10px;
+  padding-right: 10px;
 }
 .slide-group .sights-box ul,
 .slide-group .shops-box ul {

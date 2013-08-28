@@ -29,6 +29,7 @@ angular.module('uiModule').directive('radioGroup', [function(){
         // console.log("Previous Item: ", scope.previousItem);
 
 				scope.selectedItemHandler(item);
+        $('.container').removeClass('adjust');
         // if(scope.previousItem){
         //  scope.previousItem.selected = false;                    
         //  if(scope.previousItem.title == item.title){
