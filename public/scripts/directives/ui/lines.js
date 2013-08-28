@@ -11,6 +11,7 @@ angular.module('uiModule').directive('lines', ['CommonAppState', function(Common
 			showDetails: '=showDetails'
 		},
 		link : function(scope, element){
+				console.log('lines.js selectedStop', scope.selectedStop);
 			scope.$watch("selectedStop", function(newValue, oldValue){
 				if(newValue){
 					element.find('.stop-desc').html('<h2>'+newValue.details.stop_name+'</h2>');

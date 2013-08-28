@@ -22,6 +22,9 @@ html {
   width: 100%;
   position: absolute;
 }
+.container.adjust {
+  left: -300px;
+}
 body {
   height: 100%;
   font-family: "Cabin", sans-serif;
@@ -324,7 +327,7 @@ li.PNR.clicked p {
   text-align: left;
 }
 .slide-group .content-box .line-nav table.contact-desc {
-  left: -200px;
+  left: 0px;
   position: absolute;
   top: 0px;
   background-color: #e5e5e5;
@@ -334,6 +337,9 @@ li.PNR.clicked p {
   border-right: 1px solid #cccccc;
   border-bottom: 1px solid #cccccc;
   text-align: left;
+}
+.slide-group .content-box .line-nav table.contact-desc.active {
+  left: -200px;
 }
 .slide-group .content-box div.showdetails {
   display: block;

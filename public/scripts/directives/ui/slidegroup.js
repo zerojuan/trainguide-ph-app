@@ -45,6 +45,8 @@ angular.module('uiModule').directive('slideGroup', ['CommonAppState', function(C
 				// console.log('Sliding out:', width);
 				$($elm).css('right', width+'px');
 				$($elm).css('width', width+'px');	
+				$('.container').addClass('adjust');
+				$('.contact-desc').addClass('active');
 			}
 
 			var width = $('.sidebar').width();
@@ -52,6 +54,8 @@ angular.module('uiModule').directive('slideGroup', ['CommonAppState', function(C
 
 			var slideIn = function(callback){
 				$($elm).css('right', '0px');
+				$('.container').removeClass('adjust');
+				$('.contact-desc').removeClass('active');
 			}
 
 			$scope.$watch("selectedItem", function(newValue, oldValue){

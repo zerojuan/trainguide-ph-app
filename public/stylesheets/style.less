@@ -47,6 +47,9 @@ html{
   height: 100%;
   width: 100%;
   position: absolute;
+  &.adjust {
+    left: -300px;
+  }
 }
 
 body {
@@ -376,7 +379,7 @@ li.PNR.clicked{
           }   
         }
         &.contact-desc {
-          left: -200px;
+          left: 0px;
           position: absolute;
           top: 0px;
           background-color: @trainlineBg;
@@ -386,6 +389,9 @@ li.PNR.clicked{
           border-right: 1px solid @gray;
           border-bottom: 1px solid @gray;
           text-align: left;
+          &.active {
+            left: -200px;
+          }
         }
       }
     }
