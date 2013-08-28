@@ -6,6 +6,8 @@ var constants = require('../constants'),
 		async = require('async'),
 		fs = require('fs');
 
+var LineDetails = require('../models/linedetails');
+
 exports.insertAdditionalData = function(req, res, next){
 //	constants.ROUTE_IDS.LRT1;
 //	constants.ROUTE_IDS.LRT2;
@@ -13,39 +15,123 @@ exports.insertAdditionalData = function(req, res, next){
 //	constants.ROUTE_IDS.PNR;
 
 	var insertDetails = function(routeId, details){
-		gtfs.Route.findOne({route_id: routeId}, function(err, route){
-			if(err){
-				next(err);
-			};
+		var lineDetails = new LineDetails();
 
-			route.details = details;
-			route.save();
-		});
-	}
+		lineDetails.route_id = routeId;
+		lineDetails.weekdays = details.weekdays;
+		lineDetails.weekend = details.weekend;
+		lineDetails.contact = details.contact;
+		lineDetails.email = details.email;
+		lineDetails.fare = details.fare;
+		lineDetails.svc = details.svc;
+		lineDetails.twitter = details.twitter;
+		lineDetails.web = details.web;
+
+		lineDetails.save(function(err){
+			if(err) return next(err);
+			console.log('Success saving details: ' + routeId);
+		})
+	};
+
+	var insertTransfers = function(transferArray){
+		//find stop with given name
+		var stopA = transferArray[0];
+		var stopB = transferArray[1];
+
+		var insertTransfer = function(stop, transfer){
+			var transfer = new gtfs.Transfer();
+
+			transfer.agency_key = getAgencyKey(stop.line);
+			transfer.from_stop_id = stop.stop_id;
+			transfer.to_stop_id = transfer.stop_id;
+			transfer.transfer_type = '1';
+			transfer.min_transfer_time = '15min';
+
+			transfer.save(function(err){
+				if(err) return next(err);
+				console.log('Success saving transfer: StopId: ' + stop.stop_id);
+			});
+		};
+
+		var getAgencyKey = function(routeId){
+			if(routeId == constants.ROUTE_IDS.PNR){
+				return 'PNR';
+			}else if(routeId == constants.ROUTE_IDS.MRT){
+				return 'MRTC';
+			}else if(routeId == constants.ROUTE_IDS.LRT1 || routeId == constants.ROUTE_IDS.LRT2){
+				return 'LRTA';
+			}
+		};
+
+		insertTransfer(stopA, stopB);
+		insertTransfer(stopB, stopA);
+	};
 
 	var transfers = [
-		[{name: 'EDSA PNR', line: 'PNR'}, {name: 'Magallanes MRT', line: 'MRT'}],
-		[{name: 'Santa Mesa PNR', line: 'PNR'}, {name: 'Pureza LRT', line: 'LRT2'}],
-		[{name: 'Blumentritt PNR', line: 'PNR'}, {name: 'Blumentritt LRT', line: 'LRT2'}],
-		[{name: 'Doroteo Jose LRT', line: 'LRT1'}, {name: 'Recto LRT', line: 'LRT2'}],
-		[{name: 'EDSA LRT', line: 'LRT1'}, {name: 'Taft MRT', line: 'MRT'}],
-		[{name: 'Cubao LRT', line: 'LRT2'}, {name: 'Cubao MRT', line: 'MRT'}]
+		[{name: 'EDSA PNR', stop_id: 'LTFRB_5001', line: constants.ROUTE_IDS.PNR}, {name: 'Magallanes MRT', stop_id: 'LTFRB_4975', line: constants.ROUTE_IDS.MRT}],
+		[{name: 'Santa Mesa PNR', stop_id: 'LTFRB_4999', line: constants.ROUTE_IDS.PNR}, {name: 'Pureza LRT', stop_id: 'LTFRB_4979', line: constants.ROUTE_IDS.LRT2}],
+		[{name: 'Blumentritt PNR', stop_id: 'LTFRB_4991', line: constants.ROUTE_IDS.PNR}, {name: 'Blumentritt LRT', stop_id: 'LTFRB_4957', line: constants.ROUTE_IDS.LRT2}],
+		[{name: 'Doroteo Jose LRT', stop_id: 'LTFRB_4954', line: constants.ROUTE_IDS.LRT1}, {name: 'Recto LRT', stop_id: 'LTFRB_4977', line: constants.ROUTE_IDS.LRT2}],
+		[{name: 'EDSA LRT', stop_id: 'LTFRB_4945', line: constants.ROUTE_IDS.LRT1}, {name: 'Taft MRT', stop_id: 'LTFRB_4976', line: constants.ROUTE_IDS.MRT}],
+		[{name: 'Cubao LRT', stop_id: 'LTFRB_4984', line: constants.ROUTE_IDS.LRT2}, {name: 'Cubao MRT', stop_id: 'LTFRB_4967', line: constants.ROUTE_IDS.MRT}]
 	];
 
-
+	for(var i = 0; i < transfers.length; i++){
+		insertTransfers(transfers[i]);
+	}
 
 
 	//insert to Route data
 	var misc = [
-		{line: constants.ROUTE_IDS.LRT1, details: {}},
-		{line: constants.ROUTE_IDS.LRT2, details: {}},
-		{line: constants.ROUTE_IDS.MRT, details: {}},
-		{line: constants.ROUTE_IDS.PNR, details: {}}
+		{line: constants.ROUTE_IDS.LRT1, details: {
+			weekdays: '5am to 9:30pm',
+			weekend: '5am to 9:00pm',
+			contact: '853-0041 to 60',
+			email: 'lrtamain@lrta.gov.ph',
+			fare: 'P12-P20',
+			svc: 'P100',
+			twitter: '@attycabs',
+			web: 'www.lrta.gov.ph'
+		}},
+		{line: constants.ROUTE_IDS.LRT2, details: {
+			weekdays: '5am to 9:30pm',
+			weekend: '5am to 9:00pm',
+			contact: '647-3479 to 91',
+			email: 'lrtamain@lrta.gov.ph',
+			fare: 'P12-P15',
+			svc: 'P100',
+			twitter: '',
+			web: 'www.lrt2.com'
+		}},
+		{line: constants.ROUTE_IDS.MRT, details: {
+			weekdays: '5:30am to 10pm',
+			weekend: '5:30am to 10pm',
+			contact: '',
+			email: '',
+			fare: 'P10-P15',
+			svc: 'P100',
+			twitter: '@dotcmrt3',
+			web: 'www.dotcmrt3.weebly.com'
+		}},
+		{line: constants.ROUTE_IDS.PNR, details: {
+			weekdays: '5:05am to 6:30pm',
+			weekend: '5:05am to 6:30pm',
+			contact: '319-0045',
+			email: '',
+			fare: 'P10-P15',
+			svc: 'P100',
+			twitter: '@PNRRailways',
+			web: 'www.pnr.gov.ph'
+		}}
 	];
 
 	for(var i = 0; i < misc.length; i++){
 		insertDetails(misc[i].line, misc[i].details);
 	}
+
+	res.send({
+		status: 'OK'
+	});
 }
 
 exports.generateStaticData = function(req, res, next){
@@ -77,7 +163,7 @@ exports.generateStaticData = function(req, res, next){
 									var resultObj = {
 										shortName: route.route_short_name,
 										longName: route.route_long_name,
-										description: route.route_description,
+										description: route.route_desc,
 										url: route.route_url,
 										details: route.details,
 										stops: result
@@ -97,7 +183,7 @@ exports.generateStaticData = function(req, res, next){
 			origin : origin,
 			destination : dest,
 			mode : 'transit',
-//			sensor : true,
+			sensor : true,
 			departure_time : departureTime
 		};
 		return qs.stringify(args);
@@ -145,33 +231,6 @@ exports.generateStaticData = function(req, res, next){
 		};
 
 		getDirections(origin, dest, callback);
-	}
-
-	var searchStationByName = function(stationData){
-		var line = stationData.line;
-
-		for(var i = 0; i < line.stops.length; i++){
-			if(line.stops[i].details.stop_name == stationData.name){
-				return line.stops[i];
-			}
-		}
-	}
-
-	var insertTransfer = function(transfer){
-		var stationA, stationB;
-
-		stationA = searchStationByName(transfer[0]);
-		stationB = searchStationByName(transfer[1]);
-
-		stationA.transfer = {
-			name: stationB.details.stop_name,
-			_id: stationB._id
-		};
-
-		stationB.transfer = {
-			name: stationA.details.stop_name,
-			_id: stationA._id
-		};
 	}
 
 	//get route from each agency
@@ -232,20 +291,20 @@ exports.generateStaticData = function(req, res, next){
 		var outputFilename = './public/data/lines.data.json';
 
 		//insert the transfers here
-		var transfers = [
-			[{name: 'EDSA PNR', line: trainLines.PNR}, {name: 'Magallanes MRT', line: trainLines.MRT}],
-			[{name: 'Santa Mesa PNR', line: trainLines.PNR}, {name: 'Pureza LRT', line: trainLines.LRT2}],
-			[{name: 'Blumentritt PNR', line: trainLines.PNR}, {name: 'Blumentritt LRT', line: trainLines.LRT2}],
-			[{name: 'Doroteo Jose LRT', line: trainLines.LRT1}, {name: 'Recto LRT', line: trainLines.LRT2}],
-			[{name: 'EDSA LRT', line: trainLines.LRT1}, {name: 'Taft MRT', line: trainLines.MRT}],
-			[{name: 'Cubao LRT', line: trainLines.LRT2}, {name: 'Cubao MRT', line: trainLines.MRT}]
-		];
-
-		//insert the transfers
-		for(var i in transfers){
-			var transfer = transfers[i];
-			insertTransfer(transfer);
-		}
+//		var transfers = [
+//			[{name: 'EDSA PNR', line: trainLines.PNR}, {name: 'Magallanes MRT', line: trainLines.MRT}],
+//			[{name: 'Santa Mesa PNR', line: trainLines.PNR}, {name: 'Pureza LRT', line: trainLines.LRT2}],
+//			[{name: 'Blumentritt PNR', line: trainLines.PNR}, {name: 'Blumentritt LRT', line: trainLines.LRT2}],
+//			[{name: 'Doroteo Jose LRT', line: trainLines.LRT1}, {name: 'Recto LRT', line: trainLines.LRT2}],
+//			[{name: 'EDSA LRT', line: trainLines.LRT1}, {name: 'Taft MRT', line: trainLines.MRT}],
+//			[{name: 'Cubao LRT', line: trainLines.LRT2}, {name: 'Cubao MRT', line: trainLines.MRT}]
+//		];
+//
+//		//insert the transfers
+//		for(var i in transfers){
+//			var transfer = transfers[i];
+//			insertTransfer(transfer);
+//		}
 
 		//get shape data from each array of stops
 
