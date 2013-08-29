@@ -22,14 +22,20 @@ html {
   width: 100%;
   position: absolute;
 }
+.container.adjust {
+  left: -300px;
+}
 body {
   height: 100%;
   font-family: "Cabin", sans-serif;
 }
-h1,
-h2 {
+h1 {
   font-family: "Cabin", sans-serif;
   font-size: 19pt;
+}
+h2 {
+  font-family: "Cabin", sans-serif;
+  font-size: 16pt;
 }
 a {
   color: #00B7FF;
@@ -96,34 +102,39 @@ table td {
   display: inline-block;
 }
 .sidebar .header .train-links span a {
-  color: gray;
+  color: #585858;
   background-color: white;
 }
 .sidebar .content .control-tabs {
   width: 100%;
-  border-top: 1px solid #cccccc;
-  border-bottom: 1px solid #cccccc;
-  height: 33px;
+  background-color: #e5e5e5;
+  height: 31px;
 }
 .sidebar .content .control-tabs ul {
   list-style: none;
+  width: 100%;
+  margin: 0 auto;
 }
 .sidebar .content .control-tabs ul li {
-  display: inline;
+  display: table-cell;
+  margin: 0 auto;
+  text-align: center;
+  padding-left: 18px;
 }
 .sidebar .content .control-tabs ul li a {
   float: left;
   padding-top: 7.5px;
   padding-bottom: 2.5px;
-  width: 25%;
   text-align: center;
-  color: #333;
+  color: #8b8b8b;
 }
-.sidebar .content .control-tabs ul li a:hover {
-  border-bottom: 5px solid #5185bf;
+.sidebar .content .control-tabs ul li a:hover span {
+  border-bottom: 5px solid #5cc15a;
+  color: #585858;
 }
-.sidebar .content .control-tabs ul li a.active {
-  border-bottom: 5px solid #5185bf;
+.sidebar .content .control-tabs ul li a.active span {
+  border-bottom: 5px solid #5cc15a;
+  color: #585858;
 }
 .sidebar .content .directions {
   margin: 5px;
@@ -136,18 +147,27 @@ table td {
 }
 .sidebar .footer {
   position: absolute;
-  bottom: 10px;
-  border-top: 1px solid #cccccc;
+  bottom: 0px;
   width: 100%;
-  height: 20px;
+  height: 30px;
   padding-top: 5px;
   text-align: center;
+  border-top: 1px solid #e5e5e5;
 }
-.sidebar .footer a {
-  padding: 0 10px;
+.sidebar .footer ul {
+  width: 100%;
+  margin: 0 auto;
+}
+.sidebar .footer ul li {
+  display: table-cell;
+  margin: 0 auto;
+}
+.sidebar .footer ul li a {
+  padding: 0 27px;
   padding-bottom: 5px;
+  color: #333333;
 }
-.sidebar .footer a span {
+.sidebar .footer ul li a span {
   font-size: 9pt;
 }
 /* line colors */
@@ -211,6 +231,7 @@ li.PNR.clicked p {
   bottom: 0;
   background: white;
   z-index: 1;
+  border-left: 1px solid #cccccc;
 }
 .slide-group .slide {
   display: none;
@@ -226,6 +247,11 @@ li.PNR.clicked p {
 .slide-group .stop-desc h2 {
   font-weight: bold;
 }
+.slide-group .title-box h2.place,
+.slide-group .stop-desc h2.place {
+  width: 45%;
+  float: left;
+}
 .slide-group .title-box p,
 .slide-group .stop-desc p {
   font-size: 9pt;
@@ -235,6 +261,23 @@ li.PNR.clicked p {
 .slide-group .stop-desc span {
   font-weight: normal;
   font-size: 13pt;
+}
+.slide-group .title-box .search-form,
+.slide-group .stop-desc .search-form {
+  position: relative;
+}
+.slide-group .title-box .search-form .search-box,
+.slide-group .stop-desc .search-form .search-box {
+  width: 55%;
+  float: right;
+  height: 20px;
+}
+.slide-group .title-box .search-form i,
+.slide-group .stop-desc .search-form i {
+  padding-top: 6px;
+  font-size: 0.5em;
+  position: absolute;
+  right: 5px;
 }
 .slide-group .stop-desc {
   padding-bottom: 10px;
@@ -252,12 +295,10 @@ li.PNR.clicked p {
   font-size: 9pt;
 }
 .slide-group .content-box {
-  background-color: #eee;
   width: 100%;
   bottom: 0px;
   top: 30px;
   position: absolute;
-  border-top: 1px solid #cccccc;
 }
 .slide-group .content-box .line-nav ul {
   display: table;
@@ -279,7 +320,7 @@ li.PNR.clicked p {
 }
 .slide-group .content-box .line-nav ul li:hover,
 .slide-group .content-box .line-nav ul li.active {
-  color: #333;
+  color: #333333;
 }
 .slide-group .content-box .line-nav ul li.active {
   background-color: transparent;
@@ -300,6 +341,10 @@ li.PNR.clicked p {
   margin: 0 auto;
   background: none;
 }
+.slide-group .content-box .line-nav table th {
+  background-color: white;
+  font-weight: bold;
+}
 .slide-group .content-box .line-nav table tr {
   background: none;
 }
@@ -309,7 +354,23 @@ li.PNR.clicked p {
   padding-top: 0px;
   padding-right: 5px;
   padding-bottom: 0px;
-  padding-left: 0px;
+  padding-left: 10px;
+  text-align: left;
+}
+.slide-group .content-box .line-nav table.contact-desc {
+  left: 0px;
+  position: absolute;
+  top: 0px;
+  background-color: #e5e5e5;
+  border-left: 6px solid #cccccc;
+  width: 200px;
+  border-top: 1px solid #cccccc;
+  border-right: 1px solid #cccccc;
+  border-bottom: 1px solid #cccccc;
+  text-align: left;
+}
+.slide-group .content-box .line-nav table.contact-desc.active {
+  left: -200px;
 }
 .slide-group .content-box div.showdetails {
   display: block;
@@ -323,6 +384,7 @@ li.PNR.clicked p {
 }
 .slide-group .content-box .categories-list > div {
   background-color: white;
+  border-top: 1px solid #cccccc;
   border-bottom: 1px solid #cccccc;
 }
 .slide-group .content-box .categories-list > div ul {
@@ -337,25 +399,34 @@ li.PNR.clicked p {
   font-weight: bolder;
   cursor: pointer;
   font-size: 1.5em;
+  height: 45px;
+  color: #8b8b8b;
+}
+.slide-group .content-box .categories-list > div ul li.selected {
+  color: #585858;
 }
 .slide-group .content-box .categories-list > div ul li i {
-  border: 1px solid #cccccc;
+  border: 1px solid #8b8b8b;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
   padding: 3px;
 }
-.slide-group .content-box .categories-list > div ul div.down-btn {
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-top: 10px solid gray;
+.slide-group .content-box .categories-list > div ul li i.selected {
+  border: 1px solid #585858;
+}
+.slide-group .content-box .categories-list > div ul div.highlight {
   cursor: pointer;
-  width: 0px;
   position: relative;
-  z-index: 1;
-  top: 37px;
-  left: 6px;
+  top: 36px;
+  background: #5cc15a;
+  height: 5px;
+  width: 32px;
 }
 .slide-group .content-box .categories-list h6 {
-  background-color: white;
+  background-color: #e5e5e5;
   padding: 10px;
+  font-weight: bolder;
 }
 .slide-group .content-box .block,
 .slide-group .content-box .antiscroll-inner,
@@ -400,15 +471,13 @@ li.PNR.clicked p {
 }
 .slide-group .images-box {
   width: 100%;
-  border-top: 1px solid #cccccc;
-  border-bottom: 1px solid #cccccc;
   position: relative;
   display: inline-block;
   padding-bottom: 10px;
 }
 .slide-group .images-box h3 {
   line-height: 2em;
-  background: white;
+  background: #e5e5e5;
   padding-left: 10px;
 }
 .slide-group .images-box img {
@@ -431,18 +500,29 @@ li.PNR.clicked p {
 .slide-group .slideshow-content {
   margin: 10px;
 }
-.slide-group .sights-box {
-  border-bottom: 1px solid #cccccc;
-}
 .slide-group .sights-box,
 .slide-group .shops-box {
   padding-bottom: 10px;
 }
-.slide-group .sights-box h3,
-.slide-group .shops-box h3 {
+.slide-group .sights-box > div,
+.slide-group .shops-box > div {
+  background: #e5e5e5;
+  width: 100%;
+  height: 33px;
+}
+.slide-group .sights-box > div h3,
+.slide-group .shops-box > div h3 {
   line-height: 2em;
-  background: white;
   padding-left: 10px;
+  float: left;
+}
+.slide-group .sights-box > div i,
+.slide-group .shops-box > div i {
+  float: left;
+  right: 0px;
+  position: absolute;
+  padding-top: 10px;
+  padding-right: 10px;
 }
 .slide-group .sights-box ul,
 .slide-group .shops-box ul {
@@ -541,16 +621,15 @@ text.transfer {
 .icon-sights,
 .icon-shopping,
 .icon-hotel,
-.icon-blogger,
-.icon-twitter,
-.icon-facebook,
 .icon-box-add,
 .icon-office,
 .icon-transfer,
 .icon-hospital,
-.icon-twitter-2,
-.icon-facebook-2,
-.icon-blogger-2 {
+.icon-protest,
+.icon-blogger,
+.icon-facebook,
+.icon-twitter,
+.icon-search {
   float: right;
   font-family: 'icomoon';
   speak: none;
@@ -573,15 +652,6 @@ text.transfer {
 .icon-hotel:before {
   content: "\e003";
 }
-.icon-blogger:before {
-  content: "\e004";
-}
-.icon-twitter:before {
-  content: "\e005";
-}
-.icon-facebook:before {
-  content: "\e006";
-}
 .icon-box-add:before {
   content: "\e007";
 }
@@ -594,12 +664,18 @@ text.transfer {
 .icon-hospital:before {
   content: "\e00a";
 }
-.icon-twitter-2:before {
+.icon-protest:before {
+  content: "\e00b";
+}
+.icon-blogger:before {
+  content: "\e004";
+}
+.icon-facebook:before {
+  content: "\e005";
+}
+.icon-twitter:before {
+  content: "\e006";
+}
+.icon-search:before {
   content: "\e00c";
-}
-.icon-facebook-2:before {
-  content: "\e00d";
-}
-.icon-blogger-2:before {
-  content: "\e00e";
 }

@@ -36,7 +36,7 @@ angular.module('uiModule').directive('shopsSlide', function(){
     },
     template :
       '<div class="shops-box">'+
-        '<h3>Shopping</h3>'+
+        '<div><h3>Shopping</h3><i class="icon-shopping"></i></div>'+
         '<ul>'+
           '<li ng-repeat="shop in shops">'+
             '<div>'+

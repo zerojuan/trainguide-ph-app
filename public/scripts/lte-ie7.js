@@ -7,9 +7,6 @@ window.onload = function() {
 	}
 	var icons = {
 			'icon-close' : '&#xe000;',
-			'icon-blogger' : '&#xe004;',
-			'icon-twitter' : '&#xe005;',
-			'icon-facebook' : '&#xe006;',
 			'icon-sights' : '&#xe001;',
 			'icon-shopping' : '&#xe002;',
 			'icon-hotel' : '&#xe003;',
@@ -18,9 +15,10 @@ window.onload = function() {
 			'icon-transfer' : '&#xe009;',
 			'icon-hospital' : '&#xe00a;',
 			'icon-protest' : '&#xe00b;',
-			'icon-twitter-2' : '&#xe00c;',
-			'icon-facebook-2' : '&#xe00d;',
-			'icon-blogger-2' : '&#xe00e;'
+			'icon-blogger' : '&#xe004;',
+			'icon-facebook' : '&#xe005;',
+			'icon-twitter' : '&#xe006;',
+			'icon-search' : '&#xe00c;'
 		},
 		els = document.getElementsByTagName('*'),
 		i, attr, html, c, el;

@@ -27,7 +27,7 @@ angular.module('trainguide.controllers')
         selected: false
       },
       {
-        title: 'Featured',
+        title: 'Download',
         selected: false
       },
       {
