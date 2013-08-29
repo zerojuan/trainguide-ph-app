@@ -5,9 +5,6 @@ window.onload = function () {
   }
   var icons = {
       'icon-close': '&#xe000;',
-      'icon-blogger': '&#xe004;',
-      'icon-twitter': '&#xe005;',
-      'icon-facebook': '&#xe006;',
       'icon-sights': '&#xe001;',
       'icon-shopping': '&#xe002;',
       'icon-hotel': '&#xe003;',
@@ -16,9 +13,10 @@ window.onload = function () {
       'icon-transfer': '&#xe009;',
       'icon-hospital': '&#xe00a;',
       'icon-protest': '&#xe00b;',
-      'icon-twitter-2': '&#xe00c;',
-      'icon-facebook-2': '&#xe00d;',
-      'icon-blogger-2': '&#xe00e;'
+      'icon-blogger': '&#xe004;',
+      'icon-facebook': '&#xe005;',
+      'icon-twitter': '&#xe006;',
+      'icon-search': '&#xe00c;'
     }, els = document.getElementsByTagName('*'), i, attr, html, c, el;
   for (i = 0;; i += 1) {
     el = els[i];
@@ -199,7 +197,7 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
         selected: false
       },
       {
-        title: 'Featured',
+        title: 'Download',
         selected: false
       },
       {
@@ -934,7 +932,7 @@ angular.module('uiModule').directive('categories', function () {
         scope.selectedCategory = category;
       };
     },
-    template: '<div class="categories-list" ng-transclude>' + '<div>' + '<ul>' + '<li ng-show="category.icon" ng-repeat="category in categories">' + '<i class="{{category.icon}}" ng-click="setCategory(category.name)"></i>' + '<div ng-show="selectedCategory==category.name" class="down-btn"></div>' + '</li>' + '</ul>' + '</div>' + '<h6>{{selectedCategory}}</h6>' + '</div>',
+    template: '<div class="categories-list" ng-transclude>' + '<div>' + '<ul>' + '<li ng-show="category.icon" ng-repeat="category in categories" ng-class="{\'selected\': selectedCategory==category.name}">' + '<i class="{{category.icon}}" ng-click="setCategory(category.name)" ng-class="{\'selected\': selectedCategory==category.name}"></i>' + '<div ng-show="selectedCategory==category.name" class="highlight"></div>' + '</li>' + '</ul>' + '</div>' + '<h6>Featured</h6>' + '</div>',
     replace: true
   };
 });
