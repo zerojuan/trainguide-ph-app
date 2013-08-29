@@ -1,6 +1,9 @@
 
 angular.module('trainguide.controllers')
-	.controller('MainCtrl', ['$scope', '$http', '$route', 'LinesService', 'PlacesService', 'CommonAppState', function($scope, $http, $route, LinesService, PlacesService, CommonAppState){
+	.controller('MainCtrl', ['$scope', '$http', '$route', 
+    'LinesService', 'StopsService', 'TransfersService', 'PlacesService', 'CommonAppState', 
+    function($scope, $http, $route, 
+      LinesService, StopsService, TransfersService, PlacesService, CommonAppState){
 
     $scope.showDetails = false;
 		$scope.selected = {
@@ -91,6 +94,28 @@ angular.module('trainguide.controllers')
       $scope.lines.LRT2.color = "#ad86bc";
       $scope.lines.MRT.color = "#5384c4";
       $scope.lines.PNR.color = "#f28740";
+      StopsService.setLines($scope.lines);
+      TransfersService.getAllTransfers(function(data){
+        $scope.transfers = data;
+        //iterate each transfer
+        for (var i = 0; i < $scope.transfers.length; i++) {
+          var fromStop = StopsService.getStopById($scope.transfers[i].from_stop_id);
+          var toStop = StopsService.getStopById($scope.transfers[i].to_stop_id);
+          // console.log('fromStop', fromStop, 'toStop', toStop);
+          fromStop.transfer = {
+            line_name : toStop.line_name,
+            stop_id : toStop.details.stop_id,
+            stop_name : toStop.details.stop_name,
+            stop_lon : toStop.details.stop_lon,
+            stop_lat : toStop.details.stop_lat
+          };
+        };
+          //get stopFrom from StopsService.getStopById(fromId)
+          //get transferTo from StopsService.getStopById(toId)
+          // stopFrom.transfer = {stopId: transferTo.stopId, name: ... }
+      }, function(data, status, headers, config){
+        console.log('Error!', data, status, headers, config);
+      });
       $scope.getLineByName = function(name){
         for(var i in $scope.lines){
           console.log('i', i, 'name', name);

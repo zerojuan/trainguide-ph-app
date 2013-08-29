@@ -83,6 +83,7 @@ app.param('trip_id', api._loadTId);
 app.get('/api/routes/:route_id/trips/:trip_id', api.trips.get);
 app.get('/api/trips/:trip_id/stops', api.stops.list);
 app.get('/api/trips/:trip_id/calendar', api.calendar.list);
+app.get('/api/transfers', api.transfers.list);
 
 //places
 app.get('/places', places.index);

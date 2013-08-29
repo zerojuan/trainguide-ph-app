@@ -50,11 +50,11 @@ module.exports = {
 			console.log('details.get!', route.route_id);
 			LineDetails.findOne({ route_id: route.route_id }, function(err, detailsData){
 				if(err){
-					res.send(err);
 					console.log('err', err);
+					res.send(err);
 				}else{
-					res.send(detailsData);
 					console.log('detailsData', detailsData);
+					res.send(detailsData);
 				}
 			});
 		}
@@ -149,6 +149,20 @@ module.exports = {
 			}else{
 				res.send(res.error);	
 			}
+		}
+	},
+	transfers: {
+		list: function(req, res){
+			console.log('transfers.list!');
+			gtfs.Transfer.find({}, function(err, transferData){
+				if(transferData){
+					console.log('transferData', transferData);
+					res.send(transferData);
+				}else{
+					console.log('err', err);
+					res.send(err);
+				}
+			});
 		}
 	},
 	_loadAId: function(req, res, next, aId){
