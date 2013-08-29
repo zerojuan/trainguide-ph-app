@@ -39,15 +39,15 @@ exports.insertAdditionalData = function(req, res, next){
 		var stopB = transferArray[1];
 
 		var insertTransfer = function(stop, transfer){
-			var transfer = new gtfs.Transfer();
+			var transferDb = new gtfs.Transfer();
 
-			transfer.agency_key = getAgencyKey(stop.line);
-			transfer.from_stop_id = stop.stop_id;
-			transfer.to_stop_id = transfer.stop_id;
-			transfer.transfer_type = '1';
-			transfer.min_transfer_time = '15min';
+			transferDb.agency_key = getAgencyKey(stop.line);
+			transferDb.from_stop_id = stop.stop_id;
+			transferDb.to_stop_id = transfer.stop_id;
+			transferDb.transfer_type = '1';
+			transferDb.min_transfer_time = '15min';
 
-			transfer.save(function(err){
+			transferDb.save(function(err){
 				if(err) return next(err);
 				console.log('Success saving transfer: StopId: ' + stop.stop_id);
 			});
