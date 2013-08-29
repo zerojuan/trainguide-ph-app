@@ -1,7 +1,9 @@
 {
     "LRT1": {
+        "route_id": "ROUTE_880747",
         "shortName": "LRT 1",
         "longName": "Baclaran - Roosevelt",
+        "description": "Urban railway line serving 20 stations between Balaran and Roosevelt",
         "url": "http://www.lrta.gov.ph/train_operating_schedules.php",
         "stops": [
             {
@@ -688,8 +690,10 @@
         "path": "atuwAgloaV~HzF@OAKIImAcAyGiFIHG@_OoKwAm@wA[cAGiDViv@rKqzA~So@PiC~@mj@nSye@xT{d@rTiWtLgAj@oAZyAF_BQaBMcAAcHd@sELoAHcDp@eQlD}ADuFUyAQo@QwAg@cBSkTmBcCIgMW_d@{A_a@o@id@_@o`@_@uBDiAZy@d@uGbG_C`ByA`@yBHqAO}RoH{KyDuCa@ya@a@u|@cAyKKg@MyAaAm@mBGoBu@aqBm@yeBFaAPiC"
     },
     "LRT2": {
+        "route_id": "ROUTE_880801",
         "shortName": "LRT 2",
         "longName": "Recto - Santolan",
+        "description": "Light rail line serving 11 stations between Recto and Santolan",
         "url": "http://www.lrta.gov.ph/train_operating_schedules.php",
         "stops": [
             {
@@ -1070,8 +1074,10 @@
         "path": "yfcxAcrlaVPeCR_BpOcb@\\wADm@Ao@Eg@Kk@u@_E_AcEAyADo@dBmGJs@Bm@K{A[sAQkACi@Bm@Hu@Lo@Jo@Du@Ao@Ky@}@eDKo@w@oKUoBKmA]uI}@aRg@{LmAsZG_AMs@Wu@]u@a@k@_EkEsIwIoS}So@_Ai@uAmE{RsKie@u@mCcCqF_IaPmTec@sCsFi@yAa@cBs@kDqEaRsIcW{You@wBwFc@iBw@aIaAkLO}@U{@iIsUsCkIoHaQQkBFgBXqAv@sAbDiCnZcRhIsGhHaHzHgJ"
     },
     "MRT": {
+        "route_id": "ROUTE_880854",
         "shortName": "MRT-3",
         "longName": "Taft Ave - North Ave",
+        "description": "MRT3 line from Taft Avenue to North Avenue",
         "url": "http://dotcmrt3.gov.ph/",
         "stops": [
             {
@@ -1520,8 +1526,10 @@
         "path": "_kvwA}}oaVkACeAB}@HgFx@?EWeEf@AhEJpEDVIuDwk@_AkNg@{FiAkIsEwP_B_EkEwHeWq\\iHaJaK{LuFmHmMyOcKwMuPwS_MuOcJgLyAuAwDyC{BkAmCiAwBo@oLaCmVsEeB]wAc@_Bi@}GqDu`@aXmMkI{JwFsAo@yCeAsTiFcIgBoH_AcOeD_JsBaA_@cDgAiASsAMaAIcFI}CJiDTiDh@eB`@{Bp@ca@rNaf@bQm`@fN{LnEed@`P__@vMgo@j^iy@|d@aNtHAD"
     },
     "PNR": {
+        "route_id": "ROUTE_880872",
         "shortName": "PNR MC",
         "longName": "Metro Commuter",
+        "description": "PNT Metro South Commuter connects the cities of Manila, Pasay and Muntinlupa",
         "url": "http://www.pnr.gov.ph/metro_commuter.htm",
         "stops": [
             {
