@@ -19,9 +19,17 @@ module.exports = function(grunt){
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 		yeoman: yeomanConfig,
+		less: {
+			dist: {
+				options: {
+					paths: ['<%= yeoman.app %>/public/stylesheets'],
+					yuicompress: true
+				}
+			}
+		},
 		shell: {
 			'commit': {
-				command: 'git commit -m "v<%= pkg.version %>"'
+				command: 'git commit -a -m "v<%= pkg.version %>"'
 			},
 			'checkout' : {
 				command: 'git checkout deploy'
@@ -197,6 +205,7 @@ module.exports = function(grunt){
 	grunt.registerTask('build', [
 		'clean:dist',
 		'useminPrepare',
+		'less',
 		'concat',
 		'copy',
 		'cdnify',
@@ -213,7 +222,6 @@ module.exports = function(grunt){
 		'shell:commit',
 		'shell:checkout',
 		'shell:merge',
-		'shell:deploy',
 		'shell:back'
 	]);
 
