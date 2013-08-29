@@ -19,11 +19,21 @@ module.exports = function(grunt){
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 		yeoman: yeomanConfig,
-		'heroku-deploy' : {
-			production: {
-				deployTag: 'v<%= pkg.version %>',
-				pushTag: true,
-				origin: 'origin'
+		shell: {
+			'commit': {
+				command: 'git commit -m "v<%= pkg.version %>"'
+			},
+			'checkout' : {
+				command: 'git checkout deploy'
+			},
+			'merge': {
+				command: 'git merge master'
+			},
+			'deploy': {
+				command: 'git push heroku deploy'
+			},
+			'back': {
+				command: 'git checkout master'
 			}
 		},
 		clean: {
@@ -200,7 +210,11 @@ module.exports = function(grunt){
 
 	grunt.registerTask('deploy', [
 		'build',
-		'heroku-deploy'
+		'shell:commit',
+		'shell:checkout',
+		'shell:merge',
+		'shell:deploy',
+		'shell:back'
 	]);
 
 	grunt.registerTask('default', [
