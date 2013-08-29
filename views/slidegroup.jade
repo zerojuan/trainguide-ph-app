@@ -4,7 +4,7 @@ slide-group(selected-item='selectedItem', selected-stop='selected.stop', selecte
 				h2 Line
 					span  view
 			.content-box
-				lines(lines='lines', selected-line='selected.line', selected-stop='selected.stop', show-details='showDetails')
+				lines(lines='lines', selected-line='selected.line', selected-stop='selected.stop', show-details='showDetails', get-line-details='getLineDetails')
 				.content-inner
 					#stop-content(ng-class="{true:'showdetails', false:'nodetails'}[showDetails]")
 

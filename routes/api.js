@@ -1,5 +1,6 @@
 
 var gtfs = require('gtfs-2');
+var LineDetails = require('../models/linedetails');
 var async = require('async');
 
 module.exports = {
@@ -41,6 +42,21 @@ module.exports = {
 			console.log('routes.get!!!');
 			var route = req.routeId;
 			res.send(route || res.error);
+		}
+	},
+	details: {
+		get: function(req, res){
+			var route = req.routeId;
+			console.log('details.get!', route.route_id);
+			LineDetails.findOne({ route_id: route.route_id }, function(err, detailsData){
+				if(err){
+					res.send(err);
+					console.log('err', err);
+				}else{
+					res.send(detailsData);
+					console.log('detailsData', detailsData);
+				}
+			});
 		}
 	},
 	trips: {

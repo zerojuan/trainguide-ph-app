@@ -13,8 +13,6 @@ angular.module('trainguide.controllers')
       if(newValue){
 				$scope.menuItems[0].selected = false; //reset line sidebar
         $scope.selectedItemHandler($scope.menuItems[0]);
-
-
       }
 		});
     $scope.menuItems = [
@@ -44,6 +42,7 @@ angular.module('trainguide.controllers')
               // console.log('main.js $scope.selected.line', $scope.selected.line);
 							$scope.selected.line = $scope.lines.LRT1;
               $scope.showDetails = false;
+              $scope.getLineDetails($scope.selected.line);
 						}
 						$scope.selectedItem = $scope.menuItems[i];
 					}else{
@@ -103,17 +102,28 @@ angular.module('trainguide.controllers')
       };
     });
 
+    $scope.getLineDetails = function(line){
+      // console.log('$scope.selected.line', line);
+      $http({method: 'GET', url: '/api/details/' + line.route_id})
+        .success(function(data){
+          $scope.selected.line.details = data;
+        })
+        .error(function(data, status, headers, config){
+          console.log('ERROR!!!!!!', data, status, headers, config);
+        });
+    };
+
     $scope.getPlaces = function(qry){
 
       PlacesService.getPlacesByCategory(qry.queryStr,
         function(data) {
           if(qry.category=='Sightseeing'){
             $scope.selected.sights.totalcount = data.places.length;
-            console.log('$scope.selected.sights.totalcount', $scope.selected.sights.totalcount);
+            // console.log('$scope.selected.sights.totalcount', $scope.selected.sights.totalcount);
           }
           if(qry.category=='Shopping'){
             $scope.selected.shops.totalcount = data.places.length;
-            console.log('$scope.selected.sights.totalcount', $scope.selected.sights.totalcount);
+            // console.log('$scope.selected.sights.totalcount', $scope.selected.sights.totalcount);
           }
         },
         function(data, status, headers, config) {
@@ -129,11 +139,11 @@ angular.module('trainguide.controllers')
           for(var item in data){
             if(qry.category=='Sightseeing'){
               $scope.selected.sights.push(data[item]); 
-              console.log('$scope.selected.sights.push(data[item]);', $scope.selected.sights);
+              // console.log('$scope.selected.sights.push(data[item]);', $scope.selected.sights);
             }
             if(qry.category=='Shopping'){
               $scope.selected.shops.push(data[item]);
-              console.log('$scope.selected.shops.push(data[item]);', $scope.selected.shops);
+              // console.log('$scope.selected.shops.push(data[item]);', $scope.selected.shops);
             }
           }
         },
