@@ -161,6 +161,7 @@ exports.generateStaticData = function(req, res, next){
 									callback(err);
 								}else{
 									var resultObj = {
+										route_id: routeId,
 										shortName: route.route_short_name,
 										longName: route.route_long_name,
 										description: route.route_desc,
