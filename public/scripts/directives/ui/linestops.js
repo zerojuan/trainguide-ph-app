@@ -54,7 +54,7 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 										.attr("height", 10)
 										.attr("fill", "#333");
 									svg.append("circle")
-										.attr("class", "transfer transferee")
+										.attr("class", "transfer " + d.transfer.line_name)
 										.attr("cx", centerX+25)
 										.attr("cy", (y(i)+20))
 										.attr("r", 8)
