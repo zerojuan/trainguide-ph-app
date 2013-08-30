@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('uiModule').directive('lineStops', ['CommonAppState', function(CommonAppState){
+angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsService', function(CommonAppState, StopsService){
 	return {
 		restrict : 'E',
 		transclude : true,
@@ -29,7 +29,8 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', function(Co
 			scope.$watch('selectedLine', function(newValue, oldValue){
 				// console.log('SELECTEDITEM!!!!!', scope.selectedItem);
 				if(newValue && newValue.stops){
-					// console.log('svgHeight', svgHeight, 'linestops: ', newValue.stops);
+					svg.selectAll(".transfer").remove();
+					console.log('svgHeight', svgHeight, 'linestops: ', newValue.stops);
 					y = d3.scale.linear()
 								.domain([0, newValue.stops.length-1])
 								.range([0, svgHeight-30]);
@@ -38,7 +39,7 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', function(Co
 						svg.selectAll(".vertical")
 							.attr("height", svgHeight-30)
 							.attr("class", "vertical " + newValue.name);
-						svg.selectAll(".transfer").remove();
+						// svg.selectAll(".transfer").remove();
 						var dots = svg.selectAll(".stop")
 							.data(newValue.stops, function(d){return d.stop_id;});
 						dots.enter().append("circle")
@@ -46,18 +47,21 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', function(Co
 								var _class = "stop ";
 								if(d.transfer){
 									svg.append("rect")
-										.attr("class", "transfer")
+										.attr("class", "transfer " + d.transfer.line_name)
 										.attr("x", centerX + 9)
 										.attr("y", (y(i)+15))
 										.attr("width", 20)
 										.attr("height", 10)
 										.attr("fill", "#333");
 									svg.append("circle")
-										.attr("class", "transfer " + d.transfer.line)
+										.attr("class", "transfer " + d.transfer.line_name)
 										.attr("cx", centerX+25)
 										.attr("cy", (y(i)+20))
-										.attr("r", 8);
-									return _class+= "Transferee";
+										.attr("r", 8)
+										.on("click", function(){
+											scope.onSelectedStop(StopsService.getStopById(d.transfer.stop_id));
+										});
+									return _class+= "transferee";
 								}
 								return _class+= newValue.name;
 							})
@@ -82,22 +86,31 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', function(Co
 							.attr("class", function(d,i){
 								var _class = "label";
 								if(d.transfer){
-									var names = d.transfer.details.stop_name.split(" ");
+									var names = d.transfer.stop_name.split(" ");
 									svg.append("text")
 										.attr("class", "transfer")
 										.attr("x", centerX + 40)
 										.attr("y", (y(i)+23))
 										.text(function(){
-											return names[0].toUpperCase();
+											return names[0].toUpperCase() + " " + names[1].toUpperCase();
 										});
 									if(names.length > 1){
-										svg.append("text")
-											.attr("class", "transfer")
-											.attr("x", centerX + 40)
-											.attr("y", (y(i)+33))
-											.text(function(){
-												return names[1].toUpperCase();
-											});
+										// svg.append("text")
+										// 	.attr("class", "transfer")
+										// 	.attr("x", centerX + 40)
+										// 	.attr("y", (y(i)+33))
+										// 	.text(function(){
+										// 		return names[1].toUpperCase();
+										// 	});
+											if(names[2]){
+												svg.append("text")
+													.attr("class", "transfer")
+													.attr("x", centerX + 40)
+													.attr("y", (y(i)+33))
+													.text(function(){
+														return names[2].toUpperCase();
+													});	
+											}
 									}
 								}
 								if(i == 0 || i == newValue.stops.length-1){
