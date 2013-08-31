@@ -8,7 +8,8 @@ angular.module('uiModule').directive('places', function(){
       selectedCategory : '=',
       getPlacesCount : '=',
 			onQueryPlaces : '=',
-			places : '='
+			places : '=',
+      resultPlaces : '='
     },
     link : function(scope, element){
       var query = {};
@@ -42,7 +43,7 @@ angular.module('uiModule').directive('places', function(){
         '<div class="antiscroll-wrap">'+
           '<div class="block">'+
             '<div class="antiscroll-inner">'+
-              '<div class="places-list" ng-transclude>' +
+              '<div ng-show="resultPlaces.length==0" class="places-list" ng-transclude>' +
         				'<ul>' +
         				  '<li ng-repeat="place in places">' +
         				    '<span class="name">{{place.name}}</span>' +
@@ -51,10 +52,19 @@ angular.module('uiModule').directive('places', function(){
         				  '</li>' +
         				'</ul>' +
         			'</div>'+
+              '<div ng-show="resultPlaces.length>0" class="places-list" ng-transclude>' +
+                '<ul>' +
+                  '<li ng-repeat="resultPlace in resultPlaces">' +
+                    '<span class="name">{{resultPlace.name}}</span>' +
+                    '<span class="dist">{{resultPlace.distance}}</span>' +
+                    '<div class="{{resultPlace.line.line_name}} square"></div>' +
+                  '</li>' +
+                '</ul>' +
+              '</div>'+
             '</div>'+
           '</div>'+
         '</div>'+
-        '<a ng-show="counter*20<=places.totalcount-20" ng-click="loadPlaces(counter=counter+1, selectedCategory)">Load more...</a>'+
+        '<a ng-show="((resultPlaces.length==0)&&(counter*20<=places.totalcount-20))" ng-click="loadPlaces(counter=counter+1, selectedCategory)">Load more...</a>'+
       '</div>',
     replace : true
   }

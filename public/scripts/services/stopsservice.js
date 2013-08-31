@@ -16,7 +16,7 @@ angular.module('trainguideServices')
         for (var i = 0; i < stops.length; i++) {
           if(stops[i].stop_id == stopId){
             stops[i].line_name = _lines[key].name;
-            console.log('stops[i]', stops[i]);
+            // console.log('stops[i]', stops[i]);
             return stops[i];
           }
         };
