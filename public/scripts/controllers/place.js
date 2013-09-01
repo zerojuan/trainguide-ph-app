@@ -18,10 +18,10 @@ angular.module('trainguide.controllers')
 
     $scope.getPlaces = function(qry){
 
-			PlacesService.getPlacesByCategory(qry.queryStr,
+			PlacesService.getPlacesBySearch(qry.queryStr,
 				function(data) {
 					$scope.places.totalcount = data.places.length;
-          // console.log('getPlacesByCategory $scope.places', $scope.places, data.places.length, data);
+          // console.log('getPlacesBySearch $scope.places', $scope.places, data.places.length, data);
 				},
 				function(data, status, headers, config) {
 					console.log('ERROR!!!!!!', data, status, headers, config);
