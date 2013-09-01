@@ -78,10 +78,12 @@ app.get('/api/agencies/:agency_id/routes', api.routes.list);
 app.param('route_id', api._loadRId);
 app.get('/api/agencies/:agency_id/routes/:route_id', api.routes.get);
 app.get('/api/routes/:route_id/trips', api.trips.list);
+app.get('/api/details/:route_id', api.details.get);
 app.param('trip_id', api._loadTId);
 app.get('/api/routes/:route_id/trips/:trip_id', api.trips.get);
 app.get('/api/trips/:trip_id/stops', api.stops.list);
 app.get('/api/trips/:trip_id/calendar', api.calendar.list);
+app.get('/api/transfers', api.transfers.list);
 
 //places
 app.get('/places', places.index);

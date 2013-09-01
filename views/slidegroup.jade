@@ -4,7 +4,7 @@ slide-group(selected-item='selectedItem', selected-stop='selected.stop', selecte
 				h2 Line
 					span  view
 			.content-box
-				lines(lines='lines', selected-line='selected.line', selected-stop='selected.stop', show-details='showDetails')
+				lines(lines='lines', selected-line='selected.line', selected-stop='selected.stop', show-details='showDetails', get-line-details='getLineDetails')
 				.content-inner
 					#stop-content(ng-class="{true:'showdetails', false:'nodetails'}[showDetails]")
 
@@ -19,14 +19,12 @@ slide-group(selected-item='selectedItem', selected-stop='selected.stop', selecte
 
 		slide(title='Places')
 			.title-box
-				h2.place Places
-					span  to go
-				.search-form
-					i.icon-search
-					input(type="text", placeholder="Search").search-box
+				search(on-search="searchFn", result-places="resultPlaces")
 			.content-box(ng-controller='PlaceCtrl')
 				categories(categories="activeCategories", selected-category="selected.category")
-				places(selected-category='selected.category', get-places-count="getPlaces", on-query-places="getLimitedPlaces", places="places", active-categories="activeCategories")
+				places(selected-category='selected.category', get-places-count="getPlaces", 
+					on-query-places="getLimitedPlaces", places="places", 
+					active-categories="activeCategories", result-places="resultPlaces")
 
 		slide(title='Featured')
 			.featured-box

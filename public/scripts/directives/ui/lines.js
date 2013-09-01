@@ -5,10 +5,11 @@ angular.module('uiModule').directive('lines', ['CommonAppState', function(Common
 		restrict : 'E',
 		transclude : true,
 		scope : {
-			lines : '=lines',
-			selectedStop : '=selectedStop',
-			selectedLine : '=selectedLine',
-			showDetails: '=showDetails'
+			lines : '=',
+			selectedStop : '=',
+			selectedLine : '=',
+			showDetails : '=',
+			getLineDetails : '='
 		},
 		link : function(scope, element){
 				console.log('lines.js selectedStop', scope.selectedStop);
@@ -28,6 +29,7 @@ angular.module('uiModule').directive('lines', ['CommonAppState', function(Common
 				scope.selectedLine = line;
 				scope.selectedStop = null;
 				scope.showDetails = false;
+				scope.getLineDetails(line);
 				// console.log('lines.js selectedStop showDetails: ', scope.showDetails);
 			}
 		},
@@ -41,31 +43,31 @@ angular.module('uiModule').directive('lines', ['CommonAppState', function(Common
 				'<div class="stop-desc" ng-class="{true:\'showdetails\', false:\'nodetails\'}[showDetails]"></div>'+
 				'<table class="line-desc" ng-class="{true:\'nodetails\', false:\'showdetails\'}[showDetails]">'+
 					'<tr>'+
-						'<td>Weekdays: {{selectedLine.weekdays}}</td>'+
+						'<td>Weekdays: {{selectedLine.details.weekdays}}</td>'+
 					'</tr>'+
 					'<tr>'+
-						'<td>Weekend: {{selectedLine.weekend}}</td>'+
+						'<td>Weekend: {{selectedLine.details.weekend}}</td>'+
 					'</tr>'+
 					'<tr>'+
-						'<td>Stored Value Card: {{selectedLine.svc}}</td>'+
+						'<td>Stored Value Card: {{selectedLine.details.svc}}</td>'+
 					'</tr>'+
 				'</table>'+
 				'<table class="contact-desc" ng-class="{true:\'nodetails\', false:\'showdetails\'}[showDetails]">'+
 					'<th>Contact</th>'+
 					'<tr>'+
-						'<td>Web: {{selectedLine.web}}</td>'+
+						'<td>Web: {{selectedLine.details.web}}</td>'+
 					'</tr>'+
 					'<tr>'+
-						'<td>Twitter: {{selectedLine.twitter}}</td>'+
+						'<td>Twitter: {{selectedLine.details.twitter}}</td>'+
 					'</tr>'+
 					'<tr>'+
-						'<td>Contact No.: {{selectedLine.contactNo}}</td>'+
+						'<td>Contact No.: {{selectedLine.details.contactNo}}</td>'+
 					'</tr>'+
 					'<tr>'+
-						'<td>Fare: {{selectedLine.fare}}</td>'+
+						'<td>Fare: {{selectedLine.details.fare}}</td>'+
 					'</tr>'+
 					'<tr>'+
-						'<td>Email: {{selectedLine.email}}</td>'+
+						'<td>Email: {{selectedLine.details.email}}</td>'+
 					'</tr>'+
 				'</table>'+
 			'</div>',

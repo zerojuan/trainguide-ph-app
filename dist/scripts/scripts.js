@@ -148,6 +148,24 @@ angular.module('viewerApp').controller('ViewerCtrl', [
     });
   }
 ]);
+angular.module('trainguide.controllers').controller('DirectionCtrl', [
+  '$scope',
+  'DirectionsService',
+  'StopsService',
+  function ($scope, DirectionsService, StopsService) {
+    $scope.direction = {};
+    $scope.direction.from = null;
+    $scope.direction.to = null;
+    $scope.getDirections = function () {
+      DirectionsService.getDirections({
+        from: $scope.direction.from,
+        to: $scope.direction.to
+      }, function (data) {
+      }, function () {
+      });
+    };
+  }
+]);
 angular.module('trainguide.controllers').controller('GMapCtrl', [
   '$scope',
   function ($scope) {
@@ -171,9 +189,12 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
   '$http',
   '$route',
   'LinesService',
+  'StopsService',
+  'TransfersService',
   'PlacesService',
   'CommonAppState',
-  function ($scope, $http, $route, LinesService, PlacesService, CommonAppState) {
+  function ($scope, $http, $route, LinesService, StopsService, TransfersService, PlacesService, CommonAppState) {
+    $scope.resultPlaces = [];
     $scope.showDetails = false;
     $scope.selected = {
       stop: null,
@@ -214,6 +235,7 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
             if (item.title == 'Line' && !$scope.selected.line) {
               $scope.selected.line = $scope.lines.LRT1;
               $scope.showDetails = false;
+              $scope.getLineDetails($scope.selected.line);
             }
             $scope.selectedItem = $scope.menuItems[i];
           } else {
@@ -237,6 +259,24 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
       $scope.lines.LRT2.color = '#ad86bc';
       $scope.lines.MRT.color = '#5384c4';
       $scope.lines.PNR.color = '#f28740';
+      StopsService.setLines($scope.lines);
+      TransfersService.getAllTransfers(function (data) {
+        $scope.transfers = data;
+        for (var i = 0; i < $scope.transfers.length; i++) {
+          var fromStop = StopsService.getStopById($scope.transfers[i].from_stop_id);
+          var toStop = StopsService.getStopById($scope.transfers[i].to_stop_id);
+          fromStop.transfer = {
+            line_name: toStop.line_name,
+            stop_id: toStop.details.stop_id,
+            stop_name: toStop.details.stop_name,
+            stop_lon: toStop.details.stop_lon,
+            stop_lat: toStop.details.stop_lat
+          };
+        }
+        ;
+      }, function (data, status, headers, config) {
+        console.log('Error!', data, status, headers, config);
+      });
       $scope.getLineByName = function (name) {
         for (var i in $scope.lines) {
           console.log('i', i, 'name', name);
@@ -247,15 +287,23 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
         return null;
       };
     });
+    $scope.getLineDetails = function (line) {
+      $http({
+        method: 'GET',
+        url: '/api/details/' + line.route_id
+      }).success(function (data) {
+        $scope.selected.line.details = data;
+      }).error(function (data, status, headers, config) {
+        console.log('ERROR!!!!!!', data, status, headers, config);
+      });
+    };
     $scope.getPlaces = function (qry) {
-      PlacesService.getPlacesByCategory(qry.queryStr, function (data) {
+      PlacesService.getPlacesBySearch(qry.queryStr, function (data) {
         if (qry.category == 'Sightseeing') {
           $scope.selected.sights.totalcount = data.places.length;
-          console.log('$scope.selected.sights.totalcount', $scope.selected.sights.totalcount);
         }
         if (qry.category == 'Shopping') {
           $scope.selected.shops.totalcount = data.places.length;
-          console.log('$scope.selected.sights.totalcount', $scope.selected.sights.totalcount);
         }
       }, function (data, status, headers, config) {
         console.log('ERROR!!!!!!', data, status, headers, config);
@@ -266,15 +314,30 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
         for (var item in data) {
           if (qry.category == 'Sightseeing') {
             $scope.selected.sights.push(data[item]);
-            console.log('$scope.selected.sights.push(data[item]);', $scope.selected.sights);
           }
           if (qry.category == 'Shopping') {
             $scope.selected.shops.push(data[item]);
-            console.log('$scope.selected.shops.push(data[item]);', $scope.selected.shops);
           }
         }
       }, function (data, status, headers, config) {
         console.log('ERROR!!!!!!', data, status, headers, config);
+      });
+    };
+    $scope.searchFn = function (qry) {
+      $scope.resultPlaces = [];
+      PlacesService.getPlacesBySearch(qry.queryStr, function (data) {
+        var places = data.places;
+        for (var i = 0; i < places.length; i++) {
+          for (key in $scope.lines) {
+            if ($scope.lines[key].shortName == places[i].line.name) {
+              places[i].line.line_name = $scope.lines[key].name;
+            }
+          }
+          $scope.resultPlaces.push(places[i]);
+        }
+        console.log('$scope.resultPlaces' + qry.queryStr, $scope.resultPlaces);
+      }, function (data, status, headers, config) {
+        console.log('ERROR!!!!!!' + qry.queryStr, data, status, config);
       });
     };
   }
@@ -296,7 +359,7 @@ angular.module('trainguide.controllers').controller('PlaceCtrl', [
       }
     });
     $scope.getPlaces = function (qry) {
-      PlacesService.getPlacesByCategory(qry.queryStr, function (data) {
+      PlacesService.getPlacesBySearch(qry.queryStr, function (data) {
         $scope.places.totalcount = data.places.length;
       }, function (data, status, headers, config) {
         console.log('ERROR!!!!!!', data, status, headers, config);
@@ -315,6 +378,22 @@ angular.module('trainguide.controllers').controller('PlaceCtrl', [
       }, function (data, status, headers, config) {
         console.log('ERROR!!!!!!', data, status, headers, config);
       });
+    };
+  }
+]);
+angular.module('google-maps').directive('globalizeMap', [
+  '$rootScope',
+  function ($rootScope) {
+    return {
+      require: '^googleMap',
+      restrict: 'E',
+      link: function (scope, elm, attrs, gmapCtrl) {
+        gmapCtrl.registerMapListener(scope);
+        scope.onMapReady = function (map) {
+          console.log('Attach \'map\' to $rootScope');
+          $rootScope.map = map;
+        };
+      }
     };
   }
 ]);
@@ -827,10 +906,32 @@ angular.module('google-maps').factory('DirectionsService', function () {
     };
   }
 ]);
+angular.module('google-maps').directive('placesAutocomplete', [
+  '$rootScope',
+  function ($rootScope) {
+    return {
+      restrict: 'A',
+      scope: {},
+      link: function (scope, elm, attrs) {
+        var autocomplete = new google.maps.places.Autocomplete(elm[0]);
+        $rootScope.$watch('map', function (newVal, oldVal) {
+          if (newVal) {
+            console.log('Map exists!', newVal);
+            autocomplete.bindTo('bounds', newVal);
+          }
+        });
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+          var place = autocomplete.getPlace();
+          if (!place.geometry) {
+            return;
+          }
+        });
+      }
+    };
+  }
+]);
 'use strict';
-angular.module('google-maps').directive('polylineDrawer', [
-  'CommonAppState',
-  function (CommonAppState) {
+angular.module('google-maps').directive('polylineDrawer', [function () {
     return {
       require: '^googleMap',
       restrict: 'E',
@@ -912,8 +1013,7 @@ angular.module('google-maps').directive('polylineDrawer', [
         });
       }
     };
-  }
-]);
+  }]);
 'use strict';
 angular.module('uiModule').directive('categories', function () {
   return {
@@ -944,10 +1044,11 @@ angular.module('uiModule').directive('lines', [
       restrict: 'E',
       transclude: true,
       scope: {
-        lines: '=lines',
-        selectedStop: '=selectedStop',
-        selectedLine: '=selectedLine',
-        showDetails: '=showDetails'
+        lines: '=',
+        selectedStop: '=',
+        selectedLine: '=',
+        showDetails: '=',
+        getLineDetails: '='
       },
       link: function (scope, element) {
         console.log('lines.js selectedStop', scope.selectedStop);
@@ -960,9 +1061,10 @@ angular.module('uiModule').directive('lines', [
           scope.selectedLine = line;
           scope.selectedStop = null;
           scope.showDetails = false;
+          scope.getLineDetails(line);
         };
       },
-      template: '<div class="line-nav clearfix {{selectedLine.name}}" ng-transclude>' + '<ul>' + '<li ng-repeat="i in lines" class="{{i.name}}" ng-class="{active:i.name == selectedLine.name}" ng-click="lineSelected(i)">' + '{{i.shortName}}' + '</li>' + '</ul>' + '<div class="stop-desc" ng-class="{true:\'showdetails\', false:\'nodetails\'}[showDetails]"></div>' + '<table class="line-desc" ng-class="{true:\'nodetails\', false:\'showdetails\'}[showDetails]">' + '<tr>' + '<td>Weekdays: {{selectedLine.weekdays}}</td>' + '</tr>' + '<tr>' + '<td>Weekend: {{selectedLine.weekend}}</td>' + '</tr>' + '<tr>' + '<td>Stored Value Card: {{selectedLine.svc}}</td>' + '</tr>' + '</table>' + '<table class="contact-desc" ng-class="{true:\'nodetails\', false:\'showdetails\'}[showDetails]">' + '<th>Contact</th>' + '<tr>' + '<td>Web: {{selectedLine.web}}</td>' + '</tr>' + '<tr>' + '<td>Twitter: {{selectedLine.twitter}}</td>' + '</tr>' + '<tr>' + '<td>Contact No.: {{selectedLine.contactNo}}</td>' + '</tr>' + '<tr>' + '<td>Fare: {{selectedLine.fare}}</td>' + '</tr>' + '<tr>' + '<td>Email: {{selectedLine.email}}</td>' + '</tr>' + '</table>' + '</div>',
+      template: '<div class="line-nav clearfix {{selectedLine.name}}" ng-transclude>' + '<ul>' + '<li ng-repeat="i in lines" class="{{i.name}}" ng-class="{active:i.name == selectedLine.name}" ng-click="lineSelected(i)">' + '{{i.shortName}}' + '</li>' + '</ul>' + '<div class="stop-desc" ng-class="{true:\'showdetails\', false:\'nodetails\'}[showDetails]"></div>' + '<table class="line-desc" ng-class="{true:\'nodetails\', false:\'showdetails\'}[showDetails]">' + '<tr>' + '<td>Weekdays: {{selectedLine.details.weekdays}}</td>' + '</tr>' + '<tr>' + '<td>Weekend: {{selectedLine.details.weekend}}</td>' + '</tr>' + '<tr>' + '<td>Stored Value Card: {{selectedLine.details.svc}}</td>' + '</tr>' + '</table>' + '<table class="contact-desc" ng-class="{true:\'nodetails\', false:\'showdetails\'}[showDetails]">' + '<th>Contact</th>' + '<tr>' + '<td>Web: {{selectedLine.details.web}}</td>' + '</tr>' + '<tr>' + '<td>Twitter: {{selectedLine.details.twitter}}</td>' + '</tr>' + '<tr>' + '<td>Contact No.: {{selectedLine.details.contactNo}}</td>' + '</tr>' + '<tr>' + '<td>Fare: {{selectedLine.details.fare}}</td>' + '</tr>' + '<tr>' + '<td>Email: {{selectedLine.details.email}}</td>' + '</tr>' + '</table>' + '</div>',
       replace: true
     };
   }
@@ -970,7 +1072,8 @@ angular.module('uiModule').directive('lines', [
 'use strict';
 angular.module('uiModule').directive('lineStops', [
   'CommonAppState',
-  function (CommonAppState) {
+  'StopsService',
+  function (CommonAppState, StopsService) {
     return {
       restrict: 'E',
       transclude: true,
@@ -989,6 +1092,8 @@ angular.module('uiModule').directive('lineStops', [
         svg.append('rect').attr('class', 'vertical').attr('x', centerX - lineWidth / 2).attr('width', lineWidth).attr('y', 20);
         scope.$watch('selectedLine', function (newValue, oldValue) {
           if (newValue && newValue.stops) {
+            svg.selectAll('.transfer').remove();
+            console.log('svgHeight', svgHeight, 'linestops: ', newValue.stops);
             y = d3.scale.linear().domain([
               0,
               newValue.stops.length - 1
@@ -998,16 +1103,17 @@ angular.module('uiModule').directive('lineStops', [
             ]);
             for (var i in newValue.stops) {
               svg.selectAll('.vertical').attr('height', svgHeight - 30).attr('class', 'vertical ' + newValue.name);
-              svg.selectAll('.transfer').remove();
               var dots = svg.selectAll('.stop').data(newValue.stops, function (d) {
                   return d.stop_id;
                 });
               dots.enter().append('circle').attr('class', function (d, i) {
                 var _class = 'stop ';
                 if (d.transfer) {
-                  svg.append('rect').attr('class', 'transfer').attr('x', centerX + 9).attr('y', y(i) + 15).attr('width', 20).attr('height', 10).attr('fill', '#333');
-                  svg.append('circle').attr('class', 'transfer ' + d.transfer.line).attr('cx', centerX + 25).attr('cy', y(i) + 20).attr('r', 8);
-                  return _class += 'Transferee';
+                  svg.append('rect').attr('class', 'transfer ' + d.transfer.line_name).attr('x', centerX + 9).attr('y', y(i) + 15).attr('width', 20).attr('height', 10).attr('fill', '#333');
+                  svg.append('circle').attr('class', 'transfer ' + d.transfer.line_name).attr('cx', centerX + 25).attr('cy', y(i) + 20).attr('r', 8).on('click', function () {
+                    scope.onSelectedStop(StopsService.getStopById(d.transfer.stop_id));
+                  });
+                  return _class += 'transferee';
                 }
                 return _class += newValue.name;
               }).attr('cx', centerX).attr('cy', function (d, i) {
@@ -1030,14 +1136,16 @@ angular.module('uiModule').directive('lineStops', [
               text.enter().append('text').attr('class', function (d, i) {
                 var _class = 'label';
                 if (d.transfer) {
-                  var names = d.transfer.details.stop_name.split(' ');
+                  var names = d.transfer.stop_name.split(' ');
                   svg.append('text').attr('class', 'transfer').attr('x', centerX + 40).attr('y', y(i) + 23).text(function () {
-                    return names[0].toUpperCase();
+                    return names[0].toUpperCase() + ' ' + names[1].toUpperCase();
                   });
                   if (names.length > 1) {
-                    svg.append('text').attr('class', 'transfer').attr('x', centerX + 40).attr('y', y(i) + 33).text(function () {
-                      return names[1].toUpperCase();
-                    });
+                    if (names[2]) {
+                      svg.append('text').attr('class', 'transfer').attr('x', centerX + 40).attr('y', y(i) + 33).text(function () {
+                        return names[2].toUpperCase();
+                      });
+                    }
                   }
                 }
                 if (i == 0 || i == newValue.stops.length - 1) {
@@ -1088,7 +1196,8 @@ angular.module('uiModule').directive('places', function () {
       selectedCategory: '=',
       getPlacesCount: '=',
       onQueryPlaces: '=',
-      places: '='
+      places: '=',
+      resultPlaces: '='
     },
     link: function (scope, element) {
       var query = {};
@@ -1114,7 +1223,7 @@ angular.module('uiModule').directive('places', function () {
         $('.antiscroll-wrap').antiscroll();
       };
     },
-    template: '<div>' + '<div class="antiscroll-wrap">' + '<div class="block">' + '<div class="antiscroll-inner">' + '<div class="places-list" ng-transclude>' + '<ul>' + '<li ng-repeat="place in places">' + '<span class="name">{{place.name}}</span>' + '<span class="dist">{{place.distance}}</span>' + '<div class="{{place.line.line_name}} square"></div>' + '</li>' + '</ul>' + '</div>' + '</div>' + '</div>' + '</div>' + '<a ng-show="counter*20<=places.totalcount-20" ng-click="loadPlaces(counter=counter+1, selectedCategory)">Load more...</a>' + '</div>',
+    template: '<div>' + '<div class="antiscroll-wrap">' + '<div class="block">' + '<div class="antiscroll-inner">' + '<div ng-show="resultPlaces.length==0" class="places-list" ng-transclude>' + '<ul>' + '<li ng-repeat="place in places">' + '<span class="name">{{place.name}}</span>' + '<span class="dist">{{place.distance}}</span>' + '<div class="{{place.line.line_name}} square"></div>' + '</li>' + '</ul>' + '</div>' + '<div ng-show="resultPlaces.length>0" class="places-list" ng-transclude>' + '<ul>' + '<li ng-repeat="resultPlace in resultPlaces">' + '<span class="name">{{resultPlace.name}}</span>' + '<span class="dist">{{resultPlace.distance}}</span>' + '<div class="{{resultPlace.line.line_name}} square"></div>' + '</li>' + '</ul>' + '</div>' + '</div>' + '</div>' + '</div>' + '<a ng-show="((resultPlaces.length==0)&&(counter*20<=places.totalcount-20))" ng-click="loadPlaces(counter=counter+1, selectedCategory)">Load more...</a>' + '</div>',
     replace: true
   };
 });
@@ -1140,6 +1249,43 @@ angular.module('uiModule').directive('radioGroup', [function () {
       replace: true
     };
   }]);
+'use strict';
+angular.module('uiModule').directive('search', function () {
+  return {
+    restrict: 'E',
+    transclude: true,
+    scope: {
+      onSearch: '=',
+      resultPlaces: '='
+    },
+    link: function (scope, element) {
+      var KEYS = { ENTER: 13 };
+      $('.search-box').focus(function () {
+        $(this).animate({ width: '200px' }, 'fast');
+        $('h2.place').hide('fast');
+        $('h2.place span').hide('fast');
+      }).blur(function () {
+        $(this).animate({ width: '100px' }, 'fast');
+        $('h2.place').show('fast');
+        $('h2.place span').show('fast');
+      }).keyup(function (evt) {
+        if (evt.keyCode === KEYS.ENTER) {
+          var qry = { queryStr: $(this).val() };
+          if ($(this).val() != '' || $(this).val() != this.value) {
+            $('.categories-list h6').text('Results');
+            scope.onSearch(qry);
+          } else {
+            $('.categories-list h6').text('Featured');
+            scope.resultPlaces = [];
+            scope.$apply();
+          }
+        }
+      });
+    },
+    template: '<div>' + '<h2 class="place">Places <span> to go</span></h2>' + '<div class="search-form">' + '<i class="icon-search"></i>' + '<input type="text" placeholder="Search" class="search-box">' + '</div>' + '</div>',
+    replace: true
+  };
+});
 'use strict';
 angular.module('uiModule').directive('shopsSlide', function () {
   return {
@@ -1350,6 +1496,16 @@ angular.module('trainguideServices').factory('CommonAppState', [
     return commonAppService;
   }
 ]);
+angular.module('trainguideServices').factory('DirectionsService', [
+  '$http',
+  function ($http) {
+    var DirectionsService = {};
+    var api = 'http://maps.pleasantprogrammer.com/opentripplanner-api-webapp/ws';
+    DirectionsService.getDirections = function (query, callback, err) {
+    };
+    return DirectionsService;
+  }
+]);
 angular.module('trainguideServices').factory('LinesService', [
   '$http',
   function ($http) {
@@ -1410,10 +1566,10 @@ angular.module('trainguideServices').factory('PlacesService', [
       }
       return result;
     };
-    PlacesService.getPlacesByCategory = function (category, callback, err) {
+    PlacesService.getPlacesBySearch = function (query, callback, err) {
       $http({
         method: 'GET',
-        url: '/places/search-place/?queryStr=' + category + '&format=json'
+        url: '/places/search-place/?queryStr=' + query + '&format=json'
       }).success(function (data, status) {
         callback(data, status);
       }).error(function (data, status, headers, config) {
@@ -1431,6 +1587,44 @@ angular.module('trainguideServices').factory('PlacesService', [
       });
     };
     return PlacesService;
+  }
+]);
+angular.module('trainguideServices').factory('StopsService', function () {
+  var StopsService = {};
+  var _lines = null;
+  StopsService.setLines = function (lines) {
+    _lines = lines;
+  };
+  StopsService.getStopById = function (stopId) {
+    for (key in _lines) {
+      var stops = _lines[key].stops;
+      for (var i = 0; i < stops.length; i++) {
+        if (stops[i].stop_id == stopId) {
+          stops[i].line_name = _lines[key].name;
+          return stops[i];
+        }
+      }
+      ;
+    }
+  };
+  return StopsService;
+});
+angular.module('trainguideServices').factory('TransfersService', [
+  '$http',
+  function ($http) {
+    var TransfersService = {};
+    var _lines = null;
+    TransfersService.getAllTransfers = function (callback, err) {
+      $http({
+        method: 'GET',
+        url: '/api/transfers'
+      }).success(function (data) {
+        callback(data);
+      }).error(function (data, status, headers, config) {
+        err(data, status, headers, config);
+      });
+    };
+    return TransfersService;
   }
 ]);
 $(document).ready(function () {

@@ -17,18 +17,18 @@
 			menu-items='menuItems',
 			selected-item='selectedItem',
 			show-details='showDetails').control-tabs
-		.directions Transit directions
+		.directions(ng-controller='DirectionCtrl') Transit directions
 			form from:
-				input(type='text')
+				input(type='text', places-autocomplete, value='Something')
 				| to:
-				input(type='text')
+				input(type='text', places-autocomplete)
 				| Depart at: 
 				select
 					option 00:00
 					option 08:00
 					option 10:00
 				br
-				input(type='submit', value='Get Directions')
+				input(type='submit', value='Get Directions', ng-click='getDirections()')
 	.footer
 		ul
 			li: a

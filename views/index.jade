@@ -1,3 +1,4 @@
+
 extends layouts/layout
 
 block content
@@ -15,10 +16,11 @@ block content
 					draggable="true",
 					style="height: 100%; width: 100%;")
 					polyline-drawer(paths="lines", selected-line='selected.line', selected-stop="selected.stop", show-details='showDetails', selected-item="selectedItem")
+					globalize-map
 			ng-view
 
 block append scripts
-	script(src="https://maps.googleapis.com/maps/api/js?libraries=geometry&key=AIzaSyAeFiH4LhZTvKbXDNr2I8TrL9MauXt02PQ&sensor=true")
+	script(src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry&key=AIzaSyAeFiH4LhZTvKbXDNr2I8TrL9MauXt02PQ&sensor=true")
 	script(src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/src/infobox.js")
 	script(src="./components/jquery/jquery.js")
 	script(src="./components/jquery.svg/jquery.svg.js")
@@ -31,11 +33,17 @@ block append scripts
 		script(src='./scripts/controllers/main.js')
 		script(src='./scripts/controllers/gmap.js')
 		script(src='./scripts/controllers/place.js')
+		script(src='./scripts/controllers/directions.js')
 		script(src='./scripts/services/common.js')
 		script(src='./scripts/services/linesservice.js')
+		script(src='./scripts/services/stopsservice.js')
+		script(src='./scripts/services/transfersservice.js')
 		script(src='./scripts/services/placesservice.js')
+		script(src='./scripts/services/directionsservice.js')
 		script(src='./scripts/directives/gmap/google-map.js')
 		script(src='./scripts/directives/gmap/polyline-drawer.js')
+		script(src='./scripts/directives/gmap/globalize-map.js')
+		script(src='./scripts/directives/gmap/places-autocomplete.js')
 		script(src='./scripts/directives/ui/lines.js')
 		script(src='./scripts/directives/ui/linestops.js')
 		script(src='./scripts/directives/ui/radiogroup.js')
@@ -44,7 +52,8 @@ block append scripts
 		script(src='./scripts/directives/ui/slideshow.js')
 		script(src='./scripts/directives/ui/sightsslide.js')
 		script(src='./scripts/directives/ui/shopsslide.js')
-		script(src='./scripts/directives/ui/places.js')
+		script(src='./scripts/directives/ui/places.js')')
+		script(src='./scripts/directives/ui/searchplace.js')
 		script(src='./scripts/directives/ui/categories.js')
 	else
 		script(src='./scripts/scripts.js')
