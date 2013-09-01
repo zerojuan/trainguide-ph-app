@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('google-maps')
-	.directive('polylineDrawer', ['CommonAppState', function(CommonAppState){
+	.directive('polylineDrawer', [function(){
 		return {
 			require: '^googleMap',
 			restrict: 'E',

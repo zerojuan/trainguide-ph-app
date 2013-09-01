@@ -1,8 +1,11 @@
 
 angular.module('trainguide.controllers')
-	.controller('DirectionCtrl', ['$scope', 'DirectionsService', function($scope, DirectionsService){
+	.controller('DirectionCtrl', ['$scope', 'DirectionsService', 'StopsService', function($scope, DirectionsService, StopsService){
+		$scope.direction = {};
+		$scope.direction.from = null;
+		$scope.direction.to = null;
 		$scope.getDirections = function(){
-			DirectionsService.getDirections({from: 'test', to: 'test'},
+			DirectionsService.getDirections({from: $scope.direction.from, to: $scope.direction.to},
 				function(data){
 
 				},
