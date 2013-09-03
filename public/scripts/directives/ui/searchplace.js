@@ -5,6 +5,8 @@ angular.module('uiModule').directive('search', function(){
     restrict : 'E',
     transclude : true,
     scope : {
+      selectedCategory : '=',
+      searchStr : '=',
       onSearch : '=',
       resultPlaces : '='
     },
@@ -13,28 +15,21 @@ angular.module('uiModule').directive('search', function(){
         ENTER : 13
       };
 
-      $(".search-box").focus(function() {
-        $(this).animate({ width: '200px' }, "fast");
-        $('h2.place').hide("fast");
-        $('h2.place span').hide("fast");
-      }).blur(function() {
-        $(this).animate({ width: '100px' }, "fast");
-        $('h2.place').show("fast");
-        $('h2.place span').show("fast");
-      }).keyup(function(evt){
-        if (evt.keyCode === KEYS.ENTER) {
-          var qry = {
-            queryStr : $(this).val()
-          };
-          if($(this).val() != '' || $(this).val() != this.value){
-            $('.categories-list h6').text('Results');  
-            scope.onSearch(qry);
-          }else{
-            $('.categories-list h6').text('Featured'); 
-            scope.resultPlaces = [];
+      scope.$watch("selectedCategory", function(newValue, oldValue){
+        $(".search-box").focus(function() {
+          $(this).animate({ width: '200px' }, "fast");
+          $('h2.place').hide("fast");
+          $('h2.place span').hide("fast");
+        }).blur(function() {
+          $(this).animate({ width: '100px' }, "fast");
+          $('h2.place').show("fast");
+          $('h2.place span').show("fast");
+        }).keyup(function(evt){
+          if (evt.keyCode === KEYS.ENTER) {
+            scope.searchStr = $(this).val();
             scope.$apply();
           }
-        }
+        });
       });
     },
     template :

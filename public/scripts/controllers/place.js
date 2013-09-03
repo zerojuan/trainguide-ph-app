@@ -1,7 +1,9 @@
 angular.module('trainguide.controllers')
   .controller('PlaceCtrl', ['$scope', '$http', 'LinesService', 'PlacesService', function($scope, $http, LinesService, PlacesService){    
     $scope.places = [];
+    $scope.resultPlaces = [];
 
+    $scope.searchStr = null;
     $scope.activeCategories = PlacesService.activeCategories();
     $scope.selected = {
       category : $scope.activeCategories[0].name
@@ -18,7 +20,7 @@ angular.module('trainguide.controllers')
 
     $scope.getPlaces = function(qry){
 
-			PlacesService.getPlacesBySearch(qry.queryStr,
+			PlacesService.getPlacesBySearch(qry.category, qry.queryStr,
 				function(data) {
 					$scope.places.totalcount = data.places.length;
           // console.log('getPlacesBySearch $scope.places', $scope.places, data.places.length, data);
@@ -48,4 +50,27 @@ angular.module('trainguide.controllers')
         }
       );
     };
+
+    $scope.searchFn = function(qry){
+      $scope.resultPlaces = [];
+      
+      PlacesService.getPlacesBySearch(qry.category, qry.queryStr,
+        function(data){
+          var places = data.places;
+          for(var i=0; i < places.length; i++){
+            for(key in $scope.lines){
+              if($scope.lines[key].shortName == places[i].line.name){
+                places[i].line.line_name = $scope.lines[key].name;
+              }
+            }
+            $scope.resultPlaces.push(places[i]);
+          }
+          console.log('$scope.resultPlaces' + qry.queryStr, $scope.resultPlaces);
+        },
+        function(data, status, headers, config) {
+          console.log('ERROR!!!!!!' + qry.queryStr, data, status, config);
+        }
+      );
+    };
+
   }]);

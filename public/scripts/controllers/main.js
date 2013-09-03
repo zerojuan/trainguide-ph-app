@@ -5,7 +5,6 @@ angular.module('trainguide.controllers')
     function($scope, $http, $route, 
       LinesService, StopsService, TransfersService, PlacesService, CommonAppState){
 
-    $scope.resultPlaces = [];
     $scope.showDetails = false;
 		$scope.selected = {
 			stop: null,
@@ -175,28 +174,6 @@ angular.module('trainguide.controllers')
         },
         function(data, status, headers, config) {
           console.log('ERROR!!!!!!', data, status, headers, config);
-        }
-      );
-    };
-
-    $scope.searchFn = function(qry){
-      $scope.resultPlaces = [];
-      
-      PlacesService.getPlacesBySearch(qry.queryStr,
-        function(data){
-          var places = data.places;
-          for(var i=0; i < places.length; i++){
-            for(key in $scope.lines){
-              if($scope.lines[key].shortName == places[i].line.name){
-                places[i].line.line_name = $scope.lines[key].name;
-              }
-            }
-            $scope.resultPlaces.push(places[i]);
-          }
-          console.log('$scope.resultPlaces' + qry.queryStr, $scope.resultPlaces);
-        },
-        function(data, status, headers, config) {
-          console.log('ERROR!!!!!!' + qry.queryStr, data, status, config);
         }
       );
     };

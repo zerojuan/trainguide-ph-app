@@ -60,8 +60,8 @@ angular.module('trainguideServices')
 	      return result;
 	    }
 
-			PlacesService.getPlacesBySearch = function(query, callback, err){
-				$http({method: 'GET', url: '/places/search-place/?queryStr='+query+'&format=json'})
+			PlacesService.getPlacesBySearch = function(category, query, callback, err){
+				$http({method: 'GET', url: '/places/search-place/?category='+category+'&queryStr='+query+'&format=json'})
 					.success(function(data, status) {
 						callback(data, status);
 					})
