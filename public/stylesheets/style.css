@@ -119,12 +119,11 @@ table td {
   display: table-cell;
   margin: 0 auto;
   text-align: center;
-  padding-left: 18px;
+  padding-left: 15px;
 }
 .sidebar .content .control-tabs ul li a {
   float: left;
-  padding-top: 7.5px;
-  padding-bottom: 2.5px;
+  padding-top: 7px;
   text-align: center;
   color: #8b8b8b;
 }
@@ -313,7 +312,7 @@ li.PNR.clicked p {
   background-color: #e5e5e5;
   color: #5b5b5b;
   cursor: pointer;
-  font-size: 11.6pt;
+  font-size: 10.8pt;
 }
 .slide-group .content-box .line-nav ul li:last-child {
   border-right: none;
