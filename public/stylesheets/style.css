@@ -27,14 +27,14 @@ html {
 }
 body {
   height: 100%;
-  font-family: "Cabin", sans-serif;
+  font-family: 'Open Sans', sans-serif;
 }
 h1 {
-  font-family: "Cabin", sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: 19pt;
 }
 h2 {
-  font-family: "Cabin", sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: 16pt;
 }
 a {
