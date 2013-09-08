@@ -38,7 +38,7 @@ module.exports = function(grunt){
 				command: 'git checkout deploy'
 			},
 			'merge': {
-				command: 'git merge master'
+				command: 'git merge -s ours master'
 			},
 			'deploy': {
 				command: 'git push heroku deploy'
