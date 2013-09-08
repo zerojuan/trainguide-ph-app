@@ -81,6 +81,7 @@ angular.module('google-maps')
 
 						var position = new google.maps.LatLng(scope.selectedStop.details.stop_lat, scope.selectedStop.details.stop_lon);
 						scope.map.setCenter(position);
+						scope.map.setZoom(16);
 
 						setLine();
 					}

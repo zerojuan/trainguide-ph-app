@@ -19,9 +19,9 @@
 			show-details='showDetails').control-tabs
 		.directions(ng-controller='DirectionCtrl') Transit directions
 			form from:
-				input(type='text', places-autocomplete, value='Something')
+				input(type='text', places-autocomplete, value="Sup", place="direction.from")
 				| to:
-				input(type='text', places-autocomplete)
+				input(type='text', places-autocomplete, place="direction.to")
 				| Depart at: 
 				select
 					option 00:00

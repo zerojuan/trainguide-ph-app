@@ -1,5 +1,9 @@
 angular.module('trainguide.controllers')
-  .controller('PlaceCtrl', ['$scope', '$http', 'LinesService', 'PlacesService', function($scope, $http, LinesService, PlacesService){    
+  .controller('PlaceCtrl', ['$scope', '$http', 'LinesService', 'PlacesService', function($scope, $http, LinesService, PlacesService){
+
+		/** ================================================= **/
+		/** SCOPE VARIABLES
+		/** ================================================= **/
     $scope.places = [];
     $scope.resultPlaces = [];
 
@@ -7,17 +11,11 @@ angular.module('trainguide.controllers')
     $scope.activeCategories = PlacesService.activeCategories();
     $scope.selected = {
       category : $scope.activeCategories[0].name
-    }
+		}
 
-    var lines = null;
-    LinesService.getLines(function(data){
-      lines = data;
-      for(key in data){
-        lines[key].name = key;
-      }
-      // console.log('lines', lines);
-    });
-
+		/** ================================================== **/
+		/** SCOPE METHODS
+		/** ================================================== **/
     $scope.getPlaces = function(qry){
 
 			PlacesService.getPlacesBySearch(qry.category, qry.queryStr,
@@ -36,9 +34,9 @@ angular.module('trainguide.controllers')
       PlacesService.getPlacesByLimitedCategory(qry.category, qry.stopname, qry.start, qry.limit,
         function(data) {
           for(var item in data){
-            for(key in lines){
-              if(lines[key].shortName == data[item].line.name){
-                data[item].line.line_name = lines[key].name;
+            for(key in $scope.lines){
+              if($scope.lines[key].shortName == data[item].line.name){
+                data[item].line.line_name = $scope.lines[key].name;
               }
             }
             $scope.places.push(data[item]);
