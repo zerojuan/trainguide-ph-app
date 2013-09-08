@@ -587,7 +587,6 @@
 
 				// Markers
 				scope.$watch("markers", function (newValue, oldValue) {
-
 					$timeout(function () {
 
 						angular.forEach(newValue, function (v, i) {
