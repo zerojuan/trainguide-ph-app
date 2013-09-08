@@ -28,6 +28,9 @@ module.exports = function(grunt){
 			}
 		},
 		shell: {
+			'add' : {
+				command: 'git add *'
+			}
 			'commit': {
 				command: 'git commit -a -m "v<%= pkg.version %>"'
 			},
@@ -219,6 +222,7 @@ module.exports = function(grunt){
 
 	grunt.registerTask('deploy', [
 		'build',
+		'shell:add',
 		'shell:commit',
 		'shell:checkout',
 		'shell:merge',
