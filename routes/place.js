@@ -235,6 +235,7 @@ module.exports = {
   },
   search: function(req, res){
     console.log('search!!!', req.query.queryStr);
+
     if(req.query.queryStr){
       var qry = new RegExp(req.query.queryStr, 'i');
       var arr = [
@@ -242,25 +243,29 @@ module.exports = {
         {line: qry}, 
         {'stop.name': qry}, 
         {distance: qry},  
-        {website: qry}, 
-        {map: qry}, 
-        {coordinates: qry}, 
         {category: qry}, 
         {subcategory: qry} 
       ];
 
-      console.log('arr:', arr);
-      Place.find({ $or: arr }, null, { sort: '_id' }, function(err, places){
-        if(err)
-          console.log(err);
-        // console.log('places: ', places);
-        // console.log('req.query.format', req.query.format);
-        if(req.query.format){
-          res.json({ places: places });
-        }else{
-          res.render('places/search', { places: places }); 
-        }
-      }) 
+      var findPlace = function(query){
+        Place.find(query, null, { sort: '_id' }, function(err, places){
+          if(err)
+            console.log(err);
+          if(req.query.format){
+            res.json({ places: places });
+          }else{
+            res.render('places/search', { places: places }); 
+          }
+        });
+      };
+
+      if(req.query.category){
+        findPlace({ $and: [ {$or: arr}, {category: req.query.category} ] });
+      }else{
+        findPlace({ $or: arr });
+      }
+
+      console.log('arr:', arr, 'category', req.query.category);
     }
   },
   paginate: function(req, res){

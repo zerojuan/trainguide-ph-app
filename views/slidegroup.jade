@@ -9,22 +9,26 @@ slide-group(selected-item='selectedItem', selected-stop='selected.stop', selecte
 					#stop-content(ng-class="{true:'showdetails', false:'nodetails'}[showDetails]")
 
 						slideshow(images='selectedItem.images')
-			
-						sights-slide(selected-stop="selected.stop", get-places-count="getPlaces", on-query-places="getLimitedPlaces", sights="selected.sights")
 
-						shops-slide(selected-stop="selected.stop", get-places-count="getPlaces", on-query-places="getLimitedPlaces", shops="selected.shops")
+						placesbox(title="Sightseeing", icon="icon-sights", on-query-places="getLimitedPlaces", places="selected.sights", category="Sightseeing", stopname="selected.stop.details.stop_name")
+
+						placesbox(title="Shopping", icon="icon-shopping", on-query-places="getLimitedPlaces", places="selected.shops", category="Shopping", stopname="selected.stop.details.stop_name")
+
 
 					#line-content(ng-class="{true:'nodetails', false:'showdetails'}[showDetails]")
 						line-stops(selected-item="selectedItem", selected-line='selected.line', selected-stop='selected.stop', show-details='showDetails')
 
 		slide(title='Places')
-			.title-box
-				search(on-search="searchFn", result-places="resultPlaces")
-			.content-box(ng-controller='PlaceCtrl')
-				categories(categories="activeCategories", selected-category="selected.category")
-				places(selected-category='selected.category', get-places-count="getPlaces", 
-					on-query-places="getLimitedPlaces", places="places", 
-					active-categories="activeCategories", result-places="resultPlaces")
+			div(ng-controller='PlaceCtrl')
+				.title-box
+					search(selected-category="selected.category", search-str="searchStr", on-search="searchFn", result-places="resultPlaces")
+				.content-box
+					categories(categories="activeCategories", selected-category="selected.category", 
+						search-str="searchStr", result-places="resultPlaces")
+					places(selected-category="selected.category", search-str="searchStr",
+						get-places-count="getPlaces", on-query-places="getLimitedPlaces", 
+						places="places", active-categories="activeCategories", 
+						result-places="resultPlaces", on-search="searchFn")
 
 		slide(title='Featured')
 			.featured-box

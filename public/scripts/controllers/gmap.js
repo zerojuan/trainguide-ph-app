@@ -13,13 +13,58 @@ angular.module('trainguide.controllers')
 			zoomProperty: 14,
 
 			/** list of markers to put in the map */
-			markersProperty: [],
+			markers: [],
 			refresh: true,
 			pathsProperty: [],
-			stopMarkersProperty : [],
-
-			// These 2 properties will be set when clicking on the map
-			clickedLatitudeProperty: null,
-			clickedLongitudeProperty: null
+			stopMarkersProperty : []
 		});
+
+		function createMarker(val, icon, label){
+			for(var i = 0; i < $scope.markers.length; i++){
+				if($scope.markers[i].longitude == val.coordinates.lng && $scope.markers[i].latitude == val.coordinates.lat){
+					$scope.markers.splice(i, 1);
+					break;
+				}
+			}
+			console.log('icon: ' + icon);
+			$scope.markers.push({
+				longitude: val.coordinates.lng,
+				latitude: val.coordinates.lat,
+				icon: icon,
+				infoWindow: '<div id="content">'+label+'</div><div class="arrow-up"></div>',
+				label: label
+			});
+		}
+
+		function getColor(){
+			switch($scope.selected.line.name){
+				case 'PNR': return 'O';
+				case 'LRT1': return 'Y';
+				case 'LRT2': return 'P';
+				case 'MRT': return 'B';
+			}
+		}
+
+		$scope.$watch('selected.stop', function(newValue){
+			//reset all markers
+			if(newValue){
+				$scope.markers = [];
+			}
+		});
+
+		$scope.$watch('selected.sights.data', function(newValue){
+			if(newValue){
+				angular.forEach($scope.selected.sights.data, function(val){
+					createMarker(val, 'images/marker_sights'+getColor()+'.png', val.name);
+				});
+			}
+		}, true);
+
+		$scope.$watch('selected.shops.data', function(newValue){
+			if(newValue){
+				angular.forEach($scope.selected.shops.data, function(val){
+					createMarker(val, 'images/marker_shopping'+getColor()+'.png', val.name);
+				});
+			}
+		}, true);
 	}]);

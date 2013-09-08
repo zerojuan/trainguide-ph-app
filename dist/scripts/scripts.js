@@ -153,9 +153,18 @@ angular.module('trainguide.controllers').controller('DirectionCtrl', [
   'DirectionsService',
   'StopsService',
   function ($scope, DirectionsService, StopsService) {
+<<<<<<< HEAD
     $scope.direction = {};
     $scope.direction.from = null;
     $scope.direction.to = null;
+=======
+    angular.extend($scope, {
+      direction: {
+        from: null,
+        to: null
+      }
+    });
+>>>>>>> master
     $scope.getDirections = function () {
       DirectionsService.getDirections({
         from: $scope.direction.from,
@@ -175,13 +184,58 @@ angular.module('trainguide.controllers').controller('GMapCtrl', [
         longitude: 121
       },
       zoomProperty: 14,
-      markersProperty: [],
+      markers: [],
       refresh: true,
       pathsProperty: [],
-      stopMarkersProperty: [],
-      clickedLatitudeProperty: null,
-      clickedLongitudeProperty: null
+      stopMarkersProperty: []
     });
+    function createMarker(val, icon, label) {
+      for (var i = 0; i < $scope.markers.length; i++) {
+        if ($scope.markers[i].longitude == val.coordinates.lng && $scope.markers[i].latitude == val.coordinates.lat) {
+          $scope.markers.splice(i, 1);
+          break;
+        }
+      }
+      console.log('icon: ' + icon);
+      $scope.markers.push({
+        longitude: val.coordinates.lng,
+        latitude: val.coordinates.lat,
+        icon: icon,
+        infoWindow: '<div id="content">' + label + '</div><div class="arrow-up"></div>',
+        label: label
+      });
+    }
+    function getColor() {
+      switch ($scope.selected.line.name) {
+      case 'PNR':
+        return 'O';
+      case 'LRT1':
+        return 'Y';
+      case 'LRT2':
+        return 'P';
+      case 'MRT':
+        return 'B';
+      }
+    }
+    $scope.$watch('selected.stop', function (newValue) {
+      if (newValue) {
+        $scope.markers = [];
+      }
+    });
+    $scope.$watch('selected.sights.data', function (newValue) {
+      if (newValue) {
+        angular.forEach($scope.selected.sights.data, function (val) {
+          createMarker(val, 'images/marker_sights' + getColor() + '.png', val.name);
+        });
+      }
+    }, true);
+    $scope.$watch('selected.shops.data', function (newValue) {
+      if (newValue) {
+        angular.forEach($scope.selected.shops.data, function (val) {
+          createMarker(val, 'images/marker_shopping' + getColor() + '.png', val.name);
+        });
+      }
+    }, true);
   }
 ]);
 angular.module('trainguide.controllers').controller('MainCtrl', [
@@ -194,6 +248,7 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
   'PlacesService',
   'CommonAppState',
   function ($scope, $http, $route, LinesService, StopsService, TransfersService, PlacesService, CommonAppState) {
+<<<<<<< HEAD
     $scope.resultPlaces = [];
     $scope.showDetails = false;
     $scope.selected = {
@@ -202,31 +257,52 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
       sights: null,
       shops: null
     };
+=======
+    angular.extend($scope, {
+      clickedLatitudeProperty: 11,
+      clickedLongitudeProperty: 44,
+      showDetails: false,
+      selected: {
+        stop: null,
+        line: null,
+        sights: {
+          counter: 0,
+          data: []
+        },
+        shops: {
+          counter: 0,
+          data: []
+        }
+      },
+      lines: null,
+      menuItems: [
+        {
+          title: 'Line',
+          selected: false
+        },
+        {
+          title: 'Places',
+          selected: false
+        },
+        {
+          title: 'Download',
+          selected: false
+        },
+        {
+          title: 'Tips',
+          selected: false
+        }
+      ],
+      selectedItem: false
+    });
+>>>>>>> master
     $scope.$watch('selected.stop', function (newValue) {
       if (newValue) {
         $scope.menuItems[0].selected = false;
         $scope.selectedItemHandler($scope.menuItems[0]);
+        reloadStopsPlaces();
       }
     });
-    $scope.menuItems = [
-      {
-        title: 'Line',
-        selected: false
-      },
-      {
-        title: 'Places',
-        selected: false
-      },
-      {
-        title: 'Download',
-        selected: false
-      },
-      {
-        title: 'Tips',
-        selected: false
-      }
-    ];
-    $scope.selectedItem = false;
     $scope.selectedItemHandler = function (item) {
       for (var i in $scope.menuItems) {
         if ($scope.menuItems[i].title == item.title) {
@@ -250,6 +326,7 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
         $scope.showDetails = false;
       }
     };
+<<<<<<< HEAD
     LinesService.getLines(function (data, status) {
       $scope.lines = data;
       for (key in data) {
@@ -287,6 +364,17 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
         return null;
       };
     });
+=======
+    $scope.getLineByName = function (name) {
+      for (var i in $scope.lines) {
+        console.log('i', i, 'name', name);
+        if (i == name) {
+          return $scope.lines[i];
+        }
+      }
+      return null;
+    };
+>>>>>>> master
     $scope.getLineDetails = function (line) {
       $http({
         method: 'GET',
@@ -311,6 +399,7 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
     };
     $scope.getLimitedPlaces = function (qry) {
       PlacesService.getPlacesByLimitedCategory(qry.category, qry.stopname, qry.start, qry.limit, function (data) {
+<<<<<<< HEAD
         for (var item in data) {
           if (qry.category == 'Sightseeing') {
             $scope.selected.sights.push(data[item]);
@@ -318,11 +407,23 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
           if (qry.category == 'Shopping') {
             $scope.selected.shops.push(data[item]);
           }
+=======
+        console.log('Get places done: ');
+        console.log(data);
+        if (qry.category == 'Sightseeing') {
+          $scope.selected.sights.counter = qry.start;
+          Array.prototype.push.apply($scope.selected.sights.data, data);
+        } else if (qry.category == 'Shopping') {
+          $scope.selected.shops.counter = qry.start;
+          Array.prototype.push.apply($scope.selected.shops.data, data);
+>>>>>>> master
         }
+        console.log($scope.selected);
       }, function (data, status, headers, config) {
         console.log('ERROR!!!!!!', data, status, headers, config);
       });
     };
+<<<<<<< HEAD
     $scope.searchFn = function (qry) {
       $scope.resultPlaces = [];
       PlacesService.getPlacesBySearch(qry.queryStr, function (data) {
@@ -340,6 +441,60 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
         console.log('ERROR!!!!!!' + qry.queryStr, data, status, config);
       });
     };
+=======
+    function reloadStopsPlaces() {
+      var limit = 5;
+      var counter = 0;
+      $scope.selected.sights.data = [];
+      console.log('Getting stop name: ');
+      var stopname = $scope.selected.stop.details.stop_name;
+      console.log(stopname);
+      $scope.getLimitedPlaces({
+        limit: limit,
+        start: counter * limit,
+        category: 'Shopping',
+        stopname: stopname
+      });
+      $scope.selected.shops.data = [];
+      $scope.getLimitedPlaces({
+        limit: limit,
+        start: counter * limit,
+        category: 'Sightseeing',
+        stopname: stopname
+      });
+    }
+    function initialize() {
+      LinesService.getLines(function (data, status) {
+        $scope.lines = data;
+        for (key in data) {
+          $scope.lines[key].name = key;
+        }
+        $scope.lines.LRT1.color = '#fdc33c';
+        $scope.lines.LRT2.color = '#ad86bc';
+        $scope.lines.MRT.color = '#5384c4';
+        $scope.lines.PNR.color = '#f28740';
+        StopsService.setLines($scope.lines);
+        TransfersService.getAllTransfers(function (data) {
+          $scope.transfers = data;
+          for (var i = 0; i < $scope.transfers.length; i++) {
+            var fromStop = StopsService.getStopById($scope.transfers[i].from_stop_id);
+            var toStop = StopsService.getStopById($scope.transfers[i].to_stop_id);
+            fromStop.transfer = {
+              line_name: toStop.line_name,
+              stop_id: toStop.details.stop_id,
+              stop_name: toStop.details.stop_name,
+              stop_lon: toStop.details.stop_lon,
+              stop_lat: toStop.details.stop_lat
+            };
+          }
+          ;
+        }, function (data, status, headers, config) {
+          console.log('Error!', data, status, headers, config);
+        });
+      });
+    }
+    initialize();
+>>>>>>> master
   }
 ]);
 angular.module('trainguide.controllers').controller('PlaceCtrl', [
@@ -349,17 +504,16 @@ angular.module('trainguide.controllers').controller('PlaceCtrl', [
   'PlacesService',
   function ($scope, $http, LinesService, PlacesService) {
     $scope.places = [];
+    $scope.resultPlaces = [];
+    $scope.searchStr = null;
     $scope.activeCategories = PlacesService.activeCategories();
     $scope.selected = { category: $scope.activeCategories[0].name };
-    var lines = null;
-    LinesService.getLines(function (data) {
-      lines = data;
-      for (key in data) {
-        lines[key].name = key;
-      }
-    });
     $scope.getPlaces = function (qry) {
+<<<<<<< HEAD
       PlacesService.getPlacesBySearch(qry.queryStr, function (data) {
+=======
+      PlacesService.getPlacesBySearch(qry.category, qry.queryStr, function (data) {
+>>>>>>> master
         $scope.places.totalcount = data.places.length;
       }, function (data, status, headers, config) {
         console.log('ERROR!!!!!!', data, status, headers, config);
@@ -368,9 +522,9 @@ angular.module('trainguide.controllers').controller('PlaceCtrl', [
     $scope.getLimitedPlaces = function (qry) {
       PlacesService.getPlacesByLimitedCategory(qry.category, qry.stopname, qry.start, qry.limit, function (data) {
         for (var item in data) {
-          for (key in lines) {
-            if (lines[key].shortName == data[item].line.name) {
-              data[item].line.line_name = lines[key].name;
+          for (key in $scope.lines) {
+            if ($scope.lines[key].shortName == data[item].line.name) {
+              data[item].line.line_name = $scope.lines[key].name;
             }
           }
           $scope.places.push(data[item]);
@@ -378,6 +532,39 @@ angular.module('trainguide.controllers').controller('PlaceCtrl', [
       }, function (data, status, headers, config) {
         console.log('ERROR!!!!!!', data, status, headers, config);
       });
+    };
+    $scope.searchFn = function (qry) {
+      $scope.resultPlaces = [];
+      PlacesService.getPlacesBySearch(qry.category, qry.queryStr, function (data) {
+        var places = data.places;
+        for (var i = 0; i < places.length; i++) {
+          for (key in $scope.lines) {
+            if ($scope.lines[key].shortName == places[i].line.name) {
+              places[i].line.line_name = $scope.lines[key].name;
+            }
+          }
+          $scope.resultPlaces.push(places[i]);
+        }
+        console.log('$scope.resultPlaces' + qry.queryStr, $scope.resultPlaces);
+      }, function (data, status, headers, config) {
+        console.log('ERROR!!!!!!' + qry.queryStr, data, status, config);
+      });
+    };
+  }
+]);
+angular.module('google-maps').directive('globalizeMap', [
+  '$rootScope',
+  function ($rootScope) {
+    return {
+      require: '^googleMap',
+      restrict: 'E',
+      link: function (scope, elm, attrs, gmapCtrl) {
+        gmapCtrl.registerMapListener(scope);
+        scope.onMapReady = function (map) {
+          console.log('Attach \'map\' to $rootScope');
+          $rootScope.map = map;
+        };
+      }
     };
   }
 ]);
@@ -911,12 +1098,19 @@ angular.module('google-maps').directive('placesAutocomplete', [
   function ($rootScope) {
     return {
       restrict: 'A',
+<<<<<<< HEAD
       scope: {},
+=======
+      scope: { place: '=' },
+>>>>>>> master
       link: function (scope, elm, attrs) {
         var autocomplete = new google.maps.places.Autocomplete(elm[0]);
         $rootScope.$watch('map', function (newVal, oldVal) {
           if (newVal) {
+<<<<<<< HEAD
             console.log('Map exists!', newVal);
+=======
+>>>>>>> master
             autocomplete.bindTo('bounds', newVal);
           }
         });
@@ -925,6 +1119,10 @@ angular.module('google-maps').directive('placesAutocomplete', [
           if (!place.geometry) {
             return;
           }
+<<<<<<< HEAD
+=======
+          scope.place = place;
+>>>>>>> master
         });
       }
     };
@@ -998,6 +1196,7 @@ angular.module('google-maps').directive('polylineDrawer', [function () {
             scope.showDetails = true;
             var position = new google.maps.LatLng(scope.selectedStop.details.stop_lat, scope.selectedStop.details.stop_lon);
             scope.map.setCenter(position);
+            scope.map.setZoom(16);
             setLine();
           }
         });
@@ -1021,18 +1220,19 @@ angular.module('uiModule').directive('categories', function () {
     transclude: true,
     scope: {
       categories: '=',
-      selectedCategory: '='
+      selectedCategory: '=',
+      searchStr: '=',
+      resultPlaces: '='
     },
     link: function (scope, element) {
       scope.$watch('selectedCategory', function (newValue, oldValue) {
         console.log('selectedCategory', newValue);
       });
-      console.log('categories', scope.categories);
       scope.setCategory = function (category) {
         scope.selectedCategory = category;
       };
     },
-    template: '<div class="categories-list" ng-transclude>' + '<div>' + '<ul>' + '<li ng-show="category.icon" ng-repeat="category in categories" ng-class="{\'selected\': selectedCategory==category.name}">' + '<i class="{{category.icon}}" ng-click="setCategory(category.name)" ng-class="{\'selected\': selectedCategory==category.name}"></i>' + '<div ng-show="selectedCategory==category.name" class="highlight"></div>' + '</li>' + '</ul>' + '</div>' + '<h6>Featured</h6>' + '</div>',
+    template: '<div class="categories-list" ng-transclude>' + '<div>' + '<ul>' + '<li ng-show="category.icon" ng-repeat="category in categories" ng-class="{\'selected\': selectedCategory==category.name}">' + '<i class="{{category.icon}}" ng-click="setCategory(category.name)" ng-class="{\'selected\': selectedCategory==category.name}"></i>' + '<div ng-show="selectedCategory==category.name" class="highlight"></div>' + '</li>' + '</ul>' + '</div>' + '<h6 ng-show="resultPlaces.length==0 && (searchStr==null || searchStr==\'\')">Featured</h6>' + '<h6 ng-show="resultPlaces.length>0">Results</h6>' + '<h6 ng-show="resultPlaces.length==0 && searchStr">(no results)</h6>' + '</div>',
     replace: true
   };
 });
@@ -1194,18 +1394,31 @@ angular.module('uiModule').directive('places', function () {
     transclude: true,
     scope: {
       selectedCategory: '=',
+      searchStr: '=',
       getPlacesCount: '=',
       onQueryPlaces: '=',
       places: '=',
+<<<<<<< HEAD
       resultPlaces: '='
+=======
+      resultPlaces: '=',
+      onSearch: '='
+>>>>>>> master
     },
     link: function (scope, element) {
       var query = {};
+      scope.$watch('searchStr', function (newValue, oldValue) {
+        if (newValue || newValue === '') {
+          scope.resultPlaces = [];
+          scope.loadPlaces(0, scope.selectedCategory);
+        }
+      });
       scope.$watch('selectedCategory', function (newValue, oldValue) {
-        console.log('newValue', newValue);
         query.queryStr = newValue;
+        query.category = newValue;
         if (newValue) {
           scope.places = [];
+          scope.resultPlaces = [];
           scope.counter = 0;
           scope.loadPlaces(0, newValue);
           scope.getPlacesCount(query);
@@ -1213,17 +1426,63 @@ angular.module('uiModule').directive('places', function () {
       });
       var limit = 20;
       scope.loadPlaces = function (counter, selectedCategory) {
+        if (scope.searchStr) {
+          var qry = {
+              category: selectedCategory,
+              queryStr: scope.searchStr
+            };
+          scope.onSearch(qry);
+        } else {
+          var qry = {
+              limit: limit,
+              start: counter * limit,
+              category: selectedCategory,
+              stopname: ''
+            };
+          scope.onQueryPlaces(qry);
+        }
+        $('.antiscroll-wrap').antiscroll();
+      };
+    },
+    template: '<div>' + '<div class="antiscroll-wrap">' + '<div class="block">' + '<div class="antiscroll-inner">' + '<div ng-show="resultPlaces.length==0" class="places-list" ng-transclude>' + '<ul>' + '<li ng-repeat="place in places">' + '<span class="name">{{place.name}}</span>' + '<span class="dist">{{place.distance}}</span>' + '<div class="{{place.line.line_name}} square"></div>' + '</li>' + '</ul>' + '</div>' + '<div ng-show="resultPlaces.length>0" class="places-list" ng-transclude>' + '<ul>' + '<li ng-repeat="resultPlace in resultPlaces">' + '<span class="name">{{resultPlace.name}}</span>' + '<span class="dist">{{resultPlace.distance}}</span>' + '<div class="{{resultPlace.line.line_name}} square"></div>' + '</li>' + '</ul>' + '</div>' + '</div>' + '</div>' + '</div>' + '<a ng-show="resultPlaces==0 && counter*20<=places.totalcount-20" ng-click="loadPlaces(counter=counter+1, selectedCategory)">Load more...</a>' + '</div>',
+    replace: true
+  };
+});
+'use strict';
+angular.module('uiModule').directive('placesbox', function () {
+  return {
+    restrict: 'E',
+    transclude: true,
+    scope: {
+      title: '@',
+      icon: '@',
+      onQueryPlaces: '=',
+      places: '=',
+      category: '=',
+      stopname: '='
+    },
+    link: function (scope, element, attr) {
+      var limit = 5;
+      scope.$watch('places', function () {
+        console.log('Places value: ', scope.places);
+      }, true);
+      scope.loadPlaces = function (counter) {
         var qry = {
             limit: limit,
             start: counter * limit,
-            category: selectedCategory,
-            stopname: ''
+            category: scope.category,
+            stopname: scope.stopname
           };
+        console.log('shops qry', qry);
         scope.onQueryPlaces(qry);
         $('.antiscroll-wrap').antiscroll();
       };
     },
+<<<<<<< HEAD
     template: '<div>' + '<div class="antiscroll-wrap">' + '<div class="block">' + '<div class="antiscroll-inner">' + '<div ng-show="resultPlaces.length==0" class="places-list" ng-transclude>' + '<ul>' + '<li ng-repeat="place in places">' + '<span class="name">{{place.name}}</span>' + '<span class="dist">{{place.distance}}</span>' + '<div class="{{place.line.line_name}} square"></div>' + '</li>' + '</ul>' + '</div>' + '<div ng-show="resultPlaces.length>0" class="places-list" ng-transclude>' + '<ul>' + '<li ng-repeat="resultPlace in resultPlaces">' + '<span class="name">{{resultPlace.name}}</span>' + '<span class="dist">{{resultPlace.distance}}</span>' + '<div class="{{resultPlace.line.line_name}} square"></div>' + '</li>' + '</ul>' + '</div>' + '</div>' + '</div>' + '</div>' + '<a ng-show="((resultPlaces.length==0)&&(counter*20<=places.totalcount-20))" ng-click="loadPlaces(counter=counter+1, selectedCategory)">Load more...</a>' + '</div>',
+=======
+    template: '<div class="sights-box">' + '<div><h3>{{title}}</h3><i class="{{icon}}"></i></div>' + '<ul>' + '<li ng-repeat="place in places.data">' + '<div>' + '<span class="name">{{place.name}}</span>' + '<span class="distance">{{place.distance}}</span>' + '</div>' + '</li>' + '<li ng-show="!places.data.length">No sights near the area.</li>' + '</ul>' + '<a ng-show="places.counter*5<=places.totalcount-5" ng-click="loadPlaces(places.counter+1)">More...</a>' + '</div>',
+>>>>>>> master
     replace: true
   };
 });
@@ -1251,6 +1510,7 @@ angular.module('uiModule').directive('radioGroup', [function () {
   }]);
 'use strict';
 angular.module('uiModule').directive('search', function () {
+<<<<<<< HEAD
   return {
     restrict: 'E',
     transclude: true,
@@ -1288,77 +1548,37 @@ angular.module('uiModule').directive('search', function () {
 });
 'use strict';
 angular.module('uiModule').directive('shopsSlide', function () {
+=======
+>>>>>>> master
   return {
     restrict: 'E',
     transclude: true,
     scope: {
-      selectedStop: '=',
-      getPlacesCount: '=',
-      onQueryPlaces: '=',
-      shops: '='
+      selectedCategory: '=',
+      searchStr: '=',
+      onSearch: '=',
+      resultPlaces: '='
     },
-    link: function (scope, element, attr) {
-      scope.$watch('selectedStop', function (newValue, oldValue) {
-        if (newValue) {
-          scope.stopname = newValue.details.stop_name;
-          scope.shops = [];
-          scope.counter = 0;
-          scope.loadPlaces(0);
-          scope.getPlacesCount(scope.stopname);
-        }
+    link: function (scope, element) {
+      var KEYS = { ENTER: 13 };
+      scope.$watch('selectedCategory', function (newValue, oldValue) {
+        $('.search-box').focus(function () {
+          $(this).animate({ width: '200px' }, 'fast');
+          $('h2.place').hide('fast');
+          $('h2.place span').hide('fast');
+        }).blur(function () {
+          $(this).animate({ width: '100px' }, 'fast');
+          $('h2.place').show('fast');
+          $('h2.place span').show('fast');
+        }).keyup(function (evt) {
+          if (evt.keyCode === KEYS.ENTER) {
+            scope.searchStr = $(this).val();
+            scope.$apply();
+          }
+        });
       });
-      var limit = 5;
-      scope.loadPlaces = function (counter) {
-        var qry = {
-            limit: limit,
-            start: counter * limit,
-            category: 'Shopping',
-            stopname: scope.stopname
-          };
-        console.log('shops qry', qry);
-        scope.onQueryPlaces(qry);
-        $('.antiscroll-wrap').antiscroll();
-      };
     },
-    template: '<div class="shops-box">' + '<div><h3>Shopping</h3><i class="icon-shopping"></i></div>' + '<ul>' + '<li ng-repeat="shop in shops">' + '<div>' + '<span class="name">{{shop.name}}</span>' + '<span class="distance">{{shop.distance}}</span>' + '</div>' + '</li>' + '<li ng-show="!shops.length">No shops near the area.</li>' + '</ul>' + '<a ng-show="counter*5<=shops.totalcount-5" ng-click="loadPlaces(counter=counter+1)">More...</a>' + '</div>',
-    replace: true
-  };
-});
-'use strict';
-angular.module('uiModule').directive('sightsSlide', function () {
-  return {
-    restrict: 'E',
-    transclude: true,
-    scope: {
-      selectedStop: '=',
-      getPlacesCount: '=',
-      onQueryPlaces: '=',
-      sights: '='
-    },
-    link: function (scope, element, attr) {
-      scope.$watch('selectedStop', function (newValue, oldValue) {
-        if (newValue) {
-          scope.stopname = newValue.details.stop_name;
-          scope.sights = [];
-          scope.counter = 0;
-          scope.loadPlaces(0);
-          scope.getPlacesCount(scope.stopname);
-        }
-      });
-      var limit = 5;
-      scope.loadPlaces = function (counter) {
-        var qry = {
-            limit: limit,
-            start: counter * limit,
-            category: 'Sightseeing',
-            stopname: scope.stopname
-          };
-        console.log('sights qry', qry);
-        scope.onQueryPlaces(qry);
-        $('.antiscroll-wrap').antiscroll();
-      };
-    },
-    template: '<div class="sights-box">' + '<div><h3>Sightseeing</h3><i class="icon-sights"></i></div>' + '<ul>' + '<li ng-repeat="sight in sights">' + '<div>' + '<span class="name">{{sight.name}}</span>' + '<span class="distance">{{sight.distance}}</span>' + '</div>' + '</li>' + '<li ng-show="!sights.length">No sights near the area.</li>' + '</ul>' + '<a ng-show="counter*5<=sights.totalcount-5" ng-click="loadPlaces(counter=counter+1)">More...</a>' + '</div>',
+    template: '<div>' + '<h2 class="place">Places <span> to go</span></h2>' + '<div class="search-form">' + '<i class="icon-search"></i>' + '<input type="text" placeholder="Search" class="search-box">' + '</div>' + '</div>',
     replace: true
   };
 });
@@ -1502,6 +1722,19 @@ angular.module('trainguideServices').factory('DirectionsService', [
     var DirectionsService = {};
     var api = 'http://maps.pleasantprogrammer.com/opentripplanner-api-webapp/ws';
     DirectionsService.getDirections = function (query, callback, err) {
+<<<<<<< HEAD
+=======
+      var from = query.from.geometry.location;
+      var to = query.to.geometry.location;
+      var url = api + '/plan?fromPlace=' + from.ob + ',' + from.pb + '&toPlace=' + to.ob + ',' + to.pb + '&callback=JSON_CALLBACK';
+      console.log(url);
+      $http.jsonp(url).success(function (data) {
+        console.log(data.plan);
+      }).error(function (data, status, headers, config) {
+        console.log('Error accessing jsonp');
+        console.log(status);
+      });
+>>>>>>> master
     };
     return DirectionsService;
   }
@@ -1566,10 +1799,17 @@ angular.module('trainguideServices').factory('PlacesService', [
       }
       return result;
     };
+<<<<<<< HEAD
     PlacesService.getPlacesBySearch = function (query, callback, err) {
       $http({
         method: 'GET',
         url: '/places/search-place/?queryStr=' + query + '&format=json'
+=======
+    PlacesService.getPlacesBySearch = function (category, query, callback, err) {
+      $http({
+        method: 'GET',
+        url: '/places/search-place/?category=' + category + '&queryStr=' + query + '&format=json'
+>>>>>>> master
       }).success(function (data, status) {
         callback(data, status);
       }).error(function (data, status, headers, config) {

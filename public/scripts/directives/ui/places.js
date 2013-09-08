@@ -6,20 +6,33 @@ angular.module('uiModule').directive('places', function(){
     transclude : true,
     scope : {
       selectedCategory : '=',
+      searchStr : '=',
       getPlacesCount : '=',
 			onQueryPlaces : '=',
 			places : '=',
-      resultPlaces : '='
+      resultPlaces : '=',
+      onSearch : '='
     },
     link : function(scope, element){
       var query = {};
 
+      scope.$watch("searchStr", function(newValue, oldValue){
+        // console.log('newValue', newValue, 'oldValue', oldValue);
+
+        if(newValue || newValue===""){
+          scope.resultPlaces = [];
+          scope.loadPlaces(0, scope.selectedCategory); 
+        }
+      });
+
       scope.$watch("selectedCategory", function(newValue, oldValue){
-        console.log('newValue', newValue);
+        // console.log('newValue', newValue);
         query.queryStr = newValue;
+        query.category = newValue;
 
         if(newValue){
           scope.places = [];  
+          scope.resultPlaces = [];
           scope.counter = 0;     
           scope.loadPlaces(0, newValue); 
           scope.getPlacesCount(query);
@@ -28,13 +41,22 @@ angular.module('uiModule').directive('places', function(){
 
       var limit = 20;
       scope.loadPlaces = function(counter, selectedCategory){
-        var qry = {
-          limit: limit,
-          start: (counter*limit),
-          category: selectedCategory,
-          stopname: ''
+        // console.log('searchbox', scope.searchStr, selectedCategory);
+        if(scope.searchStr){
+          var qry = {
+            category : selectedCategory,
+            queryStr : scope.searchStr
+          };
+          scope.onSearch(qry);
+        }else{
+          var qry = {
+            limit: limit,
+            start: (counter*limit),
+            category: selectedCategory,
+            stopname: ''
+          }
+          scope.onQueryPlaces(qry); 
         }
-        scope.onQueryPlaces(qry);
         $('.antiscroll-wrap').antiscroll();
       }
     },
@@ -64,7 +86,7 @@ angular.module('uiModule').directive('places', function(){
             '</div>'+
           '</div>'+
         '</div>'+
-        '<a ng-show="((resultPlaces.length==0)&&(counter*20<=places.totalcount-20))" ng-click="loadPlaces(counter=counter+1, selectedCategory)">Load more...</a>'+
+        '<a ng-show="resultPlaces==0 && counter*20<=places.totalcount-20" ng-click="loadPlaces(counter=counter+1, selectedCategory)">Load more...</a>'+
       '</div>',
     replace : true
   }

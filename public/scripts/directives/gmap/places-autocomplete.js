@@ -4,13 +4,13 @@ angular.module('google-maps')
 		return {
 			restrict: 'A',
 			scope: {
+				place: '='
 			},
 			link: function(scope, elm, attrs){
 				var autocomplete = new google.maps.places.Autocomplete(elm[0]);
 
 				$rootScope.$watch('map', function(newVal, oldVal){
 					if(newVal){
-						console.log('Map exists!', newVal);
 						//create autocomplete object here
 						autocomplete.bindTo('bounds', newVal);
 					}
@@ -22,6 +22,7 @@ angular.module('google-maps')
 						//cannot find place, maybe it's a latlng?
 						return;
 					}
+					scope.place = place;
 				});
 			}
 		}

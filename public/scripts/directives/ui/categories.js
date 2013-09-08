@@ -6,14 +6,16 @@ angular.module('uiModule').directive('categories', function(){
     transclude : true,
     scope : {
       categories : '=',
-      selectedCategory : '='
+      selectedCategory : '=',
+      searchStr : '=',
+      resultPlaces : '='
     },
     link : function(scope, element){
       scope.$watch("selectedCategory", function(newValue, oldValue){
         console.log('selectedCategory', newValue);
       });
 
-      console.log('categories', scope.categories);
+      // console.log('categories', scope.categories);
 
       scope.setCategory = function(category){
         scope.selectedCategory = category;
@@ -29,7 +31,9 @@ angular.module('uiModule').directive('categories', function(){
             '</li>'+
           '</ul>'+
         '</div>'+
-        '<h6>Featured</h6>'+
+        '<h6 ng-show="resultPlaces.length==0 && (searchStr==null || searchStr==\'\')">Featured</h6>'+
+        '<h6 ng-show="resultPlaces.length>0">Results</h6>'+
+        '<h6 ng-show="resultPlaces.length==0 && searchStr">(no results)</h6>'+
       '</div>',
     replace : true
   }
