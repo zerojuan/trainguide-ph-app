@@ -30,7 +30,7 @@ module.exports = function(grunt){
 		shell: {
 			'add' : {
 				command: 'git add *'
-			}
+			},
 			'commit': {
 				command: 'git commit -a -m "v<%= pkg.version %>"'
 			},
