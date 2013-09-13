@@ -564,7 +564,7 @@ li.PNR.clicked{
     // border-bottom: 1px solid @gray;
   }
 
-  .sights-box, .shops-box {
+  .places-box {
     padding-bottom: 10px;
     > div {
       background: @trainlineBg;
@@ -591,13 +591,17 @@ li.PNR.clicked{
         font-size: 9pt;   
         line-height: 15px;
         clear: both;
-        .name {
-          float: left;
-          width: 80%;
+        a {
+          float: none;
+          padding: 0px;
+          .name {
+            float: left;
+            width: 80%;
+          }
+          .distance {
+            float: right;
+          } 
         }
-        .distance {
-          float: right;
-        } 
       } 
     }
   }

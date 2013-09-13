@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('google-maps')
-	.factory('DirectionsService', function(){
+	.factory('MapDirectionsService', function(){
 		var directionService = {};
 
 		var directionsDisplay = new google.maps.DirectionsRenderer({
@@ -31,7 +31,7 @@ angular.module('google-maps')
 
 		return directionService;
 	})
-	.directive('mapRouter', ['DirectionsService', function(DirectionsService){
+	.directive('mapRouter', ['MapDirectionsService', function(DirectionsService){
 		return {
 			require: '^googleMap',
 			restrict: 'E',
@@ -52,10 +52,13 @@ angular.module('google-maps')
 				});
 
 				scope.$watch('selectedDest', function(){
-					var start = new google.maps.LatLng(scope.selectedStop.position.lat, scope.selectedStop.position.long);
-					var end = new google.maps.LatLng(scope.selectedDest.latlng.lat, scope.selectedDest.latlng.lng);
+					console.log('scope.selectedStop && scope.selectedDest!!!', scope.selectedStop, scope.selectedDest);
+					if(scope.selectedStop && scope.selectedDest){
+						var start = new google.maps.LatLng(scope.selectedStop.details.stop_lat, scope.selectedStop.details.stop_lon);
+						var end = new google.maps.LatLng(scope.selectedDest.coordinates.lat, scope.selectedDest.coordinates.lng);	
 
-					DirectionsService.calcRoute(start, end);
+						DirectionsService.calcRoute(start, end);
+					}
 				});
 			},
 			replace: true,

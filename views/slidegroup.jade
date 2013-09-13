@@ -10,9 +10,9 @@ slide-group(selected-item='selectedItem', selected-stop='selected.stop', selecte
 
 						slideshow(images='selectedItem.images')
 
-						placesbox(title="Sightseeing", icon="icon-sights", on-query-places="getLimitedPlaces", places="selected.sights", category="Sightseeing", stopname="selected.stop.details.stop_name")
+						placesbox(title="Sightseeing", icon="icon-sights", on-query-places="getLimitedPlaces", places="selected.sights", category="Sightseeing", stopname="selected.stop.details.stop_name", selected-dest="selected.dest")
 
-						placesbox(title="Shopping", icon="icon-shopping", on-query-places="getLimitedPlaces", places="selected.shops", category="Shopping", stopname="selected.stop.details.stop_name")
+						placesbox(title="Shopping", icon="icon-shopping", on-query-places="getLimitedPlaces", places="selected.shops", category="Shopping", stopname="selected.stop.details.stop_name", selected-dest="selected.dest")
 
 
 					#line-content(ng-class="{true:'nodetails', false:'showdetails'}[showDetails]")
