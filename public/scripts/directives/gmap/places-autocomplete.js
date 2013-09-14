@@ -23,6 +23,7 @@ angular.module('google-maps')
 						return;
 					}
 					scope.place = place;
+					scope.$apply();
 				});
 			}
 		}

@@ -6,18 +6,28 @@ angular.module('trainguideServices')
 		var api = 'http://maps.pleasantprogrammer.com/opentripplanner-api-webapp/ws';
 
 		DirectionsService.getDirections = function(query, callback, err){
-			var from = query.from.geometry.location;
-			var to = query.to.geometry.location;
 
-			var url = api+'/plan?fromPlace='+from.ob+','+from.pb+'&toPlace='+to.ob+','+to.pb+'&callback=JSON_CALLBACK';
-			console.log(url);
+			function extractLocation(str){
+				var arr = str.substring(1, str.length - 1).split(",");
+				console.log(arr);
+				return {
+					lat: parseFloat(arr[0]),
+					lng: parseFloat(arr[1])
+				}
+			}
+
+			var from = extractLocation(""+query.from.geometry.location);
+			var to = extractLocation(""+query.to.geometry.location);
+
+			var url = api+'/plan?fromPlace='+from.lat+','+from.lng+'&toPlace='+to.lat+','+to.lng+'&callback=JSON_CALLBACK';
 			$http.jsonp(url)
-			.success(function(data){
-				console.log(data.plan);
-			}).error(function(data, status, headers, config){
-				console.log("Error accessing jsonp");
-				console.log(status);
-			});
+				.success(function(data){
+					callback(data.plan);
+				}).error(function(data, status, headers, config){
+					console.log('Error on API Request');
+					console.log(status);
+					err(status);
+				});
 		}
 
 		return DirectionsService;
