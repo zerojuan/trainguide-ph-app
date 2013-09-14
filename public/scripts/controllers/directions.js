@@ -4,11 +4,15 @@ angular.module('trainguide.controllers')
 		angular.extend($scope, {
 			direction: {
 				from: null,
-				to: null
-			}
+				to: null,
+				activeTrip: null
+			},
+			plan: null,
+			loadingQuery: false
 		});
 
 		$scope.getDirections = function(){
+			$scope.loadingQuery = true;
 			DirectionsService.getDirections({from: $scope.direction.from, to: $scope.direction.to},
 				function(data){
 //					data.itineraries []
@@ -18,9 +22,27 @@ angular.module('trainguide.controllers')
 //							- leg.legGeometry
 //							- leg.mode
 //					 		- leg.steps
+					console.log(data);
+					$scope.plan = data;
+					$scope.direction.activeTrip = $scope.plan.itineraries[0];
+					$scope.loadingQuery = false;
 				},
-				function(){
-
+				function(err){
+					console.log("Some error occured");
+					$scope.loadingQuery = false;
 				});
 		}
+//		getRealMode: function(mode, routeId) {
+//			if(mode == 'BUS') {
+//				if(routeId.indexOf('PUJ') >= 0) {
+//					return 'JEEP';
+//				}
+//				else {
+//					return 'BUS';
+//				}
+//			}
+//			else {
+//				return mode;
+//			}
+//		}
 	}]);
