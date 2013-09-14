@@ -47,6 +47,7 @@ angular.module('trainguide.controllers')
 
 		$scope.$watch('selected.stop', function(newValue){
 			//reset all markers
+			console.log('selectedstop!!!', $scope.selected.stop);
 			if(newValue){
 				$scope.markers = [];
 			}

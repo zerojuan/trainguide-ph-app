@@ -16,6 +16,7 @@ block content
 					longitude="clickedLongitudeProperty",
 					draggable="true",
 					style="height: 100%; width: 100%;")
+					map-router(selected-stop='selected.stop', selected-dest='selected.dest')
 					polyline-drawer(paths="lines", selected-line='selected.line', selected-stop="selected.stop", show-details='showDetails', selected-item="selectedItem")
 					globalize-map
 			ng-view
@@ -42,6 +43,7 @@ block append scripts
 		script(src='./scripts/services/placesservice.js')
 		script(src='./scripts/services/directionsservice.js')
 		script(src='./scripts/directives/gmap/google-map.js')
+		script(src='./scripts/directives/gmap/map-router.js')
 		script(src='./scripts/directives/gmap/polyline-drawer.js')
 		script(src='./scripts/directives/gmap/globalize-map.js')
 		script(src='./scripts/directives/gmap/places-autocomplete.js')

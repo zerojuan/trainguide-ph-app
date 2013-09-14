@@ -17,6 +17,7 @@ angular.module('trainguide.controllers')
 			selected: {
 				stop: null,
 				line: null,
+				dest : null,
 				sights: {
 					counter: 0,
 					data: []

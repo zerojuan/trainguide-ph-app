@@ -77,7 +77,6 @@ angular.module('google-maps')
 					//center this to that stop
 					if(scope.selectedStop){			
 						scope.showDetails = true;
-						// console.log('polyline-drawer.js selectedStop showDetails: ', scope.showDetails);
 
 						var position = new google.maps.LatLng(scope.selectedStop.details.stop_lat, scope.selectedStop.details.stop_lon);
 						scope.map.setCenter(position);
