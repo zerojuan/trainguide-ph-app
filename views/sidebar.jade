@@ -29,12 +29,12 @@
 				div
 					span Trips
 					ul
-						li(ng-repeat='trip in plan.itineraries', ng-click='direction.activeTrip = trip')
+						li(ng-repeat='trip in plan.itineraries', ng-click='selected.itinerary = trip')
 							span {{$index + 1}}: {{trip.duration|tominutes}} minutes
 				div
 					span Directions
 					ul
-						li(ng-repeat='leg in direction.activeTrip.legs')
+						li(ng-repeat='leg in selected.itinerary.legs')
 							span {{$index + 1}}: {{leg.mode|realmode:leg.routeId}} {{leg.from.name}} to {{leg.to.name}}
 
 	.footer

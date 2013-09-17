@@ -24,11 +24,11 @@ angular.module('trainguide.controllers')
 //					 		- leg.steps
 					console.log(data);
 					$scope.plan = data;
-					$scope.direction.activeTrip = $scope.plan.itineraries[0];
+					$scope.selected.itinerary= $scope.plan.itineraries[0];
 					$scope.loadingQuery = false;
 				},
 				function(err){
-					console.log("Some error occured");
+					console.log("Some error occured", err);
 					$scope.loadingQuery = false;
 				});
 		}

@@ -25,7 +25,8 @@ angular.module('trainguide.controllers')
 				shops: {
 					counter: 0,
 					data: []
-				}
+				},
+				itinerary: null
 			},
 			lines: null,
 			menuItems: [
