@@ -1,9 +1,11 @@
+angular.module('trainguide.filters', []);
 angular.module('trainguideServices', []);
 angular.module('uiModule', ['trainguideServices']);
 angular.module('google-maps', ['trainguideServices']);
 angular.module('trainguide.controllers', ['trainguideServices']);
 angular.module('trainguide', [
   'google-maps',
+  'trainguide.filters',
   'trainguide.controllers',
   'uiModule'
 ]).config([
@@ -120,15 +122,25 @@ angular.module('trainguide.controllers').controller('DirectionCtrl', [
     angular.extend($scope, {
       direction: {
         from: null,
-        to: null
-      }
+        to: null,
+        activeTrip: null
+      },
+      plan: null,
+      loadingQuery: false
     });
     $scope.getDirections = function () {
+      $scope.loadingQuery = true;
       DirectionsService.getDirections({
         from: $scope.direction.from,
         to: $scope.direction.to
       }, function (data) {
-      }, function () {
+        console.log(data);
+        $scope.plan = data;
+        $scope.selected.itinerary = $scope.plan.itineraries[0];
+        $scope.loadingQuery = false;
+      }, function (err) {
+        console.log('Some error occured', err);
+        $scope.loadingQuery = false;
       });
     };
   }
@@ -176,6 +188,7 @@ angular.module('trainguide.controllers').controller('GMapCtrl', [
       }
     }
     $scope.$watch('selected.stop', function (newValue) {
+      console.log('selectedstop!!!', $scope.selected.stop);
       if (newValue) {
         $scope.markers = [];
       }
@@ -213,6 +226,7 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
       selected: {
         stop: null,
         line: null,
+        dest: null,
         sights: {
           counter: 0,
           data: []
@@ -220,7 +234,8 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
         shops: {
           counter: 0,
           data: []
-        }
+        },
+        itinerary: null
       },
       lines: null,
       menuItems: [
@@ -899,8 +914,64 @@ angular.module('google-maps').directive('globalizeMap', [
     }
   ]);
 }());
+angular.module('google-maps').directive('itineraryRender', [
+  '$rootScope',
+  function ($rootScope) {
+    return {
+      require: '^googleMap',
+      restrict: 'E',
+      scope: { itinerary: '=' },
+      link: function (scope, elm, attrs, ctrl) {
+        ctrl.registerMapListener(scope);
+        var paths = [];
+        scope.onMapReady = function (map) {
+          scope.map = map;
+        };
+        scope.$watch('map', function () {
+        });
+        function zoomToObject(obj) {
+          var bounds = new google.maps.LatLngBounds();
+          var points = obj.getPath().getArray();
+          for (var n = 0; n < points.length; n++) {
+            bounds.extend(points[n]);
+          }
+          scope.map.fitBounds(bounds);
+        }
+        var drawLines = function () {
+          angular.forEach(paths, function (v, i) {
+            v.setMap(null);
+          });
+          paths = [];
+          for (var legs in scope.itinerary.legs) {
+            var leg = scope.itinerary.legs[legs];
+            var decodedPath = google.maps.geometry.encoding.decodePath(leg.legGeometry.points);
+            var color = '#cc00cc';
+            if (leg.mode == 'WALK') {
+              color = '#00cccc';
+            }
+            var path = new google.maps.Polyline({
+                strokeColor: color,
+                strokeOpacity: 0.9,
+                strokeWeight: 5,
+                path: decodedPath,
+                zIndex: 10
+              });
+            path.setMap(scope.map);
+            paths.push(path);
+          }
+        };
+        scope.$watch('itinerary', function () {
+          console.log('Itenerary changed: ', scope.itinerary);
+          drawLines();
+        });
+      },
+      replace: true,
+      template: '<div></div>'
+    };
+  }
+]);
 'use strict';
-angular.module('google-maps').factory('DirectionsService', function () {
+angular.module('google-maps').factory('MapDirectionsService', function () {
   var directionService = {};
   var directionsDisplay = new google.maps.DirectionsRenderer({ suppressMarkers: false });
   var _directionsService = new google.maps.DirectionsService();
@@ -921,7 +992,7 @@ angular.module('google-maps').factory('DirectionsService', function () {
   };
   return directionService;
 }).directive('mapRouter', [
-  'DirectionsService',
+  'MapDirectionsService',
   function (DirectionsService) {
     return {
       require: '^googleMap',
@@ -940,9 +1011,12 @@ angular.module('google-maps').factory('DirectionsService', function () {
           DirectionsService.setMap(scope.map);
         });
         scope.$watch('selectedDest', function () {
-          var start = new google.maps.LatLng(scope.selectedStop.position.lat, scope.selectedStop.position.long);
-          var end = new google.maps.LatLng(scope.selectedDest.latlng.lat, scope.selectedDest.latlng.lng);
-          DirectionsService.calcRoute(start, end);
+          console.log('scope.selectedStop && scope.selectedDest!!!', scope.selectedStop, scope.selectedDest);
+          if (scope.selectedStop && scope.selectedDest) {
+            var start = new google.maps.LatLng(scope.selectedStop.details.stop_lat, scope.selectedStop.details.stop_lon);
+            var end = new google.maps.LatLng(scope.selectedDest.coordinates.lat, scope.selectedDest.coordinates.lng);
+            DirectionsService.calcRoute(start, end);
+          }
         });
       },
       replace: true,
@@ -969,6 +1043,7 @@ angular.module('google-maps').directive('placesAutocomplete', [
             return;
           }
           scope.place = place;
+          scope.$apply();
         });
       }
     };
@@ -1301,7 +1376,8 @@ angular.module('uiModule').directive('placesbox', function () {
       onQueryPlaces: '=',
       places: '=',
       category: '=',
-      stopname: '='
+      stopname: '=',
+      selectedDest: '='
     },
     link: function (scope, element, attr) {
       var limit = 5;
@@ -1319,8 +1395,12 @@ angular.module('uiModule').directive('placesbox', function () {
         scope.onQueryPlaces(qry);
         $('.antiscroll-wrap').antiscroll();
       };
+      scope.selectDest = function (dest) {
+        scope.selectedDest = dest;
+        console.log('selectedDest!!!', scope.selectedDest);
+      };
     },
-    template: '<div class="sights-box">' + '<div><h3>{{title}}</h3><i class="{{icon}}"></i></div>' + '<ul>' + '<li ng-repeat="place in places.data">' + '<div>' + '<span class="name">{{place.name}}</span>' + '<span class="distance">{{place.distance}}</span>' + '</div>' + '</li>' + '<li ng-show="!places.data.length">No sights near the area.</li>' + '</ul>' + '<a ng-show="places.counter*5<=places.totalcount-5" ng-click="loadPlaces(places.counter+1)">More...</a>' + '</div>',
+    template: '<div class="places-box">' + '<div><h3>{{title}}</h3><i class="{{icon}}"></i></div>' + '<ul>' + '<li ng-repeat="place in places.data">' + '<a ng-click="selectDest(place)" target="_blank">' + '<span class="name">{{place.name}}</span>' + '<span class="distance">{{place.distance}}</span>' + '</a>' + '</li>' + '<li ng-show="!places.data.length">No sights near the area.</li>' + '</ul>' + '<a ng-show="places.counter*5<=places.totalcount-5" ng-click="loadPlaces(places.counter+1)">More...</a>' + '</div>',
     replace: true
   };
 });
@@ -1520,15 +1600,29 @@ angular.module('trainguideServices').factory('DirectionsService', [
     var DirectionsService = {};
     var api = 'http://maps.pleasantprogrammer.com/opentripplanner-api-webapp/ws';
     DirectionsService.getDirections = function (query, callback, err) {
-      var from = query.from.geometry.location;
-      var to = query.to.geometry.location;
-      var url = api + '/plan?fromPlace=' + from.ob + ',' + from.pb + '&toPlace=' + to.ob + ',' + to.pb + '&callback=JSON_CALLBACK';
+      function extractLocation(str) {
+        var arr = str.substring(1, str.length - 1).split(',');
+        return {
+          lat: parseFloat(arr[0]),
+          lng: parseFloat(arr[1])
+        };
+      }
+      var from = extractLocation('' + query.from.geometry.location);
+      var to = extractLocation('' + query.to.geometry.location);
+      var d = new Date();
+      var dateNow = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+      var url = api + '/plan?date=' + dateNow + '&time=11:59am&fromPlace=' + from.lat + ',' + from.lng + '&toPlace=' + to.lat + ',' + to.lng + '&mode=RAIL,WALK&callback=JSON_CALLBACK';
       console.log(url);
       $http.jsonp(url).success(function (data) {
-        console.log(data.plan);
+        if (data.error) {
+          err(data.error);
+          return;
+        }
+        callback(data.plan);
       }).error(function (data, status, headers, config) {
-        console.log('Error accessing jsonp');
+        console.log('Error on API Request');
         console.log(status);
+        err(status);
       });
     };
     return DirectionsService;
