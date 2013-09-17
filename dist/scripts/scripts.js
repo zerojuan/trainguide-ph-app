@@ -440,6 +440,25 @@ angular.module('trainguide.controllers').controller('PlaceCtrl', [
     };
   }
 ]);
+(function () {
+  angular.module('trainguide.filters').filter('realmode', function () {
+    return function (mode, routeId) {
+      if (mode == 'BUS') {
+        if (routeId.indexOf('PUJ') >= 0) {
+          return 'JEEP';
+        } else {
+          return 'BUS';
+        }
+      } else {
+        return mode;
+      }
+    };
+  }).filter('tominutes', function () {
+    return function (millis) {
+      return Math.round(millis / 1000 / 60);
+    };
+  });
+}());
 angular.module('google-maps').directive('globalizeMap', [
   '$rootScope',
   function ($rootScope) {
@@ -993,7 +1012,8 @@ angular.module('google-maps').factory('MapDirectionsService', function () {
   return directionService;
 }).directive('mapRouter', [
   'MapDirectionsService',
-  function (DirectionsService) {
+  '$rootScope',
+  function (DirectionsService, $rootScope) {
     return {
       require: '^googleMap',
       restrict: 'E',
@@ -1005,6 +1025,7 @@ angular.module('google-maps').factory('MapDirectionsService', function () {
         ctrl.registerMapListener(scope);
         scope.onMapReady = function (map) {
           console.log('Map is here!', map);
+          $rootScope.map = map;
           scope.map = map;
         };
         scope.$watch('map', function () {
@@ -1611,7 +1632,7 @@ angular.module('trainguideServices').factory('DirectionsService', [
       var to = extractLocation('' + query.to.geometry.location);
       var d = new Date();
       var dateNow = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
-      var url = api + '/plan?date=' + dateNow + '&time=11:59am&fromPlace=' + from.lat + ',' + from.lng + '&toPlace=' + to.lat + ',' + to.lng + '&mode=RAIL,WALK&callback=JSON_CALLBACK';
+      var url = api + '/plan?date=' + dateNow + '&time=11:59am&fromPlace=' + from.lat + ',' + from.lng + '&toPlace=' + to.lat + ',' + to.lng + '&mode=TRANSIT,WALK&callback=JSON_CALLBACK';
       console.log(url);
       $http.jsonp(url).success(function (data) {
         if (data.error) {
@@ -1749,164 +1770,3 @@ angular.module('trainguideServices').factory('TransfersService', [
     return TransfersService;
   }
 ]);
-$(document).ready(function () {
-  console.log('get_place loaded!!!');
-  $('#search-form').submit(function (evt) {
-    evt.preventDefault();
-    var query = $('.search-input').val();
-    var search = $('#search-div');
-    console.log('val: ', query);
-    $.ajax({
-      type: 'GET',
-      url: '/places/search-place',
-      data: { queryStr: query }
-    }).done(function (msg) {
-      console.log('SEARCH OK ', msg);
-      search.html(msg);
-      util.clickDelete();
-    }).fail(function (msg) {
-      console.log('SEARCH NOT OK ', msg);
-    });
-  });
-});
-$(document).ready(function () {
-  console.log('paginate_page loaded!!!');
-  var limit = 5;
-  var counter = 1;
-  var btnDiv = $('#load-btn').parent();
-  var btn = '<a href="#" class="button" id="load-btn">Load more...</a>';
-  var categoryElem = $('#category');
-  var selected = '';
-  categoryElem.change(function (evt) {
-    selected = categoryElem.find('#catkey:selected').val();
-    loadPlaces(selected, 0);
-  });
-  var clickLoad = function () {
-    $('#load-btn').click(function (evt) {
-      console.log(counter);
-      evt.preventDefault();
-      loadPlaces(selected, counter * limit);
-      counter++;
-    });
-  };
-  var loadPlaces = function (selectedCategory, start) {
-    var morePlaces = '';
-    btnDiv.html('<h3>Loading...</h3>');
-    $.ajax({
-      type: 'GET',
-      url: '/places/paginate-place',
-      data: {
-        limit: limit,
-        start: start,
-        category: selectedCategory
-      }
-    }).done(function (msg) {
-      console.log('PAGINATE OK: ', msg);
-      if (msg.length > 0) {
-        for (var i = 0; i < msg.length; i++) {
-          var place = msg[i];
-          morePlaces += '<tr><td>' + place.name + '</td>' + '<td>' + place.line.name + '-' + place.stop.name + '</td>' + '<td>' + place.distance + '</td>' + '<td><a href="' + place.website + '">' + place.website + '</a></td>' + '<td><a href="' + place.map + '"><img src="/images/map.png"/></a></td>' + '<td>' + place.coordinates.lng + ',' + place.coordinates.lat + '</td>' + '<td>' + place.category + '</td>' + '<td>' + place.subcategory + '</td>' + '<td>' + '<a href="/places/' + place._id + '" class="button">Show</a>' + '<a href="/places/' + place._id + '/edit" class="button">Edit</a>' + '<a href="/places/' + place._id + '/delete" class="button delete-place">Delete</a>' + '</td></tr>';
-        }
-        $('#no-data').remove();
-        $('#place-tbl tbody').append(morePlaces);
-        btnDiv.html(btn).on('click', clickLoad());
-        util.clickDelete();
-      } else {
-        $('#place-tbl tbody').html('<tr id="no-data"><td colspan="9">No Data</td>/tr>');
-        btnDiv.html('');
-      }
-    }).fail(function (msg) {
-      console.log('PAGINATE NOT OK: ', msg);
-      $('#place-tbl tbody').append('<tr id="no-data"><td colspan="9">No More Data</td>/tr>');
-      btnDiv.html('');
-    });
-  };
-});
-var util = {};
-util.clickDelete = function () {
-  $('.delete-place').on('click', function (evt) {
-    evt.preventDefault();
-    if (confirm('Are you sure?')) {
-      var elm = $(this);
-      var form = $('<form></form>');
-      form.attr({
-        method: 'POST',
-        action: elm.attr('href')
-      }).hide().append('<input type="hidden" />').find('input').attr({
-        'name': '_method',
-        'value': 'delete'
-      }).end().submit();
-    }
-  });
-};
-$(document).ready(function () {
-  console.log('populate_preview loaded!');
-  console.log('method', formMethod, 'action', formAction);
-  $('#input-place').submit(function (evt) {
-    evt.preventDefault();
-    var previewElem = $('#preview-div');
-    var placeArray = $(this).serializeArray();
-    var place = {};
-    for (input in placeArray) {
-      place[placeArray[input].name] = placeArray[input].value;
-    }
-    $.ajax({
-      type: 'POST',
-      url: '/places/preview',
-      data: {
-        place: place,
-        formMethod: formMethod,
-        formAction: formAction
-      }
-    }).done(function (msg) {
-      console.log('PREVIEW OK ', msg);
-      previewElem.html(msg);
-      cancelClick();
-    }).fail(function (msg) {
-      console.log('PREVIEW NOT OK ', msg);
-    });
-  });
-  var cancelClick = function () {
-    $('#cancel').click(function (evt) {
-      evt.preventDefault();
-      $('#preview-div').html('');
-    });
-  };
-});
-$(document).ready(function () {
-  console.log('populate_stops loaded!');
-  var stationElem = $('#line');
-  var stopElem = stationElem.parent().find('span');
-  stationElem.change(function (evt) {
-    var selected = stationElem.find('#stnkey:selected').val();
-    populateStops(selected);
-  });
-  var populateStops = function (selectedLine) {
-    var previewBtn = $('#preview');
-    previewBtn.attr('disabled', 'disabled').val('Loading stops...');
-    $.ajax({
-      type: 'GET',
-      url: '/places/station-stops',
-      data: { selectedStn: selectedLine }
-    }).done(function (msg) {
-      console.log('POPULATE OK ', msg);
-      var selectStr = '<select name="stop" id="stop" required>' + '<option value="">-- Select Stop-- </option>';
-      for (var i = 0; i < msg.length; i++) {
-        var selected = '';
-        if (window.selectedStop && window.selectedStop == msg[i].name) {
-          selected = 'selected';
-        }
-        selectStr += '<option id="val" value="' + msg[i].stop_id + '" ' + selected + '>' + msg[i].name + '</option>';
-      }
-      selectStr += '</select>';
-      stopElem.html(selectStr);
-      previewBtn.removeAttr('disabled').val('Preview');
-    }).fail(function (msg) {
-      console.log('POPULATE NOT OK ', msg);
-    });
-  };
-  if (window.selectedStop) {
-    console.log('Searching for...', window.selectedLineId);
-    populateStops(window.selectedLineId);
-  }
-});
