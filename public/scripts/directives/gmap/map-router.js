@@ -31,7 +31,7 @@ angular.module('google-maps')
 
 		return directionService;
 	})
-	.directive('mapRouter', ['MapDirectionsService', function(DirectionsService){
+	.directive('mapRouter', ['MapDirectionsService', '$rootScope', function(DirectionsService, $rootScope){
 		return {
 			require: '^googleMap',
 			restrict: 'E',
@@ -44,6 +44,7 @@ angular.module('google-maps')
 
 				scope.onMapReady = function(map){
 					console.log("Map is here!", map);
+					$rootScope.map = map;
 					scope.map = map;
 				};
 

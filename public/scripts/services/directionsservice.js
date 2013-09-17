@@ -20,7 +20,7 @@ angular.module('trainguideServices')
 			var d = new Date();
 			var dateNow = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
 
-			var url = api+'/plan?date='+dateNow+'&time=11:59am&fromPlace='+from.lat+','+from.lng+'&toPlace='+to.lat+','+to.lng+'&mode=RAIL,WALK&callback=JSON_CALLBACK';
+			var url = api+'/plan?date='+dateNow+'&time=11:59am&fromPlace='+from.lat+','+from.lng+'&toPlace='+to.lat+','+to.lng+'&mode=TRANSIT,WALK&callback=JSON_CALLBACK';
 			console.log(url);
 			$http.jsonp(url)
 				.success(function(data){
