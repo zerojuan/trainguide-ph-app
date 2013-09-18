@@ -37,6 +37,11 @@ h2 {
   font-family: 'Open Sans', sans-serif;
   font-size: 16pt;
 }
+h6 {
+  background-color: #e5e5e5;
+  padding: 10px;
+  font-weight: bolder;
+}
 a {
   color: #00B7FF;
 }
@@ -422,11 +427,6 @@ li.PNR.clicked p {
   height: 5px;
   width: 32px;
 }
-.slide-group .content-box .categories-list h6 {
-  background-color: #e5e5e5;
-  padding: 10px;
-  font-weight: bolder;
-}
 .slide-group .content-box .block,
 .slide-group .content-box .antiscroll-inner,
 .slide-group .content-box .places-list {
@@ -539,6 +539,14 @@ li.PNR.clicked p {
 }
 .slide-group .places-box ul li a .distance {
   float: right;
+}
+.slide-group .tips {
+  padding: 10px;
+  text-align: justify;
+  font-size: 0.9em;
+}
+.slide-group .tips p {
+  padding-bottom: 10px;
 }
 /* d3 svg */
 rect.LRT1,

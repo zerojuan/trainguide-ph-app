@@ -39,13 +39,14 @@ angular.module('trainguide.controllers')
 					selected: false
 				},
 				{
-					title: 'Download',
+					title: 'Tips',
 					selected: false
 				},
 				{
-					title: 'Tips',
+					title: 'Download',
 					selected: false
-			}],
+				}
+			],
 			selectedItem : false
 		});
 

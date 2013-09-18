@@ -70,6 +70,12 @@ h2 {
   font-size: 16pt;
 }
 
+h6 {
+  background-color: @trainlineBg;
+  padding: 10px;
+  font-weight: bolder;
+}
+
 a {
   color: #00B7FF;
 }
@@ -474,11 +480,11 @@ li.PNR.clicked{
           }
         }
       }
-      h6 {
-        background-color: @trainlineBg;
-        padding: 10px;
-        font-weight: bolder;
-      }
+      // h6 {
+      //   background-color: @trainlineBg;
+      //   padding: 10px;
+      //   font-weight: bolder;
+      // }
     }
     .block, .antiscroll-inner, .places-list {
       width: 255px;
@@ -605,7 +611,14 @@ li.PNR.clicked{
       } 
     }
   }
-
+  .tips {
+    padding: 10px;
+    text-align: justify;
+    font-size: 0.9em;
+    p {
+      padding-bottom: 10px;
+    }
+  }
 }
 
 /* d3 svg */
