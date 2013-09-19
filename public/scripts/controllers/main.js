@@ -26,6 +26,14 @@ angular.module('trainguide.controllers')
 					counter: 0,
 					data: []
 				},
+				direction: {
+					to: null,
+					from: null
+				},
+				isSearch: {
+					to: true,
+					from: false
+				},
 				itinerary: null
 			},
 			lines: null,

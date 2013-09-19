@@ -1,6 +1,7 @@
 angular.module('trainguideServices')
 	.factory('PlacesService', ['$http', function($http){
 			var PlacesService = {};
+
 	    PlacesService.categories = [
 	      {
 	        name : 'Dining'
@@ -50,6 +51,17 @@ angular.module('trainguideServices')
 	        name : 'Transport Terminal'
 	      }
 	    ];
+
+			PlacesService.reverseGeocode = function(latlng, callback, err){
+				var geocodingAPI = 'http://maps.googleapis.com/maps/api/geocode/json?latlng='+latlng.lat()+','+latlng.lng()+'&sensor=true';
+				$http({method: 'GET', url: geocodingAPI})
+					.success(function(data, status) {
+						callback(data, status);
+					})
+					.error(function(data, status, headers, config) {
+						err(data, status, headers, config);
+					});
+			}
 
 	    PlacesService.activeCategories = function(){
 	      var result = [];

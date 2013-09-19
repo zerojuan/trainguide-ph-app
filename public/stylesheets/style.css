@@ -684,6 +684,9 @@ text.transfer {
 .MRT-marker {
   border-color: #5384c4;
 }
+.trip-input .button.active {
+  background: #5384c4;
+}
 /* font styles */
 .icon-close,
 .icon-sights,

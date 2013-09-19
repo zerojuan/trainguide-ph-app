@@ -15,12 +15,34 @@ angular.module('trainguideServices')
 				}
 			}
 
+			function serialize(obj) {
+				var str = [];
+				for(var p in obj)
+					str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+				return str.join("&");
+			}
+
 			var from = extractLocation(""+query.from.geometry.location);
 			var to = extractLocation(""+query.to.geometry.location);
 			var d = new Date();
 			var dateNow = d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+			var bannedAgencies='';
 
-			var url = api+'/plan?date='+dateNow+'&time=11:59am&fromPlace='+from.lat+','+from.lng+'&toPlace='+to.lat+','+to.lng+'&mode=TRANSIT,WALK&callback=JSON_CALLBACK';
+			if(query.avoidBuses){
+				bannedAgencies += 'LTFRB';
+			}
+
+			var query = serialize({
+				bannedAgencies: bannedAgencies,
+				unpreferredAgencies: 'LTFRB',
+				preferredAgencies: 'LRTA,MRTC,PNR',
+				date: dateNow+'&time=11:59am',
+				fromPlace: from.lat+','+from.lng,
+				toPlace: to.lat+','+to.lng,
+				mode: 'TRANSIT,WALK'
+			});
+
+			var url = api+'/plan?'+query+'&callback=JSON_CALLBACK';
 			console.log(url);
 			$http.jsonp(url)
 				.success(function(data){
