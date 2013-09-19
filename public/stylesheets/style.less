@@ -236,6 +236,44 @@ table {
       .routes {
         cursor: pointer;
         text-align: right;
+        font-size: 0.8em;
+        div {
+          overflow: hidden;
+          ul {
+            float: left;
+            margin: 0px;
+            width: 60%;
+            text-align: left;
+            li.route-steps {
+              display: inline-block;
+              margin: 0 auto;
+              padding-left: 2px;
+              .route-box {
+                background: none;
+                font-size: 1.5em;
+                line-height: 0.5em;
+                &.LRT1 {
+                  color: @lrt1;
+                }
+                &.LRT2 {
+                  color: @lrt2;
+                }
+                &.MRT {
+                  color: @mrt;
+                }
+                &.PNR {
+                  color: @pnr;
+                }
+                &.JEEP {
+                  color: @jeepColor;
+                }
+                &.BUS {
+                  color: @busColor;
+                } 
+              }
+            } 
+          }
+        }
       }   
       .block, .antiscroll-inner, .steps-list {
         width: 255px;
@@ -254,7 +292,7 @@ table {
               .align {
                 padding-left: 3px; 
               }
-              .isparent {
+              .clickable {
                 cursor: pointer;
               }
               .WALK {

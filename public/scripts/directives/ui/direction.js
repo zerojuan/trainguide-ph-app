@@ -15,23 +15,7 @@ angular.module('uiModule').directive('direction', ['$filter', function($filter){
       scope.divClass = 'align';
       scope.trueMode = $filter('realmode')(scope.leg.mode, scope.leg.routeId);
       scope.showMe = (scope.trueMode == 'WALK' || scope.trueMode == 'RAIL');  
-
-      if(scope.leg.route){
-        switch(scope.leg.route){
-          case 'LRT 1':
-            scope.routeCode = 'LRT1';
-            break;
-          case 'LRT 2':
-            scope.routeCode = 'LRT2';
-            break;
-          case 'MRT-3':
-            scope.routeCode = 'MRT';
-            break;
-          default:
-            scope.routeCode = 'PNR';
-            break;
-        }
-      }
+      scope.routeCode = $filter('lineCode')(scope.leg.route);
 
       if(!scope.isLast()){
         scope.divClass = scope.trueMode;
@@ -49,7 +33,7 @@ angular.module('uiModule').directive('direction', ['$filter', function($filter){
     },
     template :
       '<div>'+
-        '<div class="{{divClass}}" ng-class="{isparent: trueMode!=\'RAIL\'}" ng-click="clickedDirection(leg)">'+
+        '<div class="{{divClass}}" ng-class="{clickable: trueMode!=\'RAIL\'}" ng-click="clickedDirection(leg)">'+
           '<div class="{{trueMode}} circle {{routeCode}}"></div>'+
           '<p>{{trueMode}}</p>'+
           '<p ng-hide="showMe"><em>{{leg.route}}</em></p>'+

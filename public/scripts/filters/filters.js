@@ -27,5 +27,27 @@
 					return direction.replace('_', ' ');
 				}
 			}
+		})
+		.filter('lineCode', function(){
+			return function(line){
+				if(line){
+					var code;
+	        switch(line){
+	          case 'LRT 1':
+	            code = 'LRT1';
+	            break;
+	          case 'LRT 2':
+	            code = 'LRT2';
+	            break;
+	          case 'MRT-3':
+	            code = 'MRT';
+	            break;
+	          default:
+	            code = 'PNR';
+	            break;
+	        }
+	        return code;
+	      }
+			}
 		});
 })();

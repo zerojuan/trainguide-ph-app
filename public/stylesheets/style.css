@@ -177,6 +177,44 @@ table td {
 .sidebar .content .directions .routes {
   cursor: pointer;
   text-align: right;
+  font-size: 0.8em;
+}
+.sidebar .content .directions .routes div {
+  overflow: hidden;
+}
+.sidebar .content .directions .routes div ul {
+  float: left;
+  margin: 0px;
+  width: 60%;
+  text-align: left;
+}
+.sidebar .content .directions .routes div ul li.route-steps {
+  display: inline-block;
+  margin: 0 auto;
+  padding-left: 2px;
+}
+.sidebar .content .directions .routes div ul li.route-steps .route-box {
+  background: none;
+  font-size: 1.5em;
+  line-height: 0.5em;
+}
+.sidebar .content .directions .routes div ul li.route-steps .route-box.LRT1 {
+  color: #fdc33c;
+}
+.sidebar .content .directions .routes div ul li.route-steps .route-box.LRT2 {
+  color: #ad86bc;
+}
+.sidebar .content .directions .routes div ul li.route-steps .route-box.MRT {
+  color: #5384c4;
+}
+.sidebar .content .directions .routes div ul li.route-steps .route-box.PNR {
+  color: #f28740;
+}
+.sidebar .content .directions .routes div ul li.route-steps .route-box.JEEP {
+  color: #9acd32;
+}
+.sidebar .content .directions .routes div ul li.route-steps .route-box.BUS {
+  color: #dc143c;
 }
 .sidebar .content .directions .block,
 .sidebar .content .directions .antiscroll-inner,
@@ -197,7 +235,7 @@ table td {
 .sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .align {
   padding-left: 3px;
 }
-.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .isparent {
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .clickable {
   cursor: pointer;
 }
 .sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .WALK {
