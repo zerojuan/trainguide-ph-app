@@ -42,20 +42,38 @@ angular.module('google-maps')
 						var leg = scope.itinerary.legs[legs];
 						var decodedPath = google.maps.geometry.encoding.decodePath(leg.legGeometry.points);
 
-						var color = '#cc00cc';
+						var color = '#2BA6CB';
+						var lineSymbol = {
+							path: 'M 0,-1 0,1',
+							strokeOpacity: 1,
+							scale: 2
+						};
+
+						var path = null;
 						if(leg.mode == 'WALK'){
-							color = '#00cccc';
+							path = new google.maps.Polyline({
+								strokeColor: color,
+								path: decodedPath,
+								strokeOpacity: 0,
+								icons: [{
+									icon: lineSymbol,
+									offset: '0',
+									repeat: '10px'
+								}],
+								map: scope.map,
+								zIndex: 10
+							});
+						}else{
+							path = new google.maps.Polyline({
+								strokeColor: color,
+								strokeOpacity : 0.9,
+								strokeWeight : 5,
+								path : decodedPath,
+								zIndex: 10,
+								map: scope.map
+							});
 						}
 
-						var path = new google.maps.Polyline({
-							strokeColor: color,
-							strokeOpacity : 0.9,
-							strokeWeight : 5,
-							path : decodedPath,
-							zIndex: 10
-						});
-
-						path.setMap(scope.map);
 						paths.push(path);
 					}
 					zoomToObject(paths);

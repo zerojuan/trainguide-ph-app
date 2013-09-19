@@ -47,9 +47,10 @@ angular.module('google-maps')
 				}
 
 				function showHideCursor(){
-					if(scope.isSearch.to ||
-						scope.isSearch.from){
-						scope.map.setOptions({draggableCursor: 'url(images/marker_featured.png) 16 16, default'});
+					if(scope.isSearch.to){
+						scope.map.setOptions({draggableCursor: 'url(images/marker_end.png) 16 16, default'});
+					}else if(scope.isSearch.from){
+						scope.map.setOptions({draggableCursor: 'url(images/marker_start.png) 16 16, default'});
 					}else{
 						scope.map.setOptions({draggableCursor: null});
 					}
@@ -71,7 +72,7 @@ angular.module('google-maps')
 					fromMarker = new google.maps.Marker({
 						position: newValue.geometry.location,
 						map: scope.map,
-						icon: 'images/marker_featured.png'
+						icon: 'images/marker_end.png'
 					});
 				});
 
@@ -83,7 +84,7 @@ angular.module('google-maps')
 					toMarker = new google.maps.Marker({
 						position: newValue.geometry.location,
 						map: scope.map,
-						icon: 'images/marker_featured.png'
+						icon: 'images/marker_start.png'
 					});
 				});
 			}
