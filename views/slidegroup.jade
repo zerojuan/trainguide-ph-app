@@ -1,9 +1,6 @@
 slide-group(selected-item='selectedItem', selected-stop='selected.stop', selected-line='selected.line', show-details='showDetails').slide-group
 		slide(title='Line')
-			.title-box
-				h2 Line
-					span  view
-			.content-box
+			.content-box(style='top: 0px;')
 				lines(lines='lines', selected-line='selected.line', selected-stop='selected.stop', show-details='showDetails', get-line-details='getLineDetails')
 				.content-inner
 					#stop-content(ng-class="{true:'showdetails', false:'nodetails'}[showDetails]")
@@ -49,3 +46,7 @@ slide-group(selected-item='selectedItem', selected-stop='selected.stop', selecte
 		slide(title='Tips')
 			tips(title="Ticketing")
 			tips(title="Time")
+
+		slide(title='Download')
+			div
+				'Heyo What is up?'
