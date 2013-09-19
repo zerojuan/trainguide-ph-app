@@ -197,6 +197,9 @@ table td {
 .sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .align {
   padding-left: 3px;
 }
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .isparent {
+  cursor: pointer;
+}
 .sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .WALK {
   border-style: dotted;
   border-left-width: medium;
@@ -305,7 +308,8 @@ table td {
   float: left;
   border: 5px solid #f28740;
 }
-.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list p {
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list p,
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list ul.direction-steps {
   padding-left: 15px;
   font-size: 0.8em;
   padding-top: 0.3em;
