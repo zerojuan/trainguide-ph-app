@@ -22,12 +22,17 @@
 			form 
 				.trip-input
 					label From:
-					input(type='text', places-autocomplete, value="Sup", place="direction.from")
+					a(ng-class='{active:selected.isSearch.from}', ng-click='selected.isSearch.from = !selected.isSearch.from; selected.isSearch.to = false;').tiny.button +
+					input(type='text', places-autocomplete, place="selected.direction.from")
 				
 				.trip-input
 					label To:
-					input(type='text', places-autocomplete, place="direction.to")
+					a(ng-class='{active:selected.isSearch.to}', ng-click='selected.isSearch.to = !selected.isSearch.to; selected.isSearch.from = false;').tiny.button +
+					input(type='text', places-autocomplete, place="selected.direction.to")
 				br
+				.trip-input
+					input(type='checkbox', ng-model='avoidBuses', value='Try Buses')
+					label Avoid Traffic
 				input(type='submit', value='Get Directions', ng-click='getDirections()')
 			span(ng-show='loadingQuery') 
 				form Loading...

@@ -1,9 +1,9 @@
 /node_modules
 
-/public/stylesheets/style.css
+public/stylesheets/style.css
 
 /.idea
 
 start.bat
 start.sh
-/public/stylesheets/style.css
+public/stylesheets/style.css

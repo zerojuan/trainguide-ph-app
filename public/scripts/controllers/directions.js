@@ -3,18 +3,16 @@ angular.module('trainguide.controllers')
 	.controller('DirectionCtrl', ['$scope', 'DirectionsService', 'StopsService', function($scope, DirectionsService, StopsService){
 		angular.extend($scope, {
 			direction: {
-				from: null,
-				to: null,
 				activeTrip: null
 			},
 			plan: null,
-			loadingQuery: false,
-			errorMessage: null
+			avoidBuses: true,
+			loadingQuery: false
 		});
 
 		$scope.getDirections = function(){
 			$scope.loadingQuery = true;
-			DirectionsService.getDirections({from: $scope.direction.from, to: $scope.direction.to},
+			DirectionsService.getDirections({from: $scope.selected.direction.from, to: $scope.selected.direction.to, avoidBuses: $scope.avoidBuses},
 				function(data){
 //					data.itineraries []
 //						- legs []

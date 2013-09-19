@@ -20,12 +20,16 @@ angular.module('google-maps')
 
 				});
 
-				function zoomToObject(obj){
+				function zoomToObject(arr){
 					var bounds = new google.maps.LatLngBounds();
-					var points = obj.getPath().getArray();
-					for (var n = 0; n < points.length ; n++){
-						bounds.extend(points[n]);
+					for(var i in arr){
+						var obj = arr[i];
+						var points = obj.getPath().getArray();
+						for (var n = 0; n < points.length ; n++){
+							bounds.extend(points[n]);
+						}
 					}
+
 					scope.map.fitBounds(bounds);
 				}
 
@@ -52,9 +56,9 @@ angular.module('google-maps')
 						});
 
 						path.setMap(scope.map);
-//						zoomToObject(path);
 						paths.push(path);
 					}
+					zoomToObject(paths);
 				}
 
 				scope.$watch('itinerary', function(newValue, oldValue){

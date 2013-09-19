@@ -25,6 +25,12 @@ angular.module('google-maps')
 					scope.place = place;
 					scope.$apply();
 				});
+
+				scope.$watch('place', function(newVal){
+					console.log('New Place update!', newVal);
+					if(newVal)
+						elm.val(newVal.formatted_address);
+				});
 			}
 		}
 	}]);
