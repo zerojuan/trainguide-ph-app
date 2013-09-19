@@ -34,14 +34,15 @@
 					input(type='checkbox', ng-model='avoidBuses', value='Try Buses')
 					label Avoid Traffic
 				input(type='submit', value='Get Directions', ng-click='getDirections()')
-			span(ng-show='loadingQuery') Loading...
-			div(ng-show='plan')
+			span(ng-show='loadingQuery') 
+				form Loading...
+			div(ng-show='plan && !errorMessage')
 				div
 					h6 Suggested Routes
 					ul
 						li(ng-repeat='trip in plan.itineraries', ng-click='selected.itinerary = trip').routes
 							//- span {{$index + 1}}: {{trip.duration|tominutes}} minutes
-							span {{trip.duration|tominutes}} minutes
+							route(trip='trip', isselected='selected.itinerary == trip')
 				div
 					h6 Directions
 					.antiscroll-wrap
@@ -51,7 +52,10 @@
 									ul
 										li(ng-repeat='leg in selected.itinerary.legs')
 											//- span {{$index + 1}}: {{leg.mode|realmode:leg.routeId}} {{leg.from.name}} to {{leg.to.name}}
-											direction(leg='leg').steps
+											direction(leg='leg', is-last='$index + 1 == selected.itinerary.legs.length').steps
+
+			div(ng-show='errorMessage') 
+				form {{errorMessage}}
 
 	.footer
 		ul

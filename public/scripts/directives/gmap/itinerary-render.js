@@ -61,9 +61,11 @@ angular.module('google-maps')
 					zoomToObject(paths);
 				}
 
-				scope.$watch('itinerary', function(){
-					console.log('Itenerary changed: ', scope.itinerary);
-					drawLines();
+				scope.$watch('itinerary', function(newValue, oldValue){
+					if(newValue){
+						console.log('Itenerary changed: ', scope.itinerary);
+						drawLines();	
+					}
 				});
 			},
 			replace: true,

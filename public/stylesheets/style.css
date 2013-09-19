@@ -168,6 +168,12 @@ table td {
 .sidebar .content .directions ul {
   margin: 5px;
 }
+.sidebar .content .directions .selectedroute {
+  border-left-width: medium;
+  border-style: solid;
+  border-color: #5cc15a;
+  margin-left: -5px;
+}
 .sidebar .content .directions .routes {
   cursor: pointer;
   text-align: right;
@@ -188,31 +194,127 @@ table td {
 .sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .steps {
   padding-left: 20px;
 }
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .align {
+  padding-left: 3px;
+}
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .isparent {
+  cursor: pointer;
+}
 .sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .WALK {
-  border-style: dashed;
+  border-style: dotted;
   border-left-width: medium;
+}
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .WALK.circle {
+  width: 20px;
+  height: 20px;
+  background: white;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  margin-left: -11px;
+  float: left;
+  border: 5px solid #222222;
 }
 .sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .JEEP,
 .sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .BUS {
-  border-style: dotted;
+  border-style: solid;
   border-left-width: medium;
 }
 .sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .JEEP {
   border-color: #9acd32;
 }
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .JEEP.circle {
+  width: 20px;
+  height: 20px;
+  background: white;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  margin-left: -11px;
+  float: left;
+  border: 5px solid #9acd32;
+}
 .sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .BUS {
   border-color: #dc143c;
+}
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .BUS.circle {
+  width: 20px;
+  height: 20px;
+  background: white;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  margin-left: -11px;
+  float: left;
+  border: 5px solid #dc143c;
 }
 .sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .RAIL {
   border-style: solid;
   border-left-width: medium;
-  border-color: #dc143c;
 }
-.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list p {
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .RAIL.LRT1 {
+  border-color: #fdc33c;
+}
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .RAIL.LRT1.circle {
+  width: 20px;
+  height: 20px;
+  background: white;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  margin-left: -11px;
+  float: left;
+  border: 5px solid #fdc33c;
+}
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .RAIL.LRT2 {
+  border-color: #ad86bc;
+}
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .RAIL.LRT2.circle {
+  width: 20px;
+  height: 20px;
+  background: white;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  margin-left: -11px;
+  float: left;
+  border: 5px solid #ad86bc;
+}
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .RAIL.MRT {
+  border-color: #5384c4;
+}
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .RAIL.MRT.circle {
+  width: 20px;
+  height: 20px;
+  background: white;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  margin-left: -11px;
+  float: left;
+  border: 5px solid #5384c4;
+}
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .RAIL.PNR {
+  border-color: #f28740;
+}
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .RAIL.PNR.circle {
+  width: 20px;
+  height: 20px;
+  background: white;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  margin-left: -11px;
+  float: left;
+  border: 5px solid #f28740;
+}
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list p,
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list ul.direction-steps {
   padding-left: 15px;
   font-size: 0.8em;
   padding-top: 0.3em;
   padding-bottom: 0.3em;
+  background-color: white;
 }
 .sidebar .footer {
   position: absolute;

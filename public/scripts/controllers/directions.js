@@ -25,10 +25,12 @@ angular.module('trainguide.controllers')
 					$scope.plan = data;
 					$scope.selected.itinerary= $scope.plan.itineraries[0];
 					$scope.loadingQuery = false;
+					$scope.errorMessage = null;
 				},
 				function(err){
 					console.log("Some error occured", err);
 					$scope.loadingQuery = false;
+					$scope.errorMessage = err.msg;
 				});
 		}
 //		getRealMode: function(mode, routeId) {

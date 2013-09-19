@@ -13,8 +13,8 @@
 @textNoHighlight : #8b8b8b;
 @trainlineColor : #5b5b5b;
 @trainlineBg : #e5e5e5;
-@jeepColor: #9acd32;
-@busColor: #dc143c;
+@jeepColor : #9acd32;
+@busColor : #dc143c;
 
 @font-face {
   font-family: 'icomoon';
@@ -39,6 +39,18 @@
   -webkit-border-radius: @weight;
   -moz-border-radius: @weight;
   border-radius: @weight;
+}
+
+.circle-shape (@color: #222){
+  width: 20px;
+  height: 20px;
+  background: white;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  margin-left: -11px;
+  float: left;
+  border: 5px solid @color;
 }
 
 /* elements */
@@ -215,6 +227,12 @@ table {
       form, ul {
         margin: 5px;
       }   
+      .selectedroute {
+        border-left-width: medium;
+        border-style: solid;
+        border-color: @linkColor;
+        margin-left: -5px;
+      }
       .routes {
         cursor: pointer;
         text-align: right;
@@ -233,30 +251,69 @@ table {
               .steps {
                 padding-left: 20px;
               }
+              .align {
+                padding-left: 3px; 
+              }
+              .isparent {
+                cursor: pointer;
+              }
               .WALK {
-                border-style: dashed;
+                border-style: dotted;
                 border-left-width: medium;
+                &.circle {
+                  .circle-shape;
+                }
               }
               .JEEP, .BUS {                
-                border-style: dotted;
+                border-style: solid;
                 border-left-width: medium;
               }
               .JEEP {
                 border-color: @jeepColor;
+                &.circle {
+                  .circle-shape(@jeepColor);
+                }
               }
               .BUS {
                 border-color: @busColor;
+                &.circle {
+                  .circle-shape(@busColor);
+                }
               }
               .RAIL {
                 border-style: solid;
                 border-left-width: medium;
-                border-color: @busColor;
+                &.LRT1 {
+                  border-color: @lrt1;
+                  &.circle {
+                    .circle-shape(@lrt1);
+                  }
+                }
+                &.LRT2 {
+                  border-color: @lrt2;
+                  &.circle {
+                    .circle-shape(@lrt2);
+                  }
+                }
+                &.MRT {
+                  border-color: @mrt;
+                  &.circle {
+                    .circle-shape(@mrt);
+                  }
+                }
+                &.PNR {
+                  border-color: @pnr;
+                  &.circle {
+                    .circle-shape(@pnr);
+                  }
+                }
               }
-              p {
+              p, ul.direction-steps {
                 padding-left: 15px;
                 font-size: 0.8em;
                 padding-top: 0.3em;
                 padding-bottom: 0.3em;
+                background-color: white;
               } 
             }
           }
