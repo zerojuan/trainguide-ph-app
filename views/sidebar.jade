@@ -46,7 +46,7 @@
 									ul
 										li(ng-repeat='leg in selected.itinerary.legs')
 											//- span {{$index + 1}}: {{leg.mode|realmode:leg.routeId}} {{leg.from.name}} to {{leg.to.name}}
-											direction(leg='leg').steps
+											direction(leg='leg', is-last='$index + 1 == selected.itinerary.legs.length').steps
 
 	.footer
 		ul
