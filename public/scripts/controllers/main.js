@@ -43,7 +43,7 @@ angular.module('trainguide.controllers')
 					from: null
 				},
 				isSearch: {
-					to: true,
+					to: false,
 					from: false
 				},
 				itinerary: null
