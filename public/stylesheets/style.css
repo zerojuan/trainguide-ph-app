@@ -45,6 +45,9 @@ h6 {
 a {
   color: #00B7FF;
 }
+em {
+  font-style: italic;
+}
 table {
   width: 100%;
   table-layout: fixed;
@@ -113,18 +116,19 @@ table td {
 .sidebar .content .control-tabs {
   width: 100%;
   background-color: #e5e5e5;
-  height: 31px;
+  height: 26px;
 }
 .sidebar .content .control-tabs ul {
   list-style: none;
   width: 100%;
   margin: 0 auto;
+  font-size: 0.75em;
 }
 .sidebar .content .control-tabs ul li {
   display: table-cell;
   margin: 0 auto;
   text-align: center;
-  padding-left: 15px;
+  padding-left: 25px;
 }
 .sidebar .content .control-tabs ul li a {
   float: left;
@@ -140,14 +144,75 @@ table td {
   border-bottom: 5px solid #5cc15a;
   color: #585858;
 }
-.sidebar .content .directions {
+.sidebar .content .directions h4 {
+  font-weight: bold;
+  padding-bottom: 10px;
+  padding-top: 10px;
   margin: 5px;
 }
+.sidebar .content .directions label {
+  display: inline-block;
+  text-align: right;
+  width: 20%;
+  padding-right: 5px;
+  font-size: 0.85em;
+}
 .sidebar .content .directions input[type="text"] {
-  width: 100%;
+  width: 80%;
+  display: inline-block;
 }
 .sidebar .content .directions select {
   width: auto;
+}
+.sidebar .content .directions form,
+.sidebar .content .directions ul {
+  margin: 5px;
+}
+.sidebar .content .directions .routes {
+  cursor: pointer;
+  text-align: right;
+}
+.sidebar .content .directions .block,
+.sidebar .content .directions .antiscroll-inner,
+.sidebar .content .directions .steps-list {
+  width: 255px;
+  height: 230px;
+}
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  .sidebar .content .directions .block,
+  .sidebar .content .directions .antiscroll-inner,
+  .sidebar .content .directions .steps-list {
+    height: 170px;
+  }
+}
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .steps {
+  padding-left: 20px;
+}
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .WALK {
+  border-style: dashed;
+  border-left-width: medium;
+}
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .JEEP,
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .BUS {
+  border-style: dotted;
+  border-left-width: medium;
+}
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .JEEP {
+  border-color: #9acd32;
+}
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .BUS {
+  border-color: #dc143c;
+}
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list .RAIL {
+  border-style: solid;
+  border-left-width: medium;
+  border-color: #dc143c;
+}
+.sidebar .content .directions .antiscroll-wrap .block .antiscroll-inner .steps-list p {
+  padding-left: 15px;
+  font-size: 0.8em;
+  padding-top: 0.3em;
+  padding-bottom: 0.3em;
 }
 .sidebar .footer {
   position: absolute;

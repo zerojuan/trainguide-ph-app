@@ -17,25 +17,36 @@
 			menu-items='menuItems',
 			selected-item='selectedItem',
 			show-details='showDetails').control-tabs
-		.directions(ng-controller='DirectionCtrl') Transit directions
-			form from:
-				input(type='text', places-autocomplete, value="Sup", place="direction.from")
-				| to:
-				input(type='text', places-autocomplete, place="direction.to")
+		.directions(ng-controller='DirectionCtrl') 
+			h4 Trip Planner
+			form 
+				.trip-input
+					label From:
+					input(type='text', places-autocomplete, value="Sup", place="direction.from")
+				
+				.trip-input
+					label To:
+					input(type='text', places-autocomplete, place="direction.to")
 				br
 				input(type='submit', value='Get Directions', ng-click='getDirections()')
 			span(ng-show='loadingQuery') Loading...
 			div(ng-show='plan')
 				div
-					span Trips
+					h6 Suggested Routes
 					ul
-						li(ng-repeat='trip in plan.itineraries', ng-click='selected.itinerary = trip')
-							span {{$index + 1}}: {{trip.duration|tominutes}} minutes
+						li(ng-repeat='trip in plan.itineraries', ng-click='selected.itinerary = trip').routes
+							//- span {{$index + 1}}: {{trip.duration|tominutes}} minutes
+							span {{trip.duration|tominutes}} minutes
 				div
-					span Directions
-					ul
-						li(ng-repeat='leg in selected.itinerary.legs')
-							span {{$index + 1}}: {{leg.mode|realmode:leg.routeId}} {{leg.from.name}} to {{leg.to.name}}
+					h6 Directions
+					.antiscroll-wrap
+						.block
+							.antiscroll-inner
+								.steps-list
+									ul
+										li(ng-repeat='leg in selected.itinerary.legs')
+											//- span {{$index + 1}}: {{leg.mode|realmode:leg.routeId}} {{leg.from.name}} to {{leg.to.name}}
+											direction(leg='leg').steps
 
 	.footer
 		ul

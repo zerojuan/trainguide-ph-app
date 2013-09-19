@@ -13,6 +13,8 @@
 @textNoHighlight : #8b8b8b;
 @trainlineColor : #5b5b5b;
 @trainlineBg : #e5e5e5;
+@jeepColor: #9acd32;
+@busColor: #dc143c;
 
 @font-face {
   font-family: 'icomoon';
@@ -78,6 +80,10 @@ h6 {
 
 a {
   color: #00B7FF;
+}
+
+em {
+  font-style: italic;
 }
 
 table {
@@ -153,16 +159,17 @@ table {
       // border-top: 1px solid @gray;
       // border-bottom: 1px solid @gray;    
       background-color: @trainlineBg;
-      height: 31px;
+      height: 26px;
       ul{
         list-style: none;
         width: 100%;
         margin: 0 auto;
+        font-size: 0.75em;
         li{  
           display: table-cell;
           margin: 0 auto;
           text-align: center;
-          padding-left: 15px;                 
+          padding-left: 25px;                 
           a{               
             float: left;        
             padding-top: 7px;
@@ -185,12 +192,75 @@ table {
       }
     }
     .directions {
-      margin: 5px;
+      h4 {
+        font-weight: bold;
+        padding-bottom: 10px;
+        padding-top: 10px;
+        margin: 5px;
+      }
+      label {
+        display: inline-block;
+        text-align: right;
+        width: 20%;
+        padding-right: 5px;
+        font-size: 0.85em;
+      }
       input[type="text"] {
-        width: 100%;
+        width: 80%;
+        display: inline-block;
       }
       select {
         width: auto;
+      }
+      form, ul {
+        margin: 5px;
+      }   
+      .routes {
+        cursor: pointer;
+        text-align: right;
+      }   
+      .block, .antiscroll-inner, .steps-list {
+        width: 255px;
+        height: 230px;
+        @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+          height: 170px;
+        }
+      }        
+      .antiscroll-wrap {
+        .block {
+          .antiscroll-inner {
+            .steps-list {
+              .steps {
+                padding-left: 20px;
+              }
+              .WALK {
+                border-style: dashed;
+                border-left-width: medium;
+              }
+              .JEEP, .BUS {                
+                border-style: dotted;
+                border-left-width: medium;
+              }
+              .JEEP {
+                border-color: @jeepColor;
+              }
+              .BUS {
+                border-color: @busColor;
+              }
+              .RAIL {
+                border-style: solid;
+                border-left-width: medium;
+                border-color: @busColor;
+              }
+              p {
+                padding-left: 15px;
+                font-size: 0.8em;
+                padding-top: 0.3em;
+                padding-bottom: 0.3em;
+              } 
+            }
+          }
+        }
       }
     }
   }
