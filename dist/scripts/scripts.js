@@ -120,27 +120,27 @@ angular.module('trainguide.controllers').controller('DirectionCtrl', [
   'StopsService',
   function ($scope, DirectionsService, StopsService) {
     angular.extend($scope, {
-      direction: {
-        from: null,
-        to: null,
-        activeTrip: null
-      },
+      direction: { activeTrip: null },
       plan: null,
+      avoidBuses: true,
       loadingQuery: false
     });
     $scope.getDirections = function () {
       $scope.loadingQuery = true;
       DirectionsService.getDirections({
-        from: $scope.direction.from,
-        to: $scope.direction.to
+        from: $scope.selected.direction.from,
+        to: $scope.selected.direction.to,
+        avoidBuses: $scope.avoidBuses
       }, function (data) {
         console.log(data);
         $scope.plan = data;
         $scope.selected.itinerary = $scope.plan.itineraries[0];
         $scope.loadingQuery = false;
+        $scope.errorMessage = null;
       }, function (err) {
         console.log('Some error occured', err);
         $scope.loadingQuery = false;
+        $scope.errorMessage = err.msg;
       });
     };
   }
@@ -193,6 +193,27 @@ angular.module('trainguide.controllers').controller('GMapCtrl', [
         $scope.markers = [];
       }
     });
+    $scope.$watch('selected.hospital.data', function (newValue) {
+      if (newValue) {
+        angular.forEach($scope.selected.hospital.data, function (val) {
+          createMarker(val, 'images/marker_medical22.png', val.name);
+        });
+      }
+    }, true);
+    $scope.$watch('selected.hotel.data', function (newValue) {
+      if (newValue) {
+        angular.forEach($scope.selected.hotel.data, function (val) {
+          createMarker(val, 'images/marker_hotel' + getColor() + '.png', val.name);
+        });
+      }
+    }, true);
+    $scope.$watch('selected.office.data', function (newValue) {
+      if (newValue) {
+        angular.forEach($scope.selected.office.data, function (val) {
+          createMarker(val, 'images/marker_office' + getColor() + '.png', val.name);
+        });
+      }
+    }, true);
     $scope.$watch('selected.sights.data', function (newValue) {
       if (newValue) {
         angular.forEach($scope.selected.sights.data, function (val) {
@@ -227,6 +248,18 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
         stop: null,
         line: null,
         dest: null,
+        hospital: {
+          counter: 0,
+          data: []
+        },
+        hotel: {
+          counter: 0,
+          data: []
+        },
+        office: {
+          counter: 0,
+          data: []
+        },
         sights: {
           counter: 0,
           data: []
@@ -234,6 +267,14 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
         shops: {
           counter: 0,
           data: []
+        },
+        direction: {
+          to: null,
+          from: null
+        },
+        isSearch: {
+          to: false,
+          from: false
         },
         itinerary: null
       },
@@ -248,11 +289,11 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
           selected: false
         },
         {
-          title: 'Download',
+          title: 'Tips',
           selected: false
         },
         {
-          title: 'Tips',
+          title: 'Download',
           selected: false
         }
       ],
@@ -309,6 +350,15 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
     };
     $scope.getPlaces = function (qry) {
       PlacesService.getPlacesBySearch(qry.queryStr, function (data) {
+        if (qry.category == 'Hospital') {
+          $scope.selected.hospital.totalcount = data.places.length;
+        }
+        if (qry.category == 'Hotel') {
+          $scope.selected.hotel.totalcount = data.places.length;
+        }
+        if (qry.category == 'Office') {
+          $scope.selected.office.totalcount = data.places.length;
+        }
         if (qry.category == 'Sightseeing') {
           $scope.selected.sights.totalcount = data.places.length;
         }
@@ -323,7 +373,16 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
       PlacesService.getPlacesByLimitedCategory(qry.category, qry.stopname, qry.start, qry.limit, function (data) {
         console.log('Get places done: ');
         console.log(data);
-        if (qry.category == 'Sightseeing') {
+        if (qry.category == 'Hospital') {
+          $scope.selected.hospital.counter = qry.start;
+          Array.prototype.push.apply($scope.selected.hospital.data, data);
+        } else if (qry.category == 'Hotel') {
+          $scope.selected.hotel.counter = qry.start;
+          Array.prototype.push.apply($scope.selected.hotel.data, data);
+        } else if (qry.category == 'Office') {
+          $scope.selected.office.counter = qry.start;
+          Array.prototype.push.apply($scope.selected.office.data, data);
+        } else if (qry.category == 'Sightseeing') {
           $scope.selected.sights.counter = qry.start;
           Array.prototype.push.apply($scope.selected.sights.data, data);
         } else if (qry.category == 'Shopping') {
@@ -342,6 +401,24 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
       console.log('Getting stop name: ');
       var stopname = $scope.selected.stop.details.stop_name;
       console.log(stopname);
+      $scope.getLimitedPlaces({
+        limit: limit,
+        start: counter * limit,
+        category: 'Hospital',
+        stopname: stopname
+      });
+      $scope.getLimitedPlaces({
+        limit: limit,
+        start: counter * limit,
+        category: 'Hotel',
+        stopname: stopname
+      });
+      $scope.getLimitedPlaces({
+        limit: limit,
+        start: counter * limit,
+        category: 'Office',
+        stopname: stopname
+      });
       $scope.getLimitedPlaces({
         limit: limit,
         start: counter * limit,
@@ -456,6 +533,33 @@ angular.module('trainguide.controllers').controller('PlaceCtrl', [
   }).filter('tominutes', function () {
     return function (millis) {
       return Math.round(millis / 1000 / 60);
+    };
+  }).filter('parseDirection', function () {
+    return function (direction) {
+      if (direction.indexOf('_')) {
+        return direction.replace('_', ' ');
+      }
+    };
+  }).filter('lineCode', function () {
+    return function (line) {
+      if (line) {
+        var code;
+        switch (line) {
+        case 'LRT 1':
+          code = 'LRT1';
+          break;
+        case 'LRT 2':
+          code = 'LRT2';
+          break;
+        case 'MRT-3':
+          code = 'MRT';
+          break;
+        default:
+          code = 'PNR';
+          break;
+        }
+        return code;
+      }
     };
   });
 }());
@@ -578,7 +682,8 @@ angular.module('google-maps').directive('globalizeMap', [
               draggable: that.draggable,
               mapTypeId: google.maps.MapTypeId.ROADMAP,
               styles: mapStyle,
-              disableDefaultUI: true
+              disableDefaultUI: true,
+              zoomControl: true
             }));
             console.log('_instance is ready', _instance);
             google.maps.event.addListener(_instance, 'dragstart', function () {
@@ -948,11 +1053,14 @@ angular.module('google-maps').directive('itineraryRender', [
         };
         scope.$watch('map', function () {
         });
-        function zoomToObject(obj) {
+        function zoomToObject(arr) {
           var bounds = new google.maps.LatLngBounds();
-          var points = obj.getPath().getArray();
-          for (var n = 0; n < points.length; n++) {
-            bounds.extend(points[n]);
+          for (var i in arr) {
+            var obj = arr[i];
+            var points = obj.getPath().getArray();
+            for (var n = 0; n < points.length; n++) {
+              bounds.extend(points[n]);
+            }
           }
           scope.map.fitBounds(bounds);
         }
@@ -964,24 +1072,45 @@ angular.module('google-maps').directive('itineraryRender', [
           for (var legs in scope.itinerary.legs) {
             var leg = scope.itinerary.legs[legs];
             var decodedPath = google.maps.geometry.encoding.decodePath(leg.legGeometry.points);
-            var color = '#cc00cc';
+            var color = '#2BA6CB';
+            var lineSymbol = {
+                path: 'M 0,-1 0,1',
+                strokeOpacity: 1,
+                scale: 2
+              };
+            var path = null;
             if (leg.mode == 'WALK') {
-              color = '#00cccc';
-            }
-            var path = new google.maps.Polyline({
+              path = new google.maps.Polyline({
+                strokeColor: color,
+                path: decodedPath,
+                strokeOpacity: 0,
+                icons: [{
+                    icon: lineSymbol,
+                    offset: '0',
+                    repeat: '10px'
+                  }],
+                map: scope.map,
+                zIndex: 10
+              });
+            } else {
+              path = new google.maps.Polyline({
                 strokeColor: color,
                 strokeOpacity: 0.9,
                 strokeWeight: 5,
                 path: decodedPath,
-                zIndex: 10
+                zIndex: 10,
+                map: scope.map
               });
-            path.setMap(scope.map);
+            }
             paths.push(path);
           }
+          zoomToObject(paths);
         };
-        scope.$watch('itinerary', function () {
-          console.log('Itenerary changed: ', scope.itinerary);
-          drawLines();
+        scope.$watch('itinerary', function (newValue, oldValue) {
+          if (newValue) {
+            console.log('Itenerary changed: ', scope.itinerary);
+            drawLines();
+          }
         });
       },
       replace: true,
@@ -1065,6 +1194,11 @@ angular.module('google-maps').directive('placesAutocomplete', [
           }
           scope.place = place;
           scope.$apply();
+        });
+        scope.$watch('place', function (newVal) {
+          console.log('New Place update!', newVal);
+          if (newVal)
+            elm.val(newVal.formatted_address);
         });
       }
     };
@@ -1155,6 +1289,94 @@ angular.module('google-maps').directive('polylineDrawer', [function () {
       }
     };
   }]);
+angular.module('google-maps').directive('tripAdder', [
+  'PlacesService',
+  function (PlacesService) {
+    return {
+      require: '^googleMap',
+      restrict: 'E',
+      scope: {
+        isSearch: '=',
+        direction: '='
+      },
+      link: function (scope, elm, attrs, gmapCtrl) {
+        gmapCtrl.registerMapListener(scope);
+        var geocoder = new google.maps.Geocoder();
+        var fromMarker = null;
+        var toMarker = null;
+        scope.onMapReady = function (map) {
+          scope.map = map;
+          google.maps.event.addListener(scope.map, 'click', onClickMap);
+        };
+        function onClickMap(event) {
+          var clickPos = event.latLng;
+          if (scope.isSearch.to || scope.isSearch.from) {
+            geocoder.geocode({ 'latLng': clickPos }, function (results, status) {
+              if (status == google.maps.GeocoderStatus.OK) {
+                console.log(results);
+                setPlace(results[0]);
+              } else {
+                console.log('Geocoder failed: ' + status);
+              }
+            });
+          }
+        }
+        function setPlace(value) {
+          if (scope.isSearch.to) {
+            scope.direction.to = value;
+            scope.$apply();
+          } else if (scope.isSearch.from) {
+            scope.direction.from = value;
+            scope.$apply();
+          }
+        }
+        function showHideCursor() {
+          if (scope.isSearch.to) {
+            scope.map.setOptions({ draggableCursor: 'url(images/marker_end.png) 16 16, default' });
+          } else if (scope.isSearch.from) {
+            scope.map.setOptions({ draggableCursor: 'url(images/marker_start.png) 16 16, default' });
+          } else {
+            scope.map.setOptions({ draggableCursor: null });
+          }
+        }
+        scope.$watch('isSearch.to', function () {
+          showHideCursor();
+        });
+        scope.$watch('isSearch.from', function () {
+          showHideCursor();
+        });
+        scope.$watch('direction.to', function (newValue) {
+          if (!newValue) {
+            return;
+          }
+          if (fromMarker) {
+            fromMarker.setMap(null);
+          }
+          scope.isSearch.to = false;
+          fromMarker = new google.maps.Marker({
+            position: newValue.geometry.location,
+            map: scope.map,
+            icon: 'images/marker_end.png'
+          });
+        });
+        scope.$watch('direction.from', function (newValue) {
+          if (!newValue) {
+            return;
+          }
+          if (toMarker) {
+            toMarker.setMap(null);
+          }
+          scope.isSearch.from = false;
+          toMarker = new google.maps.Marker({
+            position: newValue.geometry.location,
+            map: scope.map,
+            icon: 'images/marker_start.png'
+          });
+        });
+      }
+    };
+  }
+]);
 'use strict';
 angular.module('uiModule').directive('categories', function () {
   return {
@@ -1178,6 +1400,42 @@ angular.module('uiModule').directive('categories', function () {
     replace: true
   };
 });
+'use strict';
+angular.module('uiModule').directive('direction', [
+  '$filter',
+  function ($filter) {
+    return {
+      restrict: 'E',
+      transclude: true,
+      scope: {
+        leg: '=',
+        isLast: '&isLast'
+      },
+      link: function (scope, elm, attrs) {
+        $('.antiscroll-wrap').antiscroll();
+        scope.selectedStep = null;
+        scope.divClass = 'align';
+        scope.trueMode = $filter('realmode')(scope.leg.mode, scope.leg.routeId);
+        scope.showMe = scope.trueMode == 'WALK' || scope.trueMode == 'RAIL';
+        scope.routeCode = $filter('lineCode')(scope.leg.route);
+        if (!scope.isLast()) {
+          scope.divClass = scope.trueMode;
+          if (scope.trueMode == 'RAIL')
+            scope.divClass += ' ' + scope.routeCode;
+        }
+        scope.clickedDirection = function (leg) {
+          if (scope.selectedStep == null) {
+            scope.selectedStep = leg;
+          } else {
+            scope.selectedStep = null;
+          }
+        };
+      },
+      template: '<div>' + '<div class="{{divClass}}" ng-class="{clickable: trueMode!=\'RAIL\'}" ng-click="clickedDirection(leg)">' + '<div class="{{trueMode}} circle {{routeCode}}"></div>' + '<p>{{trueMode}} <span style="font-size: 10px;">{{leg.duration|tominutes}} mins</span></p>' + '<p ng-hide="showMe"><em>{{leg.route}}</em></p>' + '<p ng-show="showMe">' + '<em>{{leg.from.name}}</em> to <em>{{leg.to.name}}</em>' + '</p>' + '<ul ng-show="leg.steps.length && selectedStep==leg" class="direction-steps">' + '<li ng-repeat="step in leg.steps">' + '<span>{{step.relativeDirection|parseDirection}} on {{step.streetName}}</span>' + '</li>' + '</ul>' + '<p ng-show="trueMode!=\'RAIL\' && (leg.steps.length==0 && selectedStep==leg)" class="direction-steps">' + '<span><em>{{leg.from.name}}</em> to <em>{{leg.to.name}}</em></span>' + '</p>' + '</div>' + '</div>',
+      replace: true
+    };
+  }
+]);
 'use strict';
 angular.module('uiModule').directive('lines', [
   'CommonAppState',
@@ -1205,6 +1463,7 @@ angular.module('uiModule').directive('lines', [
           scope.showDetails = false;
           scope.getLineDetails(line);
         };
+        $('.antiscroll-wrap').antiscroll();
       },
       template: '<div class="line-nav clearfix {{selectedLine.name}}" ng-transclude>' + '<ul>' + '<li ng-repeat="i in lines" class="{{i.name}}" ng-class="{active:i.name == selectedLine.name}" ng-click="lineSelected(i)">' + '{{i.shortName}}' + '</li>' + '</ul>' + '<div class="stop-desc" ng-class="{true:\'showdetails\', false:\'nodetails\'}[showDetails]"></div>' + '<table class="line-desc" ng-class="{true:\'nodetails\', false:\'showdetails\'}[showDetails]">' + '<tr>' + '<td>Weekdays: {{selectedLine.details.weekdays}}</td>' + '</tr>' + '<tr>' + '<td>Weekend: {{selectedLine.details.weekend}}</td>' + '</tr>' + '<tr>' + '<td>Stored Value Card: {{selectedLine.details.svc}}</td>' + '</tr>' + '</table>' + '<table class="contact-desc" ng-class="{true:\'nodetails\', false:\'showdetails\'}[showDetails]">' + '<th>Contact</th>' + '<tr>' + '<td>Web: {{selectedLine.details.web}}</td>' + '</tr>' + '<tr>' + '<td>Twitter: {{selectedLine.details.twitter}}</td>' + '</tr>' + '<tr>' + '<td>Contact No.: {{selectedLine.details.contactNo}}</td>' + '</tr>' + '<tr>' + '<td>Fare: {{selectedLine.details.fare}}</td>' + '</tr>' + '<tr>' + '<td>Email: {{selectedLine.details.email}}</td>' + '</tr>' + '</table>' + '</div>',
       replace: true
@@ -1227,7 +1486,7 @@ angular.module('uiModule').directive('lineStops', [
       },
       link: function (scope, element, attr) {
         var y = null;
-        var svgHeight = $(window).height() - 130;
+        var svgHeight = $(window).height() - 100;
         var svg = d3.select('#line-stop-svg').append('svg').attr('class', 'line-stop-chart').attr('width', 260).attr('height', svgHeight);
         var lineWidth = 10;
         var centerX = 130;
@@ -1448,6 +1707,51 @@ angular.module('uiModule').directive('radioGroup', [function () {
     };
   }]);
 'use strict';
+angular.module('uiModule').directive('route', [
+  '$filter',
+  function ($filter) {
+    return {
+      restrict: 'E',
+      transclude: true,
+      scope: {
+        trip: '=',
+        isselected: '&'
+      },
+      link: function (scope) {
+        scope.steps = [];
+        console.log('trip', scope.trip.legs);
+        var legs = scope.trip.legs;
+        for (var i in legs) {
+          console.log(legs[i]);
+          var trueMode = $filter('realmode')(legs[i].mode, legs[i].routeId);
+          var routeCode;
+          switch (trueMode) {
+          case 'JEEP':
+            routeCode = 'JEEP';
+            break;
+          case 'BUS':
+            routeCode = 'BUS';
+            break;
+          case 'WALK':
+            break;
+          default:
+            routeCode = $filter('lineCode')(legs[i].route);
+            trueMode = legs[i].route;
+            break;
+          }
+          var stepObj = {
+              mode: trueMode,
+              route: routeCode
+            };
+          scope.steps.push(stepObj);
+        }
+      },
+      template: '<div ng-class="{selectedroute: isselected() == true}">' + '<ul>' + '<li ng-repeat="step in steps" class="route-steps">' + '<div>' + '<span>{{step.mode}}</span>' + '<span class="route-box {{step.route}}" ng-hide="step.mode==\'WALK\'">&#9632;</span>' + '<span ng-hide="$last"> &#9656;</span>' + '</div>' + '</li>' + '</ul>' + '<span>{{trip.duration|tominutes}} min</span>' + '</div>',
+      replace: true
+    };
+  }
+]);
+'use strict';
 angular.module('uiModule').directive('search', function () {
   return {
     restrict: 'E',
@@ -1477,7 +1781,7 @@ angular.module('uiModule').directive('search', function () {
         });
       });
     },
-    template: '<div>' + '<h2 class="place">Places <span> to go</span></h2>' + '<div class="search-form">' + '<i class="icon-search"></i>' + '<input type="text" placeholder="Search" class="search-box">' + '</div>' + '</div>',
+    template: '<div>' + '<div class="search-form">' + '<i class="icon-search"></i>' + '<input type="text" placeholder="Search" class="search-box">' + '</div>' + '</div>',
     replace: true
   };
 });
@@ -1598,6 +1902,16 @@ angular.module('uiModule').directive('slideshow', [function () {
       replace: true
     };
   }]);
+'use strict';
+angular.module('uiModule').directive('tips', function () {
+  return {
+    restrict: 'E',
+    transclude: true,
+    scope: { title: '@' },
+    template: '<div>' + '<h6>{{title}}</h6>' + '<div ng-switch on="title">' + '<div ng-switch-when="Ticketing" class="tips">' + '<p>The MRT and LRT use magnetic cards that are bought at ticket windows. Both single journey tickets and Stored Value Tickets (SVT) worth 100 Pesos can be bought.</p>' + '<p>Simply slip the card into the turnstile slot and pass through. SVTs deduct the right amount once you exit from the station and give you a "bonus ride" which means any amount left (from .50) entitles you to one last ride.</p>' + '<p>The PNR uses traditional paper tickets, bought at a ticket booth in each station.</p>' + '</div>' + '<div ng-switch-when="Time" class="tips">' + '<p>Trains are packed during rush hour (6-8:30AM and 5:30-8PM) so schedule your trips around that time. Weekends are usually less crowded.</p>' + '<p>In the large stations, ticket lines can take up to 20 minutes of your time, and security checks only make it longer. Get an SVT to skip the ticket line and save time. If SVTs aren\'t available, buy two tickets to your destination, one for going, and one for returning.</p>' + '<p>PNR trains start running around 5:05, then arrive every 30 min. Arriving a little earlier than scheduled is a good idea. On Sundays the trains run every hour.</p>' + '</div>' + '</div>' + '</div>',
+    replace: true
+  };
+});
 angular.module('trainguideServices').factory('CommonAppState', [
   '$rootScope',
   function ($rootScope) {
@@ -1628,11 +1942,30 @@ angular.module('trainguideServices').factory('DirectionsService', [
           lng: parseFloat(arr[1])
         };
       }
+      function serialize(obj) {
+        var str = [];
+        for (var p in obj)
+          str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
+        return str.join('&');
+      }
       var from = extractLocation('' + query.from.geometry.location);
       var to = extractLocation('' + query.to.geometry.location);
       var d = new Date();
       var dateNow = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
-      var url = api + '/plan?date=' + dateNow + '&time=11:59am&fromPlace=' + from.lat + ',' + from.lng + '&toPlace=' + to.lat + ',' + to.lng + '&mode=TRANSIT,WALK&callback=JSON_CALLBACK';
+      var bannedAgencies = '';
+      if (query.avoidBuses) {
+        bannedAgencies += 'LTFRB';
+      }
+      var query = serialize({
+          bannedAgencies: bannedAgencies,
+          unpreferredAgencies: 'LTFRB',
+          preferredAgencies: 'LRTA,MRTC,PNR',
+          date: dateNow + '&time=11:59am',
+          fromPlace: from.lat + ',' + from.lng,
+          toPlace: to.lat + ',' + to.lng,
+          mode: 'TRANSIT,WALK'
+        });
+      var url = api + '/plan?' + query + '&callback=JSON_CALLBACK';
       console.log(url);
       $http.jsonp(url).success(function (data) {
         if (data.error) {
@@ -1701,6 +2034,17 @@ angular.module('trainguideServices').factory('PlacesService', [
       { name: 'Sports' },
       { name: 'Transport Terminal' }
     ];
+    PlacesService.reverseGeocode = function (latlng, callback, err) {
+      var geocodingAPI = 'http://maps.googleapis.com/maps/api/geocode/json?latlng=' + latlng.lat() + ',' + latlng.lng() + '&sensor=true';
+      $http({
+        method: 'GET',
+        url: geocodingAPI
+      }).success(function (data, status) {
+        callback(data, status);
+      }).error(function (data, status, headers, config) {
+        err(data, status, headers, config);
+      });
+    };
     PlacesService.activeCategories = function () {
       var result = [];
       for (var i in PlacesService.categories) {
