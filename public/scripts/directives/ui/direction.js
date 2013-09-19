@@ -13,7 +13,7 @@ angular.module('uiModule').directive('direction', ['$filter', function($filter){
       
       scope.divClass = 'align';
       scope.trueMode = $filter('realmode')(scope.leg.mode, scope.leg.routeId);
-      scope.showMe = scope.trueMode == 'WALK';      
+      scope.showMe = (scope.trueMode == 'WALK' || scope.trueMode == 'RAIL');      
       console.log('leg route', scope.leg.route);
       if(scope.leg.route){
         switch(scope.leg.route){

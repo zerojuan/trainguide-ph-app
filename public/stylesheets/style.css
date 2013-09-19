@@ -168,6 +168,12 @@ table td {
 .sidebar .content .directions ul {
   margin: 5px;
 }
+.sidebar .content .directions .selectedroute {
+  border-left-width: medium;
+  border-style: solid;
+  border-color: #5cc15a;
+  margin-left: -5px;
+}
 .sidebar .content .directions .routes {
   cursor: pointer;
   text-align: right;

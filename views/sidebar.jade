@@ -37,7 +37,7 @@
 					ul
 						li(ng-repeat='trip in plan.itineraries', ng-click='selected.itinerary = trip').routes
 							//- span {{$index + 1}}: {{trip.duration|tominutes}} minutes
-							span {{trip.duration|tominutes}} minutes
+							route(trip='trip', isselected='selected.itinerary == trip')
 				div
 					h6 Directions
 					.antiscroll-wrap
