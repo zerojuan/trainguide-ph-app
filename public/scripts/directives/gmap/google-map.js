@@ -142,7 +142,8 @@
 						draggable: that.draggable,
 						mapTypeId : google.maps.MapTypeId.ROADMAP,
 						styles: mapStyle,
-						disableDefaultUI : true
+						disableDefaultUI: true,
+						zoomControl: true
 					}));
 
 					console.log("_instance is ready", _instance);

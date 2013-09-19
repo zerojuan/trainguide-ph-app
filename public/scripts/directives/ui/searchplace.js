@@ -34,7 +34,6 @@ angular.module('uiModule').directive('search', function(){
     },
     template :
       '<div>'+
-        '<h2 class="place">Places <span> to go</span></h2>'+
         '<div class="search-form">'+
           '<i class="icon-search"></i>'+
           '<input type="text" placeholder="Search" class="search-box">'+
