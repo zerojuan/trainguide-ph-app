@@ -65,6 +65,9 @@ angular.module('google-maps')
 				});
 
 				scope.$watch('direction.to', function(newValue){
+					if(!newValue){
+						return;
+					}
 					if(fromMarker){
 						fromMarker.setMap(null)
 					}
@@ -77,6 +80,9 @@ angular.module('google-maps')
 				});
 
 				scope.$watch('direction.from', function(newValue){
+					if(!newValue){
+						return;
+					}
 					if(toMarker){
 						toMarker.setMap(null)
 					}

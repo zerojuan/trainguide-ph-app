@@ -32,6 +32,7 @@ angular.module('uiModule').directive('lines', ['CommonAppState', function(Common
 				scope.getLineDetails(line);
 				// console.log('lines.js selectedStop showDetails: ', scope.showDetails);
 			}
+      $('.antiscroll-wrap').antiscroll();
 		},
 		template :
 			'<div class="line-nav clearfix {{selectedLine.name}}" ng-transclude>'+

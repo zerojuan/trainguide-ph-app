@@ -53,6 +53,30 @@ angular.module('trainguide.controllers')
 			}
 		});
 
+		$scope.$watch('selected.hospital.data', function(newValue){
+			if(newValue){
+				angular.forEach($scope.selected.hospital.data, function(val){
+					createMarker(val, 'images/marker_medical22.png', val.name);
+				});
+			}
+		}, true);
+
+		$scope.$watch('selected.hotel.data', function(newValue){
+			if(newValue){
+				angular.forEach($scope.selected.hotel.data, function(val){
+					createMarker(val, 'images/marker_hotel'+getColor()+'.png', val.name);
+				});
+			}
+		}, true);
+
+		$scope.$watch('selected.office.data', function(newValue){
+			if(newValue){
+				angular.forEach($scope.selected.office.data, function(val){
+					createMarker(val, 'images/marker_office'+getColor()+'.png', val.name);
+				});
+			}
+		}, true);
+
 		$scope.$watch('selected.sights.data', function(newValue){
 			if(newValue){
 				angular.forEach($scope.selected.sights.data, function(val){

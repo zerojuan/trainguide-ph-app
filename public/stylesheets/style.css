@@ -177,7 +177,7 @@ table td {
   clear: both;
 }
 .sidebar .content .directions .trip-input .button.active {
-  background: #5384c4;
+  background: #c5d5eb;
 }
 .sidebar .content .directions .trip-check {
   width: 50%;
@@ -601,6 +601,19 @@ li.PNR.clicked p {
 .slide-group .content-box .line-nav table.contact-desc.active {
   left: -200px;
 }
+.slide-group .content-box .content-inner .block,
+.slide-group .content-box .content-inner .antiscroll-inner,
+.slide-group .content-box .content-inner .group-list {
+  width: 255px;
+  height: 390px;
+}
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  .slide-group .content-box .content-inner .block,
+  .slide-group .content-box .content-inner .antiscroll-inner,
+  .slide-group .content-box .content-inner .group-list {
+    height: 330px;
+  }
+}
 .slide-group .content-box div.showdetails {
   display: block;
 }
@@ -738,9 +751,7 @@ li.PNR.clicked p {
   float: left;
 }
 .slide-group .places-box > div i {
-  float: left;
   right: 0px;
-  position: absolute;
   padding-top: 10px;
   padding-right: 10px;
 }

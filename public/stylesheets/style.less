@@ -238,7 +238,7 @@ table {
       .trip-input{
         .button{
           &.active {
-            background: @mrt;
+            background: lighten(@mrt, 30%);
           }
         }
       }
@@ -620,6 +620,15 @@ li.PNR.clicked{
         }
       }
     }
+    .content-inner {      
+      .block, .antiscroll-inner, .group-list {
+        width: 255px;
+        height: 390px;
+        @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+          height: 330px;
+        }
+      }
+    }
     div.showdetails {
       display: block;
     }
@@ -771,9 +780,9 @@ li.PNR.clicked{
         float: left;
       }
       i {
-        float: left;
+        // float: left;
         right: 0px;
-        position: absolute;
+        // position: absolute;
         padding-top: 10px;
         padding-right: 10px;
       }
