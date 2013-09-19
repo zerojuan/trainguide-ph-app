@@ -35,7 +35,7 @@ angular.module('uiModule').directive('direction', ['$filter', function($filter){
       '<div>'+
         '<div class="{{divClass}}" ng-class="{clickable: trueMode!=\'RAIL\'}" ng-click="clickedDirection(leg)">'+
           '<div class="{{trueMode}} circle {{routeCode}}"></div>'+
-          '<p>{{trueMode}}</p>'+
+          '<p>{{trueMode}} <span style="font-size: 10px;">{{leg.duration|tominutes}} mins</span></p>'+
           '<p ng-hide="showMe"><em>{{leg.route}}</em></p>'+
           '<p ng-show="showMe">'+
             '<em>{{leg.from.name}}</em> to <em>{{leg.to.name}}</em>'+

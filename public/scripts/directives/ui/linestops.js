@@ -13,7 +13,7 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 		link : function(scope, element, attr){
 			// console.log(element);
 			var y = null;
-			var svgHeight = $(window).height() - 130;
+			var svgHeight = $(window).height() - 100;
 			var svg = d3.select("#line-stop-svg").append("svg")
 				.attr("class", "line-stop-chart")
 				.attr("width", 260)
