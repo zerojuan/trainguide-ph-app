@@ -29,14 +29,13 @@
 					label To:
 					a(ng-class='{active:selected.isSearch.to}', ng-click='selected.isSearch.to = !selected.isSearch.to; selected.isSearch.from = false;').tiny.button +
 					input(type='text', places-autocomplete, place="selected.direction.to")
-				br
-				.trip-input
+				.trip-check
 					input(type='checkbox', ng-model='avoidBuses', value='Try Buses')
 					label Avoid Traffic
-				input(type='submit', value='Get Directions', ng-click='getDirections()')
+				input(type='submit', value='Get Directions', ng-click='getDirections()', class='tiny button')#getdirections-btn
 			span(ng-show='loadingQuery') 
 				form Loading...
-			div(ng-show='plan && !errorMessage')
+			div(ng-show='plan && !errorMessage')#directions-result
 				div
 					h6 Suggested Routes
 					ul

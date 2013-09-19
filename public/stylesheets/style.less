@@ -218,8 +218,10 @@ table {
         font-size: 0.85em;
       }
       input[type="text"] {
-        width: 80%;
+        width: 65%;
         display: inline-block;
+        margin-left: 10px;
+        margin-bottom: 0px;
       }
       select {
         width: auto;
@@ -227,6 +229,27 @@ table {
       form, ul {
         margin: 5px;
       }   
+      #getdirections-btn {
+        float: right;
+      }
+      #directions-result {
+        clear: both;
+      }
+      .trip-input{
+        .button{
+          &.active {
+            background: @mrt;
+          }
+        }
+      }
+      .trip-check {
+        width: 50%;
+        float: left;
+        line-height: 1.7em;
+        label {
+          width: 80%;
+        }
+      }
       .selectedroute {
         border-left-width: medium;
         border-style: solid;
@@ -239,10 +262,11 @@ table {
         font-size: 0.8em;
         div {
           overflow: hidden;
+          line-height: 1.7em;
           ul {
             float: left;
             margin: 0px;
-            width: 60%;
+            width: 80%;
             text-align: left;
             li.route-steps {
               display: inline-block;
@@ -859,14 +883,6 @@ text {
 
 .MRT-marker{
   border-color: @mrt;
-}
-
-.trip-input{
-  .button{
-    &.active {
-      background: @mrt;
-    }
-  }
 }
 
 /* font styles */

@@ -158,8 +158,10 @@ table td {
   font-size: 0.85em;
 }
 .sidebar .content .directions input[type="text"] {
-  width: 80%;
+  width: 65%;
   display: inline-block;
+  margin-left: 10px;
+  margin-bottom: 0px;
 }
 .sidebar .content .directions select {
   width: auto;
@@ -167,6 +169,23 @@ table td {
 .sidebar .content .directions form,
 .sidebar .content .directions ul {
   margin: 5px;
+}
+.sidebar .content .directions #getdirections-btn {
+  float: right;
+}
+.sidebar .content .directions #directions-result {
+  clear: both;
+}
+.sidebar .content .directions .trip-input .button.active {
+  background: #5384c4;
+}
+.sidebar .content .directions .trip-check {
+  width: 50%;
+  float: left;
+  line-height: 1.7em;
+}
+.sidebar .content .directions .trip-check label {
+  width: 80%;
 }
 .sidebar .content .directions .selectedroute {
   border-left-width: medium;
@@ -181,11 +200,12 @@ table td {
 }
 .sidebar .content .directions .routes div {
   overflow: hidden;
+  line-height: 1.7em;
 }
 .sidebar .content .directions .routes div ul {
   float: left;
   margin: 0px;
-  width: 60%;
+  width: 80%;
   text-align: left;
 }
 .sidebar .content .directions .routes div ul li.route-steps {
@@ -823,9 +843,6 @@ text.transfer {
 }
 .MRT-marker {
   border-color: #5384c4;
-}
-.trip-input .button.active {
-  background: #5384c4;
 }
 /* font styles */
 .icon-close,
