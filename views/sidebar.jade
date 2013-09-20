@@ -31,7 +31,7 @@
 					input(type='text', places-autocomplete, place="selected.direction.to")
 				.trip-check
 					input(type='checkbox', ng-model='avoidBuses', value='Try Buses')
-					label Avoid Traffic
+					label Trains Only
 				input(type='submit', value='Get Directions', ng-click='getDirections()', class='tiny button')#getdirections-btn
 			span(ng-show='loadingQuery') 
 				form Loading...

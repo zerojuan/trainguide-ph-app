@@ -1396,7 +1396,7 @@ angular.module('uiModule').directive('categories', function () {
         scope.selectedCategory = category;
       };
     },
-    template: '<div class="categories-list" ng-transclude>' + '<div>' + '<ul>' + '<li ng-show="category.icon" ng-repeat="category in categories" ng-class="{\'selected\': selectedCategory==category.name}">' + '<i class="{{category.icon}}" ng-click="setCategory(category.name)" ng-class="{\'selected\': selectedCategory==category.name}"></i>' + '<div ng-show="selectedCategory==category.name" class="highlight"></div>' + '</li>' + '</ul>' + '</div>' + '<h6 ng-show="resultPlaces.length==0 && (searchStr==null || searchStr==\'\')">Featured</h6>' + '<h6 ng-show="resultPlaces.length>0">Results</h6>' + '<h6 ng-show="resultPlaces.length==0 && searchStr">(no results)</h6>' + '</div>',
+    template: '<div class="categories-list" ng-transclude>' + '<div>' + '<ul>' + '<li ng-show="category.icon" ng-repeat="category in categories" ng-class="{\'selected\': selectedCategory==category.name}">' + '<i class="{{category.icon}}" ng-click="setCategory(category.name)" ng-class="{\'selected\': selectedCategory==category.name}"></i>' + '<div ng-show="selectedCategory==category.name" class="highlight"></div>' + '</li>' + '</ul>' + '</div>' + '<h6 ng-show="resultPlaces.length==0 && (searchStr==null || searchStr==\'\')">{{selectedCategory}}</h6>' + '<h6 ng-show="resultPlaces.length>0">Results</h6>' + '<h6 ng-show="resultPlaces.length==0 && searchStr">(no results)</h6>' + '</div>',
     replace: true
   };
 });
@@ -1465,7 +1465,7 @@ angular.module('uiModule').directive('lines', [
         };
         $('.antiscroll-wrap').antiscroll();
       },
-      template: '<div class="line-nav clearfix {{selectedLine.name}}" ng-transclude>' + '<ul>' + '<li ng-repeat="i in lines" class="{{i.name}}" ng-class="{active:i.name == selectedLine.name}" ng-click="lineSelected(i)">' + '{{i.shortName}}' + '</li>' + '</ul>' + '<div class="stop-desc" ng-class="{true:\'showdetails\', false:\'nodetails\'}[showDetails]"></div>' + '<table class="line-desc" ng-class="{true:\'nodetails\', false:\'showdetails\'}[showDetails]">' + '<tr>' + '<td>Weekdays: {{selectedLine.details.weekdays}}</td>' + '</tr>' + '<tr>' + '<td>Weekend: {{selectedLine.details.weekend}}</td>' + '</tr>' + '<tr>' + '<td>Stored Value Card: {{selectedLine.details.svc}}</td>' + '</tr>' + '</table>' + '<table class="contact-desc" ng-class="{true:\'nodetails\', false:\'showdetails\'}[showDetails]">' + '<th>Contact</th>' + '<tr>' + '<td>Web: {{selectedLine.details.web}}</td>' + '</tr>' + '<tr>' + '<td>Twitter: {{selectedLine.details.twitter}}</td>' + '</tr>' + '<tr>' + '<td>Contact No.: {{selectedLine.details.contactNo}}</td>' + '</tr>' + '<tr>' + '<td>Fare: {{selectedLine.details.fare}}</td>' + '</tr>' + '<tr>' + '<td>Email: {{selectedLine.details.email}}</td>' + '</tr>' + '</table>' + '</div>',
+      template: '<div class="line-nav clearfix {{selectedLine.name}}" ng-transclude>' + '<ul>' + '<li ng-repeat="i in lines" class="{{i.name}}" ng-class="{active:i.name == selectedLine.name}" ng-click="lineSelected(i)">' + '{{i.shortName}}' + '</li>' + '</ul>' + '<div class="stop-desc" ng-class="{true:\'showdetails\', false:\'nodetails\'}[showDetails]"></div>' + '<table class="line-desc" ng-class="{true:\'nodetails\', false:\'showdetails\'}[showDetails]">' + '<tr>' + '<td>Weekdays: {{selectedLine.details.weekdays}}</td>' + '</tr>' + '<tr>' + '<td>Weekend: {{selectedLine.details.weekend}}</td>' + '</tr>' + '<tr ng-show="selectedLine.details.svc">' + '<td>Stored Value Card: {{selectedLine.details.svc}}</td>' + '</tr>' + '</table>' + '</div>',
       replace: true
     };
   }
@@ -1515,6 +1515,9 @@ angular.module('uiModule').directive('lineStops', [
                     scope.onSelectedStop(StopsService.getStopById(d.transfer.stop_id));
                   });
                   return _class += 'transferee';
+                }
+                if (d.disabled) {
+                  return _class += 'disabled';
                 }
                 return _class += newValue.name;
               }).attr('cx', centerX).attr('cy', function (d, i) {
@@ -1766,13 +1769,7 @@ angular.module('uiModule').directive('search', function () {
       var KEYS = { ENTER: 13 };
       scope.$watch('selectedCategory', function (newValue, oldValue) {
         $('.search-box').focus(function () {
-          $(this).animate({ width: '200px' }, 'fast');
-          $('h2.place').hide('fast');
-          $('h2.place span').hide('fast');
         }).blur(function () {
-          $(this).animate({ width: '100px' }, 'fast');
-          $('h2.place').show('fast');
-          $('h2.place span').show('fast');
         }).keyup(function (evt) {
           if (evt.keyCode === KEYS.ENTER) {
             scope.searchStr = $(this).val();

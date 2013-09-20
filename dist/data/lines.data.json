@@ -2122,6 +2122,7 @@
                 "drop_off_type": "0",
                 "shape_dist_traveled": "",
                 "agency_key": "philippines",
+								"disabled": true,
                 "_id": "51ea971b70c336c76e01436a",
                 "details": {
                     "stop_id": "STOP_881853",
@@ -2156,6 +2157,7 @@
                 "drop_off_type": "0",
                 "shape_dist_traveled": "",
                 "agency_key": "philippines",
+								"disabled": true,
                 "_id": "51ea971b70c336c76e01436b",
                 "details": {
                     "stop_id": "STOP_881609",
@@ -2190,6 +2192,7 @@
                 "drop_off_type": "0",
                 "shape_dist_traveled": "",
                 "agency_key": "philippines",
+								"disabled": true,
                 "_id": "51ea971b70c336c76e01436c",
                 "details": {
                     "stop_id": "LTFRB_5009",
@@ -2223,6 +2226,7 @@
                 "pickup_type": "0",
                 "drop_off_type": "0",
                 "shape_dist_traveled": "",
+								"disabled": true,
                 "agency_key": "philippines",
                 "_id": "51ea971b70c336c76e01436d",
                 "details": {
@@ -2258,6 +2262,7 @@
                 "drop_off_type": "0",
                 "shape_dist_traveled": "",
                 "agency_key": "philippines",
+								"disabled": true,
                 "_id": "51ea971b70c336c76e01436e",
                 "details": {
                     "stop_id": "LTFRB_5010",
