@@ -1935,6 +1935,10 @@ angular.module('trainguideServices').factory('DirectionsService', [
     var DirectionsService = {};
     var api = 'http://maps.pleasantprogrammer.com/opentripplanner-api-webapp/ws';
     DirectionsService.getDirections = function (query, callback, err) {
+      if (!query.from || !query.to) {
+        err({ msg: 'Missing path information' });
+        return;
+      }
       function extractLocation(str) {
         var arr = str.substring(1, str.length - 1).split(',');
         return {
