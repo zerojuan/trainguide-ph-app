@@ -6,9 +6,10 @@ angular.module('uiModule').directive('slideshow', [function(){
 		transclude : true,
 		scope : {images : '=images'},
 		link : function(scope, element, attr){
+			scope.theImage = '/images/hyperloop.jpg';
 			scope.$watch("images", function(newValue, oldValue){
 				if(newValue){
-					scope.theImage = newValue[0];
+					//scope.theImage = newValue[0];
 				}
 			});
 		},
@@ -20,7 +21,7 @@ angular.module('uiModule').directive('slideshow', [function(){
 				'<ul class="sub-image">' +
 				'<li ng-repeat="img in images" >'+
 				'<div class="image-group">'+
-				'<img ng-show="theImage != img" src="{{img}}"></img>'+
+				'<!-- <img ng-show="theImage != img" src="{{img}}"></img> -->'+
 				'</div>'+
 				'</li>' +
 				'</ul>'+
