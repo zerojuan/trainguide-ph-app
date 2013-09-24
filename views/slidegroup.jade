@@ -7,20 +7,8 @@ slide-group(selected-item='selectedItem', selected-stop='selected.stop', selecte
 
 						slideshow(images='selectedItem.images')
 
-						.antiscroll-wrap
-							.block
-								.antiscroll-inner
-									.group-list
-										placesbox(title="Hospital", icon="icon-hospital", on-query-places="getLimitedPlaces", places="selected.hospital", category="Hospital", stopname="selected.stop.details.stop_name", selected-dest="selected.dest")
-
-										placesbox(title="Hotel", icon="icon-hotel", on-query-places="getLimitedPlaces", places="selected.hotel", category="Hotel", stopname="selected.stop.details.stop_name", selected-dest="selected.dest")
-
-										placesbox(title="Office", icon="icon-office", on-query-places="getLimitedPlaces", places="selected.office", category="Office", stopname="selected.stop.details.stop_name", selected-dest="selected.dest")
-
-										placesbox(title="Sightseeing", icon="icon-sights", on-query-places="getLimitedPlaces", places="selected.sights", category="Sightseeing", stopname="selected.stop.details.stop_name", selected-dest="selected.dest")
-
-										placesbox(title="Shopping", icon="icon-shopping", on-query-places="getLimitedPlaces", places="selected.shops", category="Shopping", stopname="selected.stop.details.stop_name", selected-dest="selected.dest")
-
+						nearby
+							
 					#line-content(ng-class="{true:'nodetails', false:'showdetails'}[showDetails]")
 						line-stops(selected-item="selectedItem", selected-line='selected.line', selected-stop='selected.stop', show-details='showDetails')
 
