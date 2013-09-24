@@ -231,6 +231,16 @@ angular.module('trainguide.controllers')
 			);
 		};
 
+		$scope.setStop = function(lineName, stopId){
+      var stops = $scope.lines[lineName].stops;
+      for(var i in stops){
+        if(stops[i].details._id == stopId){
+          $scope.selected.stop = stops[i];          
+          // console.log('stops[i].details._id == stopId', stops[i].details._id, stopId);
+        } 
+      }
+    };
+
 		/** ================================================== **/
 		/** LOCAL FUNCTIONS
 		/** ================================================== **/

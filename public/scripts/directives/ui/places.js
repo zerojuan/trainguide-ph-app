@@ -11,7 +11,8 @@ angular.module('uiModule').directive('places', function(){
 			onQueryPlaces : '=',
 			places : '=',
       resultPlaces : '=',
-      onSearch : '='
+      onSearch : '=',
+      setStop : '='
     },
     link : function(scope, element){
       var query = {};
@@ -41,7 +42,7 @@ angular.module('uiModule').directive('places', function(){
 
       var limit = 20;
       scope.loadPlaces = function(counter, selectedCategory){
-        // console.log('searchbox', scope.searchStr, selectedCategory);
+        console.log('searchbox', scope.searchStr, selectedCategory);
         if(scope.searchStr){
           var qry = {
             category : selectedCategory,
@@ -59,6 +60,11 @@ angular.module('uiModule').directive('places', function(){
         }
         $('.antiscroll-wrap').antiscroll();
       }
+
+      scope.selectPlace = function(lineId, stopId){
+        console.log('lineId', lineId, 'stopId', stopId);
+        scope.setStop(lineId, stopId);
+      }
     },
     template :
       '<div>'+
@@ -68,18 +74,22 @@ angular.module('uiModule').directive('places', function(){
               '<div ng-show="resultPlaces.length==0" class="places-list" ng-transclude>' +
         				'<ul>' +
         				  '<li ng-repeat="place in places">' +
-        				    '<span class="name">{{place.name}}</span>' +
-                    '<span class="dist">{{place.distance}}</span>' +
-                    '<div class="{{place.line.line_name}} square"></div>' +
+                    '<a class="places-place" ng-click="selectPlace(place.line.line_name, place.stop.stop_id)" target="_blank">'+
+          				    '<span class="name">{{place.name}}</span>' +
+                      '<span class="dist">{{place.distance}}</span>' +
+                      '<div class="{{place.line.line_name}} square"></div>' +
+                    '</a>'+
         				  '</li>' +
         				'</ul>' +
         			'</div>'+
               '<div ng-show="resultPlaces.length>0" class="places-list" ng-transclude>' +
                 '<ul>' +
                   '<li ng-repeat="resultPlace in resultPlaces">' +
-                    '<span class="name">{{resultPlace.name}}</span>' +
-                    '<span class="dist">{{resultPlace.distance}}</span>' +
-                    '<div class="{{resultPlace.line.line_name}} square"></div>' +
+                    '<a class="places-place" ng-click="selectPlace(resultPlace.line.line_name, resultPlace.stop.stop_id)" target="_blank">'+
+                      '<span class="name">{{resultPlace.name}}</span>' +
+                      '<span class="dist">{{resultPlace.distance}}</span>' +
+                      '<div class="{{resultPlace.line.line_name}} square"></div>' +
+                    '</a>'+
                   '</li>' +
                 '</ul>' +
               '</div>'+
