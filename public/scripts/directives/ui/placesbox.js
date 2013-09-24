@@ -41,7 +41,7 @@ angular.module('uiModule').directive('placesbox', function(){
 			}
 		},
 		template :
-			'<div class="places-box">'+
+			'<div class="places-box" ng-hide="!places.data.length">'+
 				'<div><h3>{{title}}</h3><i class="{{icon}}"></i></div>'+
 				'<ul>'+
 					'<li ng-repeat="place in places.data" ng-class="{active:place.isSelected}">'+
