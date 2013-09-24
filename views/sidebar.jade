@@ -11,7 +11,7 @@
 				a(href='http://blog.trainguide.ph/', target='_blank')#blogger-link.icon-blogger
 			span
 				a(href='https://twitter.com/trainguidePH', target='_blank')#twitter-link.icon-twitter
-	.clearfix
+		.clearfix
 	.content
 		radio-group(selected-item-handler='selectedItemHandler'
 			menu-items='menuItems',
@@ -21,13 +21,17 @@
 			h4 Trip Planner
 			form 
 				.trip-input
-					label From:
-					a(ng-class='{active:selected.isSearch.from}', ng-click='selected.isSearch.from = !selected.isSearch.from; selected.isSearch.to = false;').tiny.button +
+					//- label From:
+					a(ng-class='{active:selected.isSearch.from}', ng-click='selected.isSearch.from = !selected.isSearch.from; selected.isSearch.to = false;').tiny.button 
+						span.text From
+						span.plus +
 					input(type='text', places-autocomplete, place="selected.direction.from")
 				
 				.trip-input
-					label To:
-					a(ng-class='{active:selected.isSearch.to}', ng-click='selected.isSearch.to = !selected.isSearch.to; selected.isSearch.from = false;').tiny.button +
+					//- label To:
+					a(ng-class='{active:selected.isSearch.to}', ng-click='selected.isSearch.to = !selected.isSearch.to; selected.isSearch.from = false;').tiny.button 
+						span.text To
+						span.plus +
 					input(type='text', places-autocomplete, place="selected.direction.to")
 				.trip-check
 					input(type='checkbox', ng-model='avoidBuses', value='Try Buses')

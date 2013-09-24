@@ -48,7 +48,7 @@
   -moz-border-radius: 5px;
   -webkit-border-radius: 10px;
   border-radius: 10px;
-  margin-left: -11px;
+  margin-left: -13px;
   float: left;
   border: 5px solid @color;
 }
@@ -86,8 +86,9 @@ h2 {
 
 h6 {
   background-color: @trainlineBg;
-  padding: 10px;
+  padding: 8px;
   font-weight: bolder;
+  height: 30px;
 }
 
 a {
@@ -127,7 +128,8 @@ table {
   z-index: 1;
   .header{
     font-size: 25pt;
-    margin: 5px 10px 10px 10px;
+    // margin: 5px 10px 10px 10px;
+    margin: 11px;
     .title{
       width: 35%;
       float: left;
@@ -151,7 +153,8 @@ table {
     }
     .train-links {
       font-size: 0.7em;
-      top: 50px;
+      // top: 50px;
+      top: 57px;
       position: absolute;
       left: 165px;
       span {
@@ -171,12 +174,14 @@ table {
       // border-top: 1px solid @gray;
       // border-bottom: 1px solid @gray;    
       background-color: @trainlineBg;
-      height: 26px;
+      // height: 26px;
+      height: 30px;
       ul{
         list-style: none;
         width: 100%;
         margin: 0 auto;
-        font-size: 0.75em;
+        // font-size: 0.75em;
+        font-size: 9pt;
         li{  
           display: table-cell;
           margin: 0 auto;
@@ -184,7 +189,8 @@ table {
           padding-left: 25px;                 
           a{               
             float: left;        
-            padding-top: 7px;
+            // padding-top: 7px;
+            padding-top: 10px;
             text-align: center;                
             color: @textNoHighlight;
             &:hover{
@@ -209,6 +215,12 @@ table {
         padding-bottom: 10px;
         padding-top: 10px;
         margin: 5px;
+        font-size: 12pt;
+      }
+      h6 {
+        font-size: 10.5pt;
+        height: 30px;
+        color: @textHighlight;
       }
       label {
         display: inline-block;
@@ -218,10 +230,13 @@ table {
         font-size: 0.85em;
       }
       input[type="text"] {
-        width: 65%;
+        width: 70%;
+        font-size: 9pt;
+        float: right;
         display: inline-block;
         margin-left: 10px;
         margin-bottom: 0px;
+        height: 25px;
       }
       select {
         width: auto;
@@ -229,23 +244,47 @@ table {
       form, ul {
         margin: 5px;
       }   
+      ul {
+        margin-top: 13px;
+      }
       #getdirections-btn {
-        float: right;
+        float: left;
+        background-color: @linkColor;
+        border: none;
+        font-size: 9pt;
+        line-height: 15px;
+        margin-top: 8px;
+        margin-bottom: 13px;
       }
       #directions-result {
         clear: both;
       }
       .trip-input{
         .button{
+          background-color: @linkColor;
+          border: none;
+          line-height: 15px;
+          width: 25%;
+          clear: both;
+          margin-bottom: 5px;
           &.active {
-            background: lighten(@mrt, 30%);
+            background: lighten(@linkColor, 30%);
+          }
+          span {
+            &.text {
+              float: left;
+            }
+            &.plus {
+              float: right;
+            }
           }
         }
       }
       .trip-check {
         width: 50%;
-        float: left;
+        float: right;
         line-height: 1.7em;
+        margin-top: 8px;
         label {
           width: 80%;
         }
@@ -304,9 +343,9 @@ table {
       }   
       .block, .antiscroll-inner, .steps-list {
         width: 255px;
-        height: 230px;
+        height: 200px;
         @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
-          height: 170px;
+          height: 140px;
         }
       }        
       .antiscroll-wrap {
@@ -317,21 +356,21 @@ table {
                 padding-left: 20px;
               }
               .align {
-                padding-left: 3px; 
+                padding-left: 6px; 
               }
               .clickable {
                 cursor: pointer;
               }
               .WALK {
                 border-style: dotted;
-                border-left-width: medium;
+                border-left-width: 6px;
                 &.circle {
                   .circle-shape;
                 }
               }
               .JEEP, .BUS {                
                 border-style: solid;
-                border-left-width: medium;
+                border-left-width: 6px;
               }
               .JEEP {
                 border-color: @jeepColor;
@@ -347,7 +386,7 @@ table {
               }
               .RAIL {
                 border-style: solid;
-                border-left-width: medium;
+                border-left-width: 6px;
                 &.LRT1 {
                   border-color: @lrt1;
                   &.circle {
@@ -515,10 +554,11 @@ li.PNR.clicked{
       .search-box {
         width: 100%;
         float: right;
-        height: 37px;
+        height: 25px;
+        font-size: 9pt;
       }
       i {
-        padding-top: 10px;
+        padding-top: 6px;
         font-size: 1em;
         position: absolute;
         right: 5px;
@@ -546,7 +586,7 @@ li.PNR.clicked{
     // background-color: #eee;
     width: 100%;
     bottom: 0px;
-    top: 47px;
+    top: 35px;
     position: absolute;
     // border-top: 1px solid @gray;
     .line-nav {
@@ -654,9 +694,9 @@ li.PNR.clicked{
       }
       .block, .antiscroll-inner, .group-list {
         width: 255px;
-        height: 390px;
+        height: 380px;
         @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
-          height: 330px;
+          height: 320px;
         }
       }
     }
@@ -675,7 +715,7 @@ li.PNR.clicked{
         border-top: 1px solid @gray;
         border-bottom: 1px solid @gray;
         ul {
-          width: 80%;
+          width: 70%;
           margin: 0 auto;
           li {
             display: table-cell;
@@ -684,8 +724,8 @@ li.PNR.clicked{
             padding: 5px 5px;
             font-weight: bolder;
             cursor: pointer;
-            font-size: 1.5em;
-            height: 45px;
+            font-size: 1.2em;
+            height: 35px;
             color: @textNoHighlight;
             &.selected {
               color: @textHighlight;
@@ -694,6 +734,7 @@ li.PNR.clicked{
               border: 1px solid @textNoHighlight;
               .round-border (5px);
               padding: 3px;
+              height: 24px;
               &.selected {
                 border: 1px solid @textHighlight;
               }
@@ -702,10 +743,10 @@ li.PNR.clicked{
           div.highlight {
             cursor: pointer;
             position: relative;
-            top: 36px;
+            top: 25px;
             background: @linkColor;
             height: 5px;
-            width: 32px;
+            width: 27px;
           }
         }
       }
@@ -717,9 +758,9 @@ li.PNR.clicked{
     }
     .block, .antiscroll-inner, .places-list {
       width: 255px;
-      height: 510px;
+      height: 540px;
       @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
-        height: 450px;
+        height: 490px;
       }
     }
     .antiscroll-wrap {
@@ -737,12 +778,13 @@ li.PNR.clicked{
                 .name {
                   float: left;
                   width: 65%;
-                  font-size: 0.9em;
+                  font-size: 9pt;
+                  line-height: 10pt;
                 }
                 .dist {
                   float: left;
                   padding-left: 20px;
-                  font-size: 0.9em;
+                  font-size: 9pt;
                 }  
                 .square {
                   float: right;
