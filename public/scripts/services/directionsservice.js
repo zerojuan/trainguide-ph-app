@@ -1,6 +1,6 @@
 
 angular.module('trainguideServices')
-	.factory('DirectionsService', ['$http', function($http){
+	.factory('DirectionsService', ['$http', '$filter', function($http, $filter){
 		var DirectionsService = {};
 
 		var api = 'http://maps.pleasantprogrammer.com/opentripplanner-api-webapp/ws';
@@ -90,6 +90,50 @@ angular.module('trainguideServices')
 						err(data.error);
 						return;
 					}
+
+					function isSameTrip(tripA, tripB){
+						//is the same
+
+						if($filter('tominutes')(tripA.duration) != $filter('tominutes')(tripB.duration) ){
+							return false;
+						}
+
+						for(var k = 0; k < tripA.legs.length; k++){
+							if(!tripB.legs[k]){
+								return false;
+							}
+							if(tripA.legs[k].from.name != tripB.legs[k].from.name){
+								return false;
+							}
+						}
+						return true;
+					}
+
+					console.log("===============");
+					//fix duration
+					angular.forEach(data.plan.itineraries, function(trip){
+						var duration = 0;
+						angular.forEach(trip.legs, function(leg){
+							duration += leg.duration;
+						});
+						trip.duration = duration;
+					});
+					//if same legs.from.name don't add it
+					var itineraries = [];
+					for(var i = data.plan.itineraries.length-1; i >= 0; i--){
+						var tripA = data.plan.itineraries[i];
+						var tripB;
+						var match = false;
+						for(var j = i - 1; j >= 0; j--){
+							tripB = data.plan.itineraries[j];
+							match = isSameTrip(tripA, tripB);
+						}
+						if(!match){
+							itineraries.push(tripA);
+						}
+					}
+					data.plan.itineraries = itineraries;
+					console.log(data.plan);
 					callback(data.plan);
 				}).error(function(data, status, headers, config){
 					console.log('Error on API Request');
