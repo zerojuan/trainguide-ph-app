@@ -93,6 +93,9 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 										.attr("y", (y(i)+23))
 										.text(function(){
 											return names[0].toUpperCase() + " " + names[1].toUpperCase();
+										})
+										.on("click", function(){
+											scope.onSelectedStop(StopsService.getStopById(d.transfer.stop_id));
 										});
 									if(names.length > 1){
 										// svg.append("text")
@@ -125,6 +128,9 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 									return d.details.stop_name.toUpperCase();
 								}
 								return d.details.stop_name;
+							})
+							.on("click", function(d){
+								scope.onSelectedStop(d);
 							});
 						text.exit().remove();
 					}

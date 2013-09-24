@@ -834,6 +834,9 @@ rect.PNR,
 .label {
   text-anchor: end;
 }
+text {
+  cursor: pointer;
+}
 text.transfer {
   fill: black;
 }
