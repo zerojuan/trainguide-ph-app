@@ -159,19 +159,22 @@ angular.module('trainguide.controllers').controller('GMapCtrl', [
       pathsProperty: [],
       stopMarkersProperty: []
     });
-    function createMarker(val, icon, label) {
+    function createMarker(val, icon, label, infoWindow) {
       for (var i = 0; i < $scope.markers.length; i++) {
         if ($scope.markers[i].longitude == val.coordinates.lng && $scope.markers[i].latitude == val.coordinates.lat) {
           $scope.markers.splice(i, 1);
           break;
         }
       }
+      if (!infoWindow) {
+        infoWindow = '<div id="content">' + label + '</div><div class="arrow-up"></div>';
+      }
       console.log('icon: ' + icon);
       $scope.markers.push({
         longitude: val.coordinates.lng,
         latitude: val.coordinates.lat,
         icon: icon,
-        infoWindow: '<div id="content">' + label + '</div><div class="arrow-up"></div>',
+        infoWindow: infoWindow,
         label: label
       });
     }
@@ -196,7 +199,7 @@ angular.module('trainguide.controllers').controller('GMapCtrl', [
     $scope.$watch('selected.hospital.data', function (newValue) {
       if (newValue) {
         angular.forEach($scope.selected.hospital.data, function (val) {
-          createMarker(val, 'images/marker_medical22.png', val.name);
+          createMarker(val, 'images/marker_medical' + getColor() + '.png', val.name);
         });
       }
     }, true);
@@ -228,6 +231,19 @@ angular.module('trainguide.controllers').controller('GMapCtrl', [
         });
       }
     }, true);
+    $scope.$watch('selected.nearbyStops', function (newValue) {
+      if (newValue) {
+        console.log('Heyo: ', $scope.selected.nearbyStops);
+        angular.forEach($scope.selected.nearbyStops, function (val) {
+          createMarker({
+            coordinates: {
+              lat: val.stopLat,
+              lng: val.stopLon
+            }
+          }, 'images/marker_transit' + getColor() + '.png', val.stopName);
+        });
+      }
+    }, true);
   }
 ]);
 angular.module('trainguide.controllers').controller('MainCtrl', [
@@ -239,7 +255,8 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
   'TransfersService',
   'PlacesService',
   'CommonAppState',
-  function ($scope, $http, $route, LinesService, StopsService, TransfersService, PlacesService, CommonAppState) {
+  'DirectionsService',
+  function ($scope, $http, $route, LinesService, StopsService, TransfersService, PlacesService, CommonAppState, DirectionsService) {
     angular.extend($scope, {
       clickedLatitudeProperty: 11,
       clickedLongitudeProperty: 44,
@@ -248,6 +265,7 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
         stop: null,
         line: null,
         dest: null,
+        nearbyStops: null,
         hospital: {
           counter: 0,
           data: []
@@ -297,12 +315,63 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
           selected: false
         }
       ],
-      selectedItem: false
+      selectedItem: false,
+      tips: [
+        {
+          title: 'Ticketing',
+          selected: true,
+          details: [
+            'The MRT and LRT use magnetic cards that are bought at ticket windows. Both single journey tickets and Stored Value Tickets (SVT) worth 100 Pesos can be bought.',
+            'Simply slip the card into the turnstile slot and pass through. SVTs deduct the right amount once you exit from the station and give you a "bonus ride" which means any amount left (from .50) entitles you to one last ride.',
+            'The PNR uses traditional paper tickets, bought at a ticket booth in each station.'
+          ],
+          image: '/images/logo_card.png'
+        },
+        {
+          title: 'Time',
+          selected: false,
+          details: [
+            'Trains are packed during rush hour (6-8:30AM and 5:30-8PM) so schedule your trips around that time. Weekends are usually less crowded.',
+            'In the large stations, ticket lines can take up to 20 minutes of your time, and security checks only make it longer. Get an SVT to skip the ticket line and save time. If SVTs aren\'t available, buy two tickets to your destination, one for going, and one for returning.',
+            'PNR trains start running around 5:05, then arrive every 30 min. Arriving a little earlier than scheduled is a good idea. On Sundays the trains run every hour.'
+          ],
+          image: '/images/logo_time.png'
+        },
+        {
+          title: 'Safety',
+          selected: false,
+          details: [
+            'The train system is generally safe, but petty crime can occur. Security guards man all stations and police have booths at major stations, in case of emergency or for general inquiries.',
+            'The first train cars of all the train lines are reserved for women, the elderly, children and the disabled.'
+          ],
+          image: '/images/logo_safety.png'
+        },
+        {
+          title: 'Airport',
+          selected: false,
+          details: [
+            'There are shuttle buses from EDSA/Taft station to the airport, but their departure times fluctuate.',
+            'There are no lines to the airport as of yet, but a spur line to the airport is being explored.',
+            'The nearest station to the NAIA1 and 2 is Baclaran station on LRT1. For NAIA3, the nearest station is PNR Nichols. You\'ll still need to take a taxi to the airport from these stations.'
+          ],
+          image: '/images/logo_airport.png'
+        }
+      ]
     });
     $scope.$watch('selected.stop', function (newValue) {
       if (newValue) {
         $scope.menuItems[0].selected = false;
         $scope.selectedItemHandler($scope.menuItems[0]);
+        DirectionsService.getStopsNearPoint({
+          from: {
+            lat: $scope.selected.stop.details.stop_lat,
+            lon: $scope.selected.stop.details.stop_lon
+          }
+        }, function (data) {
+          $scope.selected.nearbyStops = data;
+        }, function (err) {
+          console.log('======== Error!');
+        });
         reloadStopsPlaces();
       }
     });
@@ -375,24 +444,32 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
         console.log(data);
         if (qry.category == 'Hospital') {
           $scope.selected.hospital.counter = qry.start;
-          Array.prototype.push.apply($scope.selected.hospital.data, data);
+          $scope.selected.hospital.data = data;
         } else if (qry.category == 'Hotel') {
           $scope.selected.hotel.counter = qry.start;
-          Array.prototype.push.apply($scope.selected.hotel.data, data);
+          $scope.selected.hotel.data = data;
         } else if (qry.category == 'Office') {
           $scope.selected.office.counter = qry.start;
-          Array.prototype.push.apply($scope.selected.office.data, data);
+          $scope.selected.office.data = data;
         } else if (qry.category == 'Sightseeing') {
           $scope.selected.sights.counter = qry.start;
-          Array.prototype.push.apply($scope.selected.sights.data, data);
+          $scope.selected.sights.data = data;
         } else if (qry.category == 'Shopping') {
           $scope.selected.shops.counter = qry.start;
-          Array.prototype.push.apply($scope.selected.shops.data, data);
+          $scope.selected.shops.data = data;
         }
         console.log($scope.selected);
       }, function (data, status, headers, config) {
         console.log('ERROR!!!!!!', data, status, headers, config);
       });
+    };
+    $scope.setStop = function (lineName, stopId) {
+      var stops = $scope.lines[lineName].stops;
+      for (var i in stops) {
+        if (stops[i].details._id == stopId) {
+          $scope.selected.stop = stops[i];
+        }
+      }
     };
     function reloadStopsPlaces() {
       var limit = 5;
@@ -1424,11 +1501,7 @@ angular.module('uiModule').directive('direction', [
             scope.divClass += ' ' + scope.routeCode;
         }
         scope.clickedDirection = function (leg) {
-          if (scope.selectedStep == null) {
-            scope.selectedStep = leg;
-          } else {
-            scope.selectedStep = null;
-          }
+          scope.selectedStep = scope.selectedStep == null ? leg : null;
         };
       },
       template: '<div>' + '<div class="{{divClass}}" ng-class="{clickable: trueMode!=\'RAIL\'}" ng-click="clickedDirection(leg)">' + '<div class="{{trueMode}} circle {{routeCode}}"></div>' + '<p>{{trueMode}} <span style="font-size: 10px;">{{leg.duration|tominutes}} mins</span></p>' + '<p ng-hide="showMe"><em>{{leg.route}}</em></p>' + '<p ng-show="showMe">' + '<em>{{leg.from.name}}</em> to <em>{{leg.to.name}}</em>' + '</p>' + '<ul ng-show="leg.steps.length && selectedStep==leg" class="direction-steps">' + '<li ng-repeat="step in leg.steps">' + '<span>{{step.relativeDirection|parseDirection}} on {{step.streetName}}</span>' + '</li>' + '</ul>' + '<p ng-show="trueMode!=\'RAIL\' && (leg.steps.length==0 && selectedStep==leg)" class="direction-steps">' + '<span><em>{{leg.from.name}}</em> to <em>{{leg.to.name}}</em></span>' + '</p>' + '</div>' + '</div>',
@@ -1543,6 +1616,8 @@ angular.module('uiModule').directive('lineStops', [
                   var names = d.transfer.stop_name.split(' ');
                   svg.append('text').attr('class', 'transfer').attr('x', centerX + 40).attr('y', y(i) + 23).text(function () {
                     return names[0].toUpperCase() + ' ' + names[1].toUpperCase();
+                  }).on('click', function () {
+                    scope.onSelectedStop(StopsService.getStopById(d.transfer.stop_id));
                   });
                   if (names.length > 1) {
                     if (names[2]) {
@@ -1563,6 +1638,8 @@ angular.module('uiModule').directive('lineStops', [
                   return d.details.stop_name.toUpperCase();
                 }
                 return d.details.stop_name;
+              }).on('click', function (d) {
+                scope.onSelectedStop(d);
               });
               text.exit().remove();
             }
@@ -1592,6 +1669,22 @@ angular.module('uiModule').directive('lineStops', [
   }
 ]);
 'use strict';
+angular.module('uiModule').directive('nearby', function () {
+  return {
+    restrict: 'E',
+    transclude: true,
+    link: function (scope) {
+      scope.selectedNearby = 'Places';
+      scope.setNearby = function (choice) {
+        scope.selectedNearby = choice;
+        console.log('selectedNearby', scope.selectedNearby);
+      };
+    },
+    template: '<div ng-switch on="selectedNearby" class="nearby">' + '<ul>' + '<li ng-click="setNearby(\'Places\')" ng-class="{active:selectedNearby==\'Places\'}">' + '<a ng-click="setNearby(\'Places\')" target="_blank">Places</a>' + '</li>' + '<li ng-click="setNearby(\'Stops\')" ng-class="{active:selectedNearby==\'Stops\'}">' + '<a ng-click="setNearby(\'Stops\')" target="_blank">Stops</a>' + '</li>' + '</ul>' + '<div ng-switch-when="Places">' + '<div class="antiscroll-wrap">' + '<div class="block">' + '<div class="antiscroll-inner">' + '<div class="group-list">' + '<placesbox title="Hospital" icon="icon-hospital" on-query-places="getLimitedPlaces" places="selected.hospital" category="Hospital" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Hotel" icon="icon-hotel" on-query-places="getLimitedPlaces" places="selected.hotel" category="Hotel" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Office" icon="icon-office" on-query-places="getLimitedPlaces" places="selected.office" category="Office" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Sightseeing" icon="icon-sights" on-query-places="getLimitedPlaces" places="selected.sights" category="Sightseeing" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Shopping" icon="icon-shopping" on-query-places="getLimitedPlaces" places="selected.shops" category="Shopping" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '</div>' + '</div>' + '</div>' + '</div>' + '</div>' + '<div ng-switch-when="Stops">' + '<div class="antiscroll-wrap">' + '<div class="block">' + '<div class="antiscroll-inner">' + '<div class="group-list">' + 'STOPS' + '</div>' + '</div>' + '</div>' + '</div>' + '</div>' + '</div>',
+    replace: true
+  };
+});
+'use strict';
 angular.module('uiModule').directive('places', function () {
   return {
     restrict: 'E',
@@ -1603,7 +1696,8 @@ angular.module('uiModule').directive('places', function () {
       onQueryPlaces: '=',
       places: '=',
       resultPlaces: '=',
-      onSearch: '='
+      onSearch: '=',
+      setStop: '='
     },
     link: function (scope, element) {
       var query = {};
@@ -1626,6 +1720,7 @@ angular.module('uiModule').directive('places', function () {
       });
       var limit = 20;
       scope.loadPlaces = function (counter, selectedCategory) {
+        console.log('searchbox', scope.searchStr, selectedCategory);
         if (scope.searchStr) {
           var qry = {
               category: selectedCategory,
@@ -1643,8 +1738,12 @@ angular.module('uiModule').directive('places', function () {
         }
         $('.antiscroll-wrap').antiscroll();
       };
+      scope.selectPlace = function (lineId, stopId) {
+        console.log('lineId', lineId, 'stopId', stopId);
+        scope.setStop(lineId, stopId);
+      };
     },
-    template: '<div>' + '<div class="antiscroll-wrap">' + '<div class="block">' + '<div class="antiscroll-inner">' + '<div ng-show="resultPlaces.length==0" class="places-list" ng-transclude>' + '<ul>' + '<li ng-repeat="place in places">' + '<span class="name">{{place.name}}</span>' + '<span class="dist">{{place.distance}}</span>' + '<div class="{{place.line.line_name}} square"></div>' + '</li>' + '</ul>' + '</div>' + '<div ng-show="resultPlaces.length>0" class="places-list" ng-transclude>' + '<ul>' + '<li ng-repeat="resultPlace in resultPlaces">' + '<span class="name">{{resultPlace.name}}</span>' + '<span class="dist">{{resultPlace.distance}}</span>' + '<div class="{{resultPlace.line.line_name}} square"></div>' + '</li>' + '</ul>' + '</div>' + '</div>' + '</div>' + '</div>' + '<a ng-show="resultPlaces==0 && counter*20<=places.totalcount-20" ng-click="loadPlaces(counter=counter+1, selectedCategory)">Load more...</a>' + '</div>',
+    template: '<div>' + '<div class="antiscroll-wrap">' + '<div class="block">' + '<div class="antiscroll-inner">' + '<div ng-show="resultPlaces.length==0" class="places-list" ng-transclude>' + '<ul>' + '<li ng-repeat="place in places">' + '<a class="places-place" ng-click="selectPlace(place.line.line_name, place.stop.stop_id)" target="_blank">' + '<span class="name">{{place.name}}</span>' + '<span class="dist">{{place.distance}}</span>' + '<div class="{{place.line.line_name}} square"></div>' + '</a>' + '</li>' + '</ul>' + '</div>' + '<div ng-show="resultPlaces.length>0" class="places-list" ng-transclude>' + '<ul>' + '<li ng-repeat="resultPlace in resultPlaces">' + '<a class="places-place" ng-click="selectPlace(resultPlace.line.line_name, resultPlace.stop.stop_id)" target="_blank">' + '<span class="name">{{resultPlace.name}}</span>' + '<span class="dist">{{resultPlace.distance}}</span>' + '<div class="{{resultPlace.line.line_name}} square"></div>' + '</a>' + '</li>' + '</ul>' + '</div>' + '</div>' + '</div>' + '</div>' + '<a ng-show="resultPlaces==0 && counter*20<=places.totalcount-20" ng-click="loadPlaces(counter=counter+1, selectedCategory)">Load more...</a>' + '</div>',
     replace: true
   };
 });
@@ -1679,11 +1778,15 @@ angular.module('uiModule').directive('placesbox', function () {
         $('.antiscroll-wrap').antiscroll();
       };
       scope.selectDest = function (dest) {
+        if (scope.selectedDest) {
+          scope.selectedDest.isSelected = false;
+        }
         scope.selectedDest = dest;
+        scope.selectedDest.isSelected = true;
         console.log('selectedDest!!!', scope.selectedDest);
       };
     },
-    template: '<div class="places-box">' + '<div><h3>{{title}}</h3><i class="{{icon}}"></i></div>' + '<ul>' + '<li ng-repeat="place in places.data">' + '<a ng-click="selectDest(place)" target="_blank">' + '<span class="name">{{place.name}}</span>' + '<span class="distance">{{place.distance}}</span>' + '</a>' + '</li>' + '<li ng-show="!places.data.length">No sights near the area.</li>' + '</ul>' + '<a ng-show="places.counter*5<=places.totalcount-5" ng-click="loadPlaces(places.counter+1)">More...</a>' + '</div>',
+    template: '<div class="places-box" ng-hide="!places.data.length">' + '<div><h3>{{title}}</h3><i class="{{icon}}"></i></div>' + '<ul>' + '<li ng-repeat="place in places.data" ng-class="{active:place.isSelected}">' + '<a ng-click="selectDest(place)" target="_blank">' + '<span class="name">{{place.name}}</span>' + '<span class="distance">{{place.distance}}</span>' + '</a>' + '</li>' + '<li ng-show="!places.data.length">No sights near the area.</li>' + '</ul>' + '<a ng-show="places.counter*5<=places.totalcount-5" ng-click="loadPlaces(places.counter+1)">More...</a>' + '</div>',
     replace: true
   };
 });
@@ -1889,13 +1992,13 @@ angular.module('uiModule').directive('slideshow', [function () {
       transclude: true,
       scope: { images: '=images' },
       link: function (scope, element, attr) {
+        scope.theImage = '/images/hyperloop.jpg';
         scope.$watch('images', function (newValue, oldValue) {
           if (newValue) {
-            scope.theImage = newValue[0];
           }
         });
       },
-      template: '<div class="images-box slideshow" ng-transclude>' + '<h3>Photos</h3>' + '<div class="slideshow-content">' + '<div class="main-img"><img src="{{theImage}}"></img></div>' + '<ul class="sub-image">' + '<li ng-repeat="img in images" >' + '<div class="image-group">' + '<img ng-show="theImage != img" src="{{img}}"></img>' + '</div>' + '</li>' + '</ul>' + '</div>' + '</div>',
+      template: '<div class="images-box slideshow" ng-transclude>' + '<h3>Photos</h3>' + '<div class="slideshow-content">' + '<div class="main-img"><img src="{{theImage}}"></img></div>' + '<ul class="sub-image">' + '<li ng-repeat="img in images" >' + '<div class="image-group">' + '<!-- <img ng-show="theImage != img" src="{{img}}"></img> -->' + '</div>' + '</li>' + '</ul>' + '</div>' + '</div>',
       replace: true
     };
   }]);
@@ -1904,8 +2007,17 @@ angular.module('uiModule').directive('tips', function () {
   return {
     restrict: 'E',
     transclude: true,
-    scope: { title: '@' },
-    template: '<div>' + '<h6>{{title}}</h6>' + '<div ng-switch on="title">' + '<div ng-switch-when="Ticketing" class="tips">' + '<p>The MRT and LRT use magnetic cards that are bought at ticket windows. Both single journey tickets and Stored Value Tickets (SVT) worth 100 Pesos can be bought.</p>' + '<p>Simply slip the card into the turnstile slot and pass through. SVTs deduct the right amount once you exit from the station and give you a "bonus ride" which means any amount left (from .50) entitles you to one last ride.</p>' + '<p>The PNR uses traditional paper tickets, bought at a ticket booth in each station.</p>' + '</div>' + '<div ng-switch-when="Time" class="tips">' + '<p>Trains are packed during rush hour (6-8:30AM and 5:30-8PM) so schedule your trips around that time. Weekends are usually less crowded.</p>' + '<p>In the large stations, ticket lines can take up to 20 minutes of your time, and security checks only make it longer. Get an SVT to skip the ticket line and save time. If SVTs aren\'t available, buy two tickets to your destination, one for going, and one for returning.</p>' + '<p>PNR trains start running around 5:05, then arrive every 30 min. Arriving a little earlier than scheduled is a good idea. On Sundays the trains run every hour.</p>' + '</div>' + '</div>' + '</div>',
+    scope: { tips: '=data' },
+    link: function (scope) {
+      scope.clickedTip = function (tip) {
+        console.log('tip', tip);
+        for (var i in scope.tips) {
+          scope.tips[i].selected = scope.tips[i].title == tip ? true : false;
+        }
+        console.log('selectedTip', scope.tips);
+      };
+    },
+    template: '<div class="tips">' + '<ul>' + '<li ng-repeat="tip in tips" ng-click="clickedTip(tip.title)">' + '<h6>{{tip.title}}</h6>' + '<div ng-show="tip.selected" ng-hide="tip.selected==false">' + '<img src="{{tip.image}}" />' + '<p ng-repeat="detail in tip.details">{{detail}}</p>' + '</div>' + '</li>' + '</ul>' + '</div>',
     replace: true
   };
 });
@@ -1928,9 +2040,43 @@ angular.module('trainguideServices').factory('CommonAppState', [
 ]);
 angular.module('trainguideServices').factory('DirectionsService', [
   '$http',
-  function ($http) {
+  '$filter',
+  function ($http, $filter) {
     var DirectionsService = {};
     var api = 'http://maps.pleasantprogrammer.com/opentripplanner-api-webapp/ws';
+    function serialize(obj) {
+      var str = [];
+      for (var p in obj)
+        str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
+      return str.join('&');
+    }
+    DirectionsService.getStopsNearPoint = function (query, callback, err) {
+      var query = serialize({
+          lat: query.from.lat,
+          lon: query.from.lon
+        });
+      var url = api + '/transit/stopsNearPoint?' + query + '&callback=JSON_CALLBACK';
+      $http.jsonp(url).success(function (data) {
+        if (data.error) {
+          err(data.error);
+          return;
+        }
+        console.log('Stops Near Point:');
+        console.log(data);
+        var stops = [];
+        for (var i in data.stops) {
+          var stop = data.stops[i];
+          if (stop.stopName.indexOf('PNR') == -1 && stop.stopName.indexOf('LRT') == -1 && stop.stopName.indexOf('MRT') == -1) {
+            stops.push(stop);
+          }
+        }
+        callback(stops);
+      }).error(function (data, status, headers, config) {
+        console.log('Error on API Request');
+        console.log(status);
+        err(status);
+      });
+    };
     DirectionsService.getDirections = function (query, callback, err) {
       if (!query.from || !query.to) {
         err({ msg: 'Missing path information' });
@@ -1942,12 +2088,6 @@ angular.module('trainguideServices').factory('DirectionsService', [
           lat: parseFloat(arr[0]),
           lng: parseFloat(arr[1])
         };
-      }
-      function serialize(obj) {
-        var str = [];
-        for (var p in obj)
-          str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
-        return str.join('&');
       }
       var from = extractLocation('' + query.from.geometry.location);
       var to = extractLocation('' + query.to.geometry.location);
@@ -1973,6 +2113,43 @@ angular.module('trainguideServices').factory('DirectionsService', [
           err(data.error);
           return;
         }
+        function isSameTrip(tripA, tripB) {
+          if ($filter('tominutes')(tripA.duration) != $filter('tominutes')(tripB.duration)) {
+            return false;
+          }
+          for (var k = 0; k < tripA.legs.length; k++) {
+            if (!tripB.legs[k]) {
+              return false;
+            }
+            if (tripA.legs[k].from.name != tripB.legs[k].from.name) {
+              return false;
+            }
+          }
+          return true;
+        }
+        console.log('===============');
+        angular.forEach(data.plan.itineraries, function (trip) {
+          var duration = 0;
+          angular.forEach(trip.legs, function (leg) {
+            duration += leg.duration;
+          });
+          trip.duration = duration;
+        });
+        var itineraries = [];
+        for (var i = data.plan.itineraries.length - 1; i >= 0; i--) {
+          var tripA = data.plan.itineraries[i];
+          var tripB;
+          var match = false;
+          for (var j = i - 1; j >= 0; j--) {
+            tripB = data.plan.itineraries[j];
+            match = isSameTrip(tripA, tripB);
+          }
+          if (!match) {
+            itineraries.push(tripA);
+          }
+        }
+        data.plan.itineraries = itineraries;
+        console.log(data.plan);
         callback(data.plan);
       }).error(function (data, status, headers, config) {
         console.log('Error on API Request');
