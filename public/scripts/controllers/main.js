@@ -67,7 +67,48 @@ angular.module('trainguide.controllers')
 					selected: false
 				}
 			],
-			selectedItem : false
+			selectedItem : false,
+			tips : [
+        {
+          title : 'Ticketing',
+          selected : true,
+          details : [
+          	'The MRT and LRT use magnetic cards that are bought at ticket windows. Both single journey tickets and Stored Value Tickets (SVT) worth 100 Pesos can be bought.',
+          	'Simply slip the card into the turnstile slot and pass through. SVTs deduct the right amount once you exit from the station and give you a "bonus ride" which means any amount left (from .50) entitles you to one last ride.',
+          	'The PNR uses traditional paper tickets, bought at a ticket booth in each station.'
+          ],
+          image : '/images/logo_card.png'
+        },
+        {
+          title : 'Time',
+          selected : false,
+          details : [
+          	'Trains are packed during rush hour (6-8:30AM and 5:30-8PM) so schedule your trips around that time. Weekends are usually less crowded.',
+          	'In the large stations, ticket lines can take up to 20 minutes of your time, and security checks only make it longer. Get an SVT to skip the ticket line and save time. If SVTs aren\'t available, buy two tickets to your destination, one for going, and one for returning.',
+          	'PNR trains start running around 5:05, then arrive every 30 min. Arriving a little earlier than scheduled is a good idea. On Sundays the trains run every hour.'
+          ],
+          image : '/images/logo_time.png'
+        },
+        {
+          title : 'Safety',
+          selected : false,
+          details : [
+          	'The train system is generally safe, but petty crime can occur. Security guards man all stations and police have booths at major stations, in case of emergency or for general inquiries.',
+          	'The first train cars of all the train lines are reserved for women, the elderly, children and the disabled.'
+          ],
+          image : '/images/logo_safety.png'
+        },
+        {
+          title : 'Airport',
+          selected : false,
+          details : [
+          	'There are shuttle buses from EDSA/Taft station to the airport, but their departure times fluctuate.',
+          	'There are no lines to the airport as of yet, but a spur line to the airport is being explored.',
+          	'The nearest station to the NAIA1 and 2 is Baclaran station on LRT1. For NAIA3, the nearest station is PNR Nichols. You\'ll still need to take a taxi to the airport from these stations.'
+          ],
+          image : '/images/logo_airport.png'
+        }
+      ]
 		});
 
 		/** ================================================= **/

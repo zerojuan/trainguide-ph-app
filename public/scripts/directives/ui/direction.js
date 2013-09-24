@@ -24,11 +24,7 @@ angular.module('uiModule').directive('direction', ['$filter', function($filter){
       }
 
       scope.clickedDirection = function(leg){
-        if(scope.selectedStep == null){
-          scope.selectedStep = leg; 
-        }else{
-          scope.selectedStep = null;
-        }
+        scope.selectedStep = (scope.selectedStep == null) ? leg : null; 
       };
     },
     template :
