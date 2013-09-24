@@ -17,13 +17,13 @@ angular.module('uiModule').directive('search', function(){
 
       scope.$watch("selectedCategory", function(newValue, oldValue){
         $(".search-box").focus(function() {
-          $(this).animate({ width: '200px' }, "fast");
-          $('h2.place').hide("fast");
-          $('h2.place span').hide("fast");
+//          $(this).animate({ width: '200px' }, "fast");
+//          $('h2.place').hide("fast");
+//          $('h2.place span').hide("fast");
         }).blur(function() {
-          $(this).animate({ width: '100px' }, "fast");
-          $('h2.place').show("fast");
-          $('h2.place span').show("fast");
+//          $(this).animate({ width: '100px' }, "fast");
+//          $('h2.place').show("fast");
+//          $('h2.place span').show("fast");
         }).keyup(function(evt){
           if (evt.keyCode === KEYS.ENTER) {
             scope.searchStr = $(this).val();

@@ -31,7 +31,7 @@ angular.module('uiModule').directive('categories', function(){
             '</li>'+
           '</ul>'+
         '</div>'+
-        '<h6 ng-show="resultPlaces.length==0 && (searchStr==null || searchStr==\'\')">Featured</h6>'+
+        '<h6 ng-show="resultPlaces.length==0 && (searchStr==null || searchStr==\'\')">{{selectedCategory}}</h6>'+
         '<h6 ng-show="resultPlaces.length>0">Results</h6>'+
         '<h6 ng-show="resultPlaces.length==0 && searchStr">(no results)</h6>'+
       '</div>',

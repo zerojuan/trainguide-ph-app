@@ -43,7 +43,7 @@ angular.module('trainguide.controllers')
 					from: null
 				},
 				isSearch: {
-					to: true,
+					to: false,
 					from: false
 				},
 				itinerary: null
@@ -168,19 +168,19 @@ angular.module('trainguide.controllers')
 					console.log(data);
 					if(qry.category=='Hospital'){
 						$scope.selected.hospital.counter = qry.start;
-						Array.prototype.push.apply($scope.selected.hospital.data, data);
+						$scope.selected.hospital.data = data;
 					}else if(qry.category=='Hotel'){
 						$scope.selected.hotel.counter = qry.start;
-						Array.prototype.push.apply($scope.selected.hotel.data, data);
+						$scope.selected.hotel.data = data;
 					}else if(qry.category=='Office'){
 						$scope.selected.office.counter = qry.start;
-						Array.prototype.push.apply($scope.selected.office.data, data);
+						$scope.selected.office.data = data;
 					}else	if(qry.category=='Sightseeing'){
 						$scope.selected.sights.counter = qry.start;
-						Array.prototype.push.apply($scope.selected.sights.data, data);
+						$scope.selected.sights.data = data;
 					}else if(qry.category=='Shopping'){
 						$scope.selected.shops.counter = qry.start;
-						Array.prototype.push.apply($scope.selected.shops.data, data);
+						$scope.selected.shops.data= data;
 					}
 					console.log($scope.selected);
 				},

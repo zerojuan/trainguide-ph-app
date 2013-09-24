@@ -255,6 +255,9 @@ table {
         border-style: solid;
         border-color: @linkColor;
         margin-left: -5px;
+        ul {
+          padding-left: 10px;
+        }
       }
       .routes {
         cursor: pointer;
@@ -510,13 +513,13 @@ li.PNR.clicked{
     .search-form {
       position: relative;
       .search-box {
-        width: 55%;
+        width: 100%;
         float: right;
-        height: 20px;
+        height: 37px;
       }
       i {
-        padding-top: 6px;
-        font-size: 0.5em;
+        padding-top: 10px;
+        font-size: 1em;
         position: absolute;
         right: 5px;
       }
@@ -543,7 +546,7 @@ li.PNR.clicked{
     // background-color: #eee;
     width: 100%;
     bottom: 0px;
-    top: 30px;
+    top: 47px;
     position: absolute;
     // border-top: 1px solid @gray;
     .line-nav {
@@ -792,6 +795,9 @@ li.PNR.clicked{
       display: inline-block;
       width: 100%;
       li {
+        &.active{
+          font-weight: bold;
+        }
         font-size: 9pt;   
         line-height: 15px;
         clear: both;
@@ -854,6 +860,10 @@ rect, .vertical {
   }
   &.transferee {
     stroke: black;
+  }
+  &.disabled{
+    fill: #ccc;
+    stroke: @pnr;
   }
 }
 

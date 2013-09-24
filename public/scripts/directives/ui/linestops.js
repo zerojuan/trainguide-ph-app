@@ -63,6 +63,9 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 										});
 									return _class+= "transferee";
 								}
+								if(d.disabled){
+									return _class += "disabled";
+								}
 								return _class+= newValue.name;
 							})
 							.attr("cx", centerX)

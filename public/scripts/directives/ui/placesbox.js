@@ -32,7 +32,11 @@ angular.module('uiModule').directive('placesbox', function(){
 			}
 
 			scope.selectDest = function(dest){
+				if(scope.selectedDest){
+					scope.selectedDest.isSelected = false;
+				}
 				scope.selectedDest = dest;
+				scope.selectedDest.isSelected = true;
 				console.log('selectedDest!!!', scope.selectedDest);
 			}
 		},
@@ -40,7 +44,7 @@ angular.module('uiModule').directive('placesbox', function(){
 			'<div class="places-box">'+
 				'<div><h3>{{title}}</h3><i class="{{icon}}"></i></div>'+
 				'<ul>'+
-					'<li ng-repeat="place in places.data">'+
+					'<li ng-repeat="place in places.data" ng-class="{active:place.isSelected}">'+
 						'<a ng-click="selectDest(place)" target="_blank">'+
 							'<span class="name">{{place.name}}</span>'+
 							'<span class="distance">{{place.distance}}</span>'+

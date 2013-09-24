@@ -49,28 +49,28 @@ angular.module('uiModule').directive('lines', ['CommonAppState', function(Common
 					'<tr>'+
 						'<td>Weekend: {{selectedLine.details.weekend}}</td>'+
 					'</tr>'+
-					'<tr>'+
+					'<tr ng-show="selectedLine.details.svc">'+
 						'<td>Stored Value Card: {{selectedLine.details.svc}}</td>'+
 					'</tr>'+
 				'</table>'+
-				'<table class="contact-desc" ng-class="{true:\'nodetails\', false:\'showdetails\'}[showDetails]">'+
-					'<th>Contact</th>'+
-					'<tr>'+
-						'<td>Web: {{selectedLine.details.web}}</td>'+
-					'</tr>'+
-					'<tr>'+
-						'<td>Twitter: {{selectedLine.details.twitter}}</td>'+
-					'</tr>'+
-					'<tr>'+
-						'<td>Contact No.: {{selectedLine.details.contactNo}}</td>'+
-					'</tr>'+
-					'<tr>'+
-						'<td>Fare: {{selectedLine.details.fare}}</td>'+
-					'</tr>'+
-					'<tr>'+
-						'<td>Email: {{selectedLine.details.email}}</td>'+
-					'</tr>'+
-				'</table>'+
+//				'<table class="contact-desc" ng-class="{true:\'nodetails\', false:\'showdetails\'}[showDetails]">'+
+//					'<th>Contact</th>'+
+//					'<tr>'+
+//						'<td>Web: {{selectedLine.details.web}}</td>'+
+//					'</tr>'+
+//					'<tr>'+
+//						'<td>Twitter: {{selectedLine.details.twitter}}</td>'+
+//					'</tr>'+
+//					'<tr>'+
+//						'<td>Contact No.: {{selectedLine.details.contactNo}}</td>'+
+//					'</tr>'+
+//					'<tr>'+
+//						'<td>Fare: {{selectedLine.details.fare}}</td>'+
+//					'</tr>'+
+//					'<tr>'+
+//						'<td>Email: {{selectedLine.details.email}}</td>'+
+//					'</tr>'+
+//				'</table>'+
 			'</div>',
 		replace : true
 	}

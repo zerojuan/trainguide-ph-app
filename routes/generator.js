@@ -119,7 +119,6 @@ exports.insertAdditionalData = function(req, res, next){
 			contact: '319-0045',
 			email: '',
 			fare: 'P10-P15',
-			svc: 'P100',
 			twitter: '@PNRRailways',
 			web: 'www.pnr.gov.ph'
 		}}
