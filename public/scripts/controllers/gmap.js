@@ -19,19 +19,24 @@ angular.module('trainguide.controllers')
 			stopMarkersProperty : []
 		});
 
-		function createMarker(val, icon, label){
+		function createMarker(val, icon, label, infoWindow){
 			for(var i = 0; i < $scope.markers.length; i++){
 				if($scope.markers[i].longitude == val.coordinates.lng && $scope.markers[i].latitude == val.coordinates.lat){
 					$scope.markers.splice(i, 1);
 					break;
 				}
 			}
+
+			if(!infoWindow){
+				infoWindow = '<div id="content">'+label+'</div><div class="arrow-up"></div>';
+			}
+
 			console.log('icon: ' + icon);
 			$scope.markers.push({
 				longitude: val.coordinates.lng,
 				latitude: val.coordinates.lat,
 				icon: icon,
-				infoWindow: '<div id="content">'+label+'</div><div class="arrow-up"></div>',
+				infoWindow: infoWindow,
 				label: label
 			});
 		}
@@ -56,7 +61,7 @@ angular.module('trainguide.controllers')
 		$scope.$watch('selected.hospital.data', function(newValue){
 			if(newValue){
 				angular.forEach($scope.selected.hospital.data, function(val){
-					createMarker(val, 'images/marker_medical22.png', val.name);
+					createMarker(val, 'images/marker_medical'+getColor()+'.png', val.name);
 				});
 			}
 		}, true);
@@ -89,6 +94,19 @@ angular.module('trainguide.controllers')
 			if(newValue){
 				angular.forEach($scope.selected.shops.data, function(val){
 					createMarker(val, 'images/marker_shopping'+getColor()+'.png', val.name);
+				});
+			}
+		}, true);
+
+		$scope.$watch('selected.nearbyStops', function(newValue){
+			if(newValue){
+				console.log('Heyo: ', $scope.selected.nearbyStops);
+				angular.forEach($scope.selected.nearbyStops, function(val){
+					createMarker({coordinates: {
+													lat: val.stopLat,
+													lng: val.stopLon
+												}
+					}, 'images/marker_transit'+getColor()+'.png', val.stopName);
 				});
 			}
 		}, true);

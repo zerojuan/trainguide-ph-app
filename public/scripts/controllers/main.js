@@ -1,9 +1,9 @@
 
 angular.module('trainguide.controllers')
 	.controller('MainCtrl', ['$scope', '$http', '$route', 
-    'LinesService', 'StopsService', 'TransfersService', 'PlacesService', 'CommonAppState', 
+    'LinesService', 'StopsService', 'TransfersService', 'PlacesService', 'CommonAppState', 'DirectionsService',
     function($scope, $http, $route, 
-      LinesService, StopsService, TransfersService, PlacesService, CommonAppState){
+      LinesService, StopsService, TransfersService, PlacesService, CommonAppState, DirectionsService){
 
 
 		/** ================================================= **/
@@ -18,6 +18,7 @@ angular.module('trainguide.controllers')
 				stop: null,
 				line: null,
 				dest : null,
+				nearbyStops: null,
 				hospital: {
 					counter: 0,
 					data: []
@@ -118,6 +119,16 @@ angular.module('trainguide.controllers')
       if(newValue){
 				$scope.menuItems[0].selected = false; //reset line sidebar
         $scope.selectedItemHandler($scope.menuItems[0]);
+				DirectionsService.getStopsNearPoint({from: {
+					lat: $scope.selected.stop.details.stop_lat,
+					lon: $scope.selected.stop.details.stop_lon
+				}},
+				function(data){
+					$scope.selected.nearbyStops = data;
+				},
+				function(err){
+					console.log('======== Error!');
+				});
 				reloadStopsPlaces();
       }
 		});
