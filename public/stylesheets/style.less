@@ -88,7 +88,9 @@ h6 {
   background-color: @trainlineBg;
   padding: 8px;
   font-weight: bolder;
+  font-size: 10.5pt;
   height: 30px;
+  color: @textHighlight;
 }
 
 a {
@@ -218,11 +220,11 @@ table {
         margin: 5px;
         font-size: 12pt;
       }
-      h6 {
-        font-size: 10.5pt;
-        height: 30px;
-        color: @textHighlight;
-      }
+      // h6 {
+      //   font-size: 10.5pt;
+      //   height: 30px;
+      //   color: @textHighlight;
+      // }
       label {
         display: inline-block;
         text-align: right;
@@ -706,6 +708,7 @@ li.PNR.clicked{
     }
     table.showdetails {
       display: table;
+      height: 56px;
     }
     div.nodetails, table.nodetails {
       display: none;
@@ -745,7 +748,7 @@ li.PNR.clicked{
             cursor: pointer;
             position: relative;
             top: 25px;
-            background: @linkColor;
+            // background: @linkColor;
             height: 5px;
             width: 27px;
           }
@@ -938,7 +941,8 @@ rect, .vertical {
 .stop, .transfer {
   cursor: pointer;
   fill: white;  
-  stroke-width: 2px;
+  // stroke-width: 2px;
+  stroke-width: 5px;
   &.LRT1 {
     stroke: @lrt1;
   }
@@ -955,8 +959,7 @@ rect, .vertical {
     stroke: black;
   }
   &.disabled{
-    fill: #ccc;
-    stroke: @pnr;
+    stroke: #ccc;
   }
 }
 

@@ -13,12 +13,13 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 		link : function(scope, element, attr){
 			// console.log(element);
 			var y = null;
-			var svgHeight = $(window).height() - 100;
+			var svgHeight = $(window).height() - 90;
 			var svg = d3.select("#line-stop-svg").append("svg")
 				.attr("class", "line-stop-chart")
 				.attr("width", 260)
 				.attr("height", svgHeight);
-			var lineWidth = 10;
+			// var lineWidth = 10;
+			var lineWidth = 6;
 			var centerX = 130;
 			svg.append("rect")
 				.attr("class", "vertical")
@@ -37,7 +38,13 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 
 					for(var i in newValue.stops){
 						svg.selectAll(".vertical")
-							.attr("height", svgHeight-30)
+							// .attr("height", svgHeight-30)
+							.attr("height", function(d){
+								if(newValue.name == "PNR"){
+									return svgHeight-140	
+								}
+								return svgHeight-30
+							})
 							.attr("class", "vertical " + newValue.name);
 						// svg.selectAll(".transfer").remove();
 						var dots = svg.selectAll(".stop")
@@ -48,16 +55,20 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 								if(d.transfer){
 									svg.append("rect")
 										.attr("class", "transfer " + d.transfer.line_name)
-										.attr("x", centerX + 9)
-										.attr("y", (y(i)+15))
-										.attr("width", 20)
-										.attr("height", 10)
+										// .attr("x", centerX + 9)
+										.attr("x", centerX + 13)
+										// .attr("y", (y(i)+15))
+										.attr("y", (y(i)+18))
+										// .attr("width", 20)
+										.attr("width", 10)
+										// .attr("height", 10)
+										.attr("height", 3)
 										.attr("fill", "#333");
 									svg.append("circle")
 										.attr("class", "transfer " + d.transfer.line_name)
 										.attr("cx", centerX+25)
 										.attr("cy", (y(i)+20))
-										.attr("r", 8)
+										.attr("r", 7)
 										.on("click", function(){
 											scope.onSelectedStop(StopsService.getStopById(d.transfer.stop_id));
 										});
@@ -66,18 +77,22 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 								if(d.disabled){
 									return _class += "disabled";
 								}
-								return _class+= newValue.name;
+								// return _class+= newValue.name;
+								if(i == 0 || i == newValue.stops.length-1){
+									return _class+= newValue.name;
+								}
+								return _class;
 							})
 							.attr("cx", centerX)
 							.attr("cy", function(d,i){return y(i)+20})
 							.attr("r", function(d,i){
 								if(d.transfer){
-									return 8;
+									return 7;
 								}
 								if(i == 0 || i == newValue.stops.length-1){
-									return 8;
+									return 7;
 								}
-								return 5;
+								return 3;
 							})
 							.on("click", function(d){
 								scope.onSelectedStop(d);
