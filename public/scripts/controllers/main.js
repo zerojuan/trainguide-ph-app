@@ -1,9 +1,9 @@
 
 angular.module('trainguide.controllers')
 	.controller('MainCtrl', ['$scope', '$http', '$route', 
-    'LinesService', 'StopsService', 'TransfersService', 'PlacesService', 'CommonAppState', 'DirectionsService',
+    'LinesService', 'StopsService', 'TransfersService', 'PlacesService', 'CommonAppState', 'DirectionsService', 'RoutesService',
     function($scope, $http, $route, 
-      LinesService, StopsService, TransfersService, PlacesService, CommonAppState, DirectionsService){
+      LinesService, StopsService, TransfersService, PlacesService, CommonAppState, DirectionsService, RoutesService){
 
 
 		/** ================================================= **/
@@ -124,7 +124,28 @@ angular.module('trainguide.controllers')
 					lon: $scope.selected.stop.details.stop_lon
 				}},
 				function(data){
+					// $scope.selected.nearbyStops = data;
+					var routeData = [];
+
+					for(var i in data){
+						var routes = data[i].routes;
+
+						for(var j in routes){
+							// console.log('routes[j]', routes[j].agencyId, routes[j].id);
+
+							RoutesService.getRouteInfo(routes[j].agencyId, routes[j].id,
+								function(routeInfo){
+									console.log(routeInfo);
+									routes[j].details = routeInfo;
+								},
+								function(err){
+									console.log('RoutesService error', err);
+								});
+						}
+					}
+
 					$scope.selected.nearbyStops = data;
+					console.log('nearby', $scope.selected.nearbyStops);
 				},
 				function(err){
 					console.log('======== Error!');

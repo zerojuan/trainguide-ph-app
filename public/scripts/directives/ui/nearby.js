@@ -41,7 +41,11 @@ angular.module('uiModule').directive('nearby', function(){
             '<div class="block">'+
               '<div class="antiscroll-inner">'+
                 '<div class="group-list">'+
-                  'STOPS'+
+                  '<ul>'+
+                    '<li ng-repeat="nearby in selected.nearbyStops" ng-class="{active:place.isSelected}">'+
+                        '<span class="name">{{nearby.stopName}}</span>'+
+                    '</li>'+
+                  '</ul>'+
                 '</div>'+
               '</div>'+
             '</div>'+
