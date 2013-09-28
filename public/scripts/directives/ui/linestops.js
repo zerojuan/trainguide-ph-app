@@ -19,8 +19,8 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 				.attr("width", 260)
 				.attr("height", svgHeight);
 			// var lineWidth = 10;
-			var lineWidth = 6;
-			var centerX = 130;
+			var lineWidth = 7;
+			var centerX = 123;
 			svg.append("rect")
 				.attr("class", "vertical")
 				.attr("x", centerX - lineWidth/2)
@@ -31,6 +31,7 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 				// console.log('SELECTEDITEM!!!!!', scope.selectedItem);
 				if(newValue && newValue.stops){
 					svg.selectAll(".transfer").remove();
+					svg.selectAll(".disabled").remove();
 					console.log('svgHeight', svgHeight, 'linestops: ', newValue.stops);
 					y = d3.scale.linear()
 								.domain([0, newValue.stops.length-1])
@@ -47,57 +48,7 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 							})
 							.attr("class", "vertical " + newValue.name);
 						// svg.selectAll(".transfer").remove();
-						var dots = svg.selectAll(".stop")
-							.data(newValue.stops, function(d){return d.stop_id;});
-						dots.enter().append("circle")
-							.attr("class", function(d,i){
-								var _class = "stop ";
-								if(d.transfer){
-									svg.append("rect")
-										.attr("class", "transfer " + d.transfer.line_name)
-										// .attr("x", centerX + 9)
-										.attr("x", centerX + 13)
-										// .attr("y", (y(i)+15))
-										.attr("y", (y(i)+18))
-										// .attr("width", 20)
-										.attr("width", 10)
-										// .attr("height", 10)
-										.attr("height", 3)
-										.attr("fill", "#333");
-									svg.append("circle")
-										.attr("class", "transfer " + d.transfer.line_name)
-										.attr("cx", centerX+25)
-										.attr("cy", (y(i)+20))
-										.attr("r", 7)
-										.on("click", function(){
-											scope.onSelectedStop(StopsService.getStopById(d.transfer.stop_id));
-										});
-									return _class+= "transferee";
-								}
-								if(d.disabled){
-									return _class += "disabled";
-								}
-								// return _class+= newValue.name;
-								if(i == 0 || i == newValue.stops.length-1){
-									return _class+= newValue.name;
-								}
-								return _class;
-							})
-							.attr("cx", centerX)
-							.attr("cy", function(d,i){return y(i)+20})
-							.attr("r", function(d,i){
-								if(d.transfer){
-									return 7;
-								}
-								if(i == 0 || i == newValue.stops.length-1){
-									return 7;
-								}
-								return 3;
-							})
-							.on("click", function(d){
-								scope.onSelectedStop(d);
-							});
-						dots.exit().remove();
+						
 						var text = svg.selectAll(".label")
 							.data(newValue.stops, function(d){return d.stop_id;});
 						text.enter().append("text")
@@ -134,6 +85,17 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 											}
 									}
 								}
+								if(d.disabled){
+									if(i < newValue.stops.length){
+										svg.append("rect")
+											.attr("class", "disabled")
+											.attr("x", centerX - lineWidth/2)
+											.attr("y", (y(i) - 5))
+											.attr("width", lineWidth)
+											.attr("height", (y(i+1) - y(i)));	
+									}
+									
+								}
 								if(i == 0 || i == newValue.stops.length-1){
 									return _class + " ends";
 								}
@@ -151,6 +113,64 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 								scope.onSelectedStop(d);
 							});
 						text.exit().remove();
+						var dots = svg.selectAll(".stop")
+							.data(newValue.stops, function(d){return d.stop_id;});
+						dots.enter().append("circle")
+							.attr("class", function(d,i){
+								var _class = "stop ";
+								if(d.transfer){
+									svg.append("rect")
+										.attr("class", "transfer " + d.transfer.line_name)
+										// .attr("x", centerX + 9)
+										.attr("x", centerX + 11)
+										// .attr("y", (y(i)+15))
+										.attr("y", (y(i)+18))
+										// .attr("width", 20)
+										.attr("width", 10)
+										// .attr("height", 10)
+										.attr("height", 3)
+										.attr("fill", "#333");
+									svg.append("circle")
+										.attr("class", "transfer " + d.transfer.line_name)
+										.attr("cx", centerX+25)
+										.attr("cy", (y(i)+20))
+										.attr("r", 7)
+										.on("click", function(){
+											scope.onSelectedStop(StopsService.getStopById(d.transfer.stop_id));
+										});
+									return _class+= "transferee";
+								}
+								if(d.disabled){
+									dots.append("rect")
+										.attr("class", "disabled")
+										.attr("x", centerX - lineWidth/2)
+										.attr("y", (y(i)))
+										.attr("width", lineWidth)
+										.attr("height", y(i+1)+20);
+									return _class += "disabled";
+								}
+								// return _class+= newValue.name;
+								if(i == 0 || i == newValue.stops.length-1){
+									return _class+= newValue.name;
+								}
+								return _class;
+							})
+							.attr("cx", centerX)
+							.attr("cy", function(d,i){return y(i)+20})
+							.attr("r", function(d,i){
+								if(d.transfer){
+									return 7;
+								}
+								if(i == 0 || i == newValue.stops.length-1){
+									return 7;
+								}
+								return 4.5;
+							})
+							.on("click", function(d){
+								scope.onSelectedStop(d);
+							});
+						dots.exit().remove();
+						
 					}
 				}
 			});

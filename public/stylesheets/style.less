@@ -936,6 +936,7 @@ li.PNR.clicked{
 /* d3 svg */
 
 rect, .vertical {
+  shape-rendering:crispEdges;
   &.LRT1 {
     fill: @lrt1;
   }
@@ -947,6 +948,9 @@ rect, .vertical {
   }
   &.PNR {
     fill: @pnr;
+  }
+  &.disabled{
+    fill: #ccc;
   }
 }
 
@@ -971,6 +975,7 @@ rect, .vertical {
     stroke: black;
   }
   &.disabled{
+    stroke-width: 2px;
     stroke: #ccc;
   }
 }

@@ -253,10 +253,11 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
   'LinesService',
   'StopsService',
   'TransfersService',
+  'FaresService',
   'PlacesService',
   'CommonAppState',
   'DirectionsService',
-  function ($scope, $http, $route, LinesService, StopsService, TransfersService, PlacesService, CommonAppState, DirectionsService) {
+  function ($scope, $http, $route, LinesService, StopsService, TransfersService, FaresService, PlacesService, CommonAppState, DirectionsService) {
     angular.extend($scope, {
       clickedLatitudeProperty: 11,
       clickedLongitudeProperty: 44,
@@ -521,6 +522,18 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
         $scope.lines.MRT.color = '#5384c4';
         $scope.lines.PNR.color = '#f28740';
         StopsService.setLines($scope.lines);
+        var fareData = {};
+        fareData.MRT = $scope.lines.MRT.fare;
+        fareData.LRT1 = $scope.lines.LRT1.fare;
+        fareData.LRT2 = $scope.lines.LRT2.fare;
+        fareData.PNR = $scope.lines.PNR.fare;
+        DirectionsService.bindFareMatrix('TRAIN', fareData);
+        FaresService.getPUB(function (data) {
+          DirectionsService.bindFareMatrix('BUS', data);
+        });
+        FaresService.getPUJ(function (data) {
+          DirectionsService.bindFareMatrix('JEEP', data);
+        });
         TransfersService.getAllTransfers(function (data) {
           $scope.transfers = data;
           for (var i = 0; i < $scope.transfers.length; i++) {
@@ -1504,7 +1517,7 @@ angular.module('uiModule').directive('direction', [
           scope.selectedStep = scope.selectedStep == null ? leg : null;
         };
       },
-      template: '<div>' + '<div class="{{divClass}}" ng-class="{clickable: trueMode!=\'RAIL\'}" ng-click="clickedDirection(leg)">' + '<div class="{{trueMode}} circle {{routeCode}}"></div>' + '<p>{{trueMode}} <span style="font-size: 10px;">{{leg.duration|tominutes}} mins</span></p>' + '<p ng-hide="showMe"><em>{{leg.route}}</em></p>' + '<p ng-show="showMe">' + '<em>{{leg.from.name}}</em> to <em>{{leg.to.name}}</em>' + '</p>' + '<ul ng-show="leg.steps.length && selectedStep==leg" class="direction-steps">' + '<li ng-repeat="step in leg.steps">' + '<span>{{step.relativeDirection|parseDirection}} on {{step.streetName}}</span>' + '</li>' + '</ul>' + '<p ng-show="trueMode!=\'RAIL\' && (leg.steps.length==0 && selectedStep==leg)" class="direction-steps">' + '<span><em>{{leg.from.name}}</em> to <em>{{leg.to.name}}</em></span>' + '</p>' + '</div>' + '</div>',
+      template: '<div>' + '<div class="{{divClass}}" ng-class="{clickable: trueMode!=\'RAIL\'}" ng-click="clickedDirection(leg)">' + '<div class="{{trueMode}} circle {{routeCode}}"></div>' + '<p>{{trueMode}} <span style="font-size: 10px;">{{leg.duration|tominutes}} mins </span> <span ng-show="leg.fare>0">P{{leg.fare}}</span></p>' + '<p ng-hide="showMe"><em>{{leg.route}}</em></p>' + '<p ng-show="showMe">' + '<em>{{leg.from.name}}</em> to <em>{{leg.to.name}}</em>' + '</p>' + '<ul ng-show="leg.steps.length && selectedStep==leg" class="direction-steps">' + '<li ng-repeat="step in leg.steps">' + '<span>{{step.relativeDirection|parseDirection}} on {{step.streetName}}</span>' + '</li>' + '</ul>' + '<p ng-show="trueMode!=\'RAIL\' && (leg.steps.length==0 && selectedStep==leg)" class="direction-steps">' + '<span><em>{{leg.from.name}}</em> to <em>{{leg.to.name}}</em></span>' + '</p>' + '</div>' + '</div>',
       replace: true
     };
   }
@@ -1559,14 +1572,15 @@ angular.module('uiModule').directive('lineStops', [
       },
       link: function (scope, element, attr) {
         var y = null;
-        var svgHeight = $(window).height() - 100;
+        var svgHeight = $(window).height() - 90;
         var svg = d3.select('#line-stop-svg').append('svg').attr('class', 'line-stop-chart').attr('width', 260).attr('height', svgHeight);
-        var lineWidth = 10;
-        var centerX = 130;
+        var lineWidth = 7;
+        var centerX = 123;
         svg.append('rect').attr('class', 'vertical').attr('x', centerX - lineWidth / 2).attr('width', lineWidth).attr('y', 20);
         scope.$watch('selectedLine', function (newValue, oldValue) {
           if (newValue && newValue.stops) {
             svg.selectAll('.transfer').remove();
+            svg.selectAll('.disabled').remove();
             console.log('svgHeight', svgHeight, 'linestops: ', newValue.stops);
             y = d3.scale.linear().domain([
               0,
@@ -1576,37 +1590,12 @@ angular.module('uiModule').directive('lineStops', [
               svgHeight - 30
             ]);
             for (var i in newValue.stops) {
-              svg.selectAll('.vertical').attr('height', svgHeight - 30).attr('class', 'vertical ' + newValue.name);
-              var dots = svg.selectAll('.stop').data(newValue.stops, function (d) {
-                  return d.stop_id;
-                });
-              dots.enter().append('circle').attr('class', function (d, i) {
-                var _class = 'stop ';
-                if (d.transfer) {
-                  svg.append('rect').attr('class', 'transfer ' + d.transfer.line_name).attr('x', centerX + 9).attr('y', y(i) + 15).attr('width', 20).attr('height', 10).attr('fill', '#333');
-                  svg.append('circle').attr('class', 'transfer ' + d.transfer.line_name).attr('cx', centerX + 25).attr('cy', y(i) + 20).attr('r', 8).on('click', function () {
-                    scope.onSelectedStop(StopsService.getStopById(d.transfer.stop_id));
-                  });
-                  return _class += 'transferee';
+              svg.selectAll('.vertical').attr('height', function (d) {
+                if (newValue.name == 'PNR') {
+                  return svgHeight - 140;
                 }
-                if (d.disabled) {
-                  return _class += 'disabled';
-                }
-                return _class += newValue.name;
-              }).attr('cx', centerX).attr('cy', function (d, i) {
-                return y(i) + 20;
-              }).attr('r', function (d, i) {
-                if (d.transfer) {
-                  return 8;
-                }
-                if (i == 0 || i == newValue.stops.length - 1) {
-                  return 8;
-                }
-                return 5;
-              }).on('click', function (d) {
-                scope.onSelectedStop(d);
-              });
-              dots.exit().remove();
+                return svgHeight - 30;
+              }).attr('class', 'vertical ' + newValue.name);
               var text = svg.selectAll('.label').data(newValue.stops, function (d) {
                   return d.stop_id;
                 });
@@ -1627,6 +1616,11 @@ angular.module('uiModule').directive('lineStops', [
                     }
                   }
                 }
+                if (d.disabled) {
+                  if (i < newValue.stops.length) {
+                    svg.append('rect').attr('class', 'disabled').attr('x', centerX - lineWidth / 2).attr('y', y(i) - 5).attr('width', lineWidth).attr('height', y(i + 1) - y(i));
+                  }
+                }
                 if (i == 0 || i == newValue.stops.length - 1) {
                   return _class + ' ends';
                 }
@@ -1642,6 +1636,40 @@ angular.module('uiModule').directive('lineStops', [
                 scope.onSelectedStop(d);
               });
               text.exit().remove();
+              var dots = svg.selectAll('.stop').data(newValue.stops, function (d) {
+                  return d.stop_id;
+                });
+              dots.enter().append('circle').attr('class', function (d, i) {
+                var _class = 'stop ';
+                if (d.transfer) {
+                  svg.append('rect').attr('class', 'transfer ' + d.transfer.line_name).attr('x', centerX + 11).attr('y', y(i) + 18).attr('width', 10).attr('height', 3).attr('fill', '#333');
+                  svg.append('circle').attr('class', 'transfer ' + d.transfer.line_name).attr('cx', centerX + 25).attr('cy', y(i) + 20).attr('r', 7).on('click', function () {
+                    scope.onSelectedStop(StopsService.getStopById(d.transfer.stop_id));
+                  });
+                  return _class += 'transferee';
+                }
+                if (d.disabled) {
+                  dots.append('rect').attr('class', 'disabled').attr('x', centerX - lineWidth / 2).attr('y', y(i)).attr('width', lineWidth).attr('height', y(i + 1) + 20);
+                  return _class += 'disabled';
+                }
+                if (i == 0 || i == newValue.stops.length - 1) {
+                  return _class += newValue.name;
+                }
+                return _class;
+              }).attr('cx', centerX).attr('cy', function (d, i) {
+                return y(i) + 20;
+              }).attr('r', function (d, i) {
+                if (d.transfer) {
+                  return 7;
+                }
+                if (i == 0 || i == newValue.stops.length - 1) {
+                  return 7;
+                }
+                return 4.5;
+              }).on('click', function (d) {
+                scope.onSelectedStop(d);
+              });
+              dots.exit().remove();
             }
           }
         });
@@ -1852,7 +1880,7 @@ angular.module('uiModule').directive('route', [
           scope.steps.push(stepObj);
         }
       },
-      template: '<div ng-class="{selectedroute: isselected() == true}">' + '<ul>' + '<li ng-repeat="step in steps" class="route-steps">' + '<div>' + '<span>{{step.mode}}</span>' + '<span class="route-box {{step.route}}" ng-hide="step.mode==\'WALK\'">&#9632;</span>' + '<span ng-hide="$last"> &#9656;</span>' + '</div>' + '</li>' + '</ul>' + '<span>{{trip.duration|tominutes}} min</span>' + '</div>',
+      template: '<div ng-class="{selectedroute: isselected() == true}">' + '<ul>' + '<li ng-repeat="step in steps" class="route-steps">' + '<div>' + '<span>{{step.mode}}</span>' + '<span class="route-box {{step.route}}" ng-hide="step.mode==\'WALK\'">&#9632;</span>' + '<span ng-hide="$last"> &#9656;</span>' + '</div>' + '</li>' + '</ul>' + '<span>{{trip.duration|tominutes}} min </span> <span ng-show="trip.fare > 0">P{{trip.fare}}</span>' + '</div>',
       replace: true
     };
   }
@@ -2044,12 +2072,25 @@ angular.module('trainguideServices').factory('DirectionsService', [
   function ($http, $filter) {
     var DirectionsService = {};
     var api = 'http://maps.pleasantprogrammer.com/opentripplanner-api-webapp/ws';
+    var fareMatrix = {};
     function serialize(obj) {
       var str = [];
       for (var p in obj)
         str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
       return str.join('&');
     }
+    DirectionsService.bindFareMatrix = function (type, matrix) {
+      switch (type) {
+      case 'TRAIN':
+        fareMatrix.train = matrix;
+        break;
+      case 'BUS':
+        fareMatrix.bus = matrix;
+        break;
+      case 'JEEP':
+        fareMatrix.jeep = matrix;
+      }
+    };
     DirectionsService.getStopsNearPoint = function (query, callback, err) {
       var query = serialize({
           lat: query.from.lat,
@@ -2113,6 +2154,41 @@ angular.module('trainguideServices').factory('DirectionsService', [
           err(data.error);
           return;
         }
+        function calculateFare(trip) {
+          var totalFare = 0;
+          angular.forEach(trip.legs, function (leg) {
+            var realMode = $filter('realmode')(leg.mode, leg.routeId), distance = Math.round(leg.distance / 1000), foundFare = 0;
+            switch (realMode) {
+            case 'RAIL':
+              switch (leg.routeShortName) {
+              case 'LRT 1':
+                foundFare = 10;
+                break;
+              case 'LRT 2':
+                foundFare = 20;
+                break;
+              case 'MRT-3':
+                foundFare = 30;
+                break;
+              case 'PNR MC':
+                foundFare = 40;
+                break;
+              }
+              break;
+            case 'JEEP':
+              var jeepMatrix = fareMatrix.jeep.matrix;
+              foundFare = distance > jeepMatrix.length ? jeepMatrix[jeepMatrix.length - 1][0] : jeepMatrix[distance][0];
+              break;
+            case 'BUS':
+              var busMatrix = fareMatrix.bus.matrix;
+              foundFare = distance > busMatrix.length ? busMatrix[busMatrix.length - 1][0] : busMatrix[distance][0];
+              break;
+            }
+            leg.fare = foundFare;
+            totalFare += leg.fare;
+          });
+          return totalFare;
+        }
         function isSameTrip(tripA, tripB) {
           if ($filter('tominutes')(tripA.duration) != $filter('tominutes')(tripB.duration)) {
             return false;
@@ -2148,6 +2224,9 @@ angular.module('trainguideServices').factory('DirectionsService', [
             itineraries.push(tripA);
           }
         }
+        for (var i in itineraries) {
+          itineraries[i].fare = calculateFare(itineraries[i]);
+        }
         data.plan.itineraries = itineraries;
         console.log(data.plan);
         callback(data.plan);
@@ -2175,6 +2254,33 @@ angular.module('trainguideServices').factory('LinesService', [
       });
     };
     return LinesService;
+  }
+]);
+angular.module('trainguideServices').factory('FaresService', [
+  '$http',
+  function ($http) {
+    var FaresService = {};
+    FaresService.getPUJ = function (callback, err) {
+      $http({
+        method: 'GET',
+        url: 'data/puj.data.json'
+      }).success(function (data, status) {
+        callback(data, status);
+      }).error(function (data, status, headers, config) {
+        err(data, status, headers, config);
+      });
+    };
+    FaresService.getPUB = function (callback, err) {
+      $http({
+        method: 'GET',
+        url: 'data/pub-aircon.data.json'
+      }).success(function (data, status) {
+        callback(data, status);
+      }).error(function (data, status, headers, config) {
+        err(data, status, headers, config);
+      });
+    };
+    return FaresService;
   }
 ]);
 angular.module('trainguideServices').factory('PlacesService', [

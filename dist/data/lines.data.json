@@ -5,6 +5,7 @@
         "longName": "Baclaran - Roosevelt",
         "description": "Urban railway line serving 20 stations between Balaran and Roosevelt",
         "url": "http://www.lrta.gov.ph/train_operating_schedules.php",
+        "fare": [12, 12, 12, 12, 15, 15, 15, 15],
         "stops": [
             {
                 "trip_id": "882210",
@@ -695,6 +696,7 @@
         "longName": "Recto - Santolan",
         "description": "Light rail line serving 11 stations between Recto and Santolan",
         "url": "http://www.lrta.gov.ph/train_operating_schedules.php",
+        "fare": [12, 12, 12, 13, 13, 13, 14, 14, 14, 15],
         "stops": [
             {
                 "trip_id": "880815",
@@ -1079,6 +1081,7 @@
         "longName": "Taft Ave - North Ave",
         "description": "MRT3 line from Taft Avenue to North Avenue",
         "url": "http://dotcmrt3.gov.ph/",
+        "fare": [10, 10, 11, 11, 12, 12, 12, 14, 14, 14, 15],
         "stops": [
             {
                 "trip_id": "881478",
@@ -1531,6 +1534,7 @@
         "longName": "Metro Commuter",
         "description": "PNT Metro South Commuter connects the cities of Manila, Pasay and Muntinlupa",
         "url": "http://www.pnr.gov.ph/metro_commuter.htm",
+        "fare": [[10, 8], [15, 12], [20, 16], [25, 20], [30, 24]],
         "stops": [
             {
                 "trip_id": "882001",
