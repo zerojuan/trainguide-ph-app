@@ -915,8 +915,20 @@ li.PNR.clicked{
   .download {
     padding: 10px;
     font-size: 0.9em;
+    text-align: justify;
     p {
       padding-bottom: 10px;
+      a {
+        &:nth-child(odd){
+          margin-right: 8px;
+        }
+        img {
+          width: 115px;
+          height: 100px;
+          border: 1px solid @gray;
+          margin-bottom: 5px;
+        }
+      }
     }
   }
 }
