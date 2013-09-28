@@ -5,11 +5,25 @@ angular.module('trainguideServices')
 
 		var api = 'http://maps.pleasantprogrammer.com/opentripplanner-api-webapp/ws';
 
+		var fareMatrix = {
+
+		}
+
 		function serialize(obj) {
 			var str = [];
 			for(var p in obj)
 				str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
 			return str.join("&");
+		}
+
+		DirectionsService.bindFareMatrix = function(type, matrix){
+			switch(type){
+				case 'TRAIN': fareMatrix.train = matrix;
+							  break;
+				case 'BUS':   fareMatrix.bus = matrix;
+							  break;
+				case 'JEEP':  fareMatrix.jeep = matrix; 
+			}
 		}
 
 		DirectionsService.getStopsNearPoint = function(query, callback, err){
@@ -91,9 +105,54 @@ angular.module('trainguideServices')
 						return;
 					}
 
+					function calculateFare(trip){
+						//loop through each leg
+						var totalFare = 0;
+						angular.forEach(trip.legs, function(leg){
+							//!!!calculate fare
+
+							var realMode = $filter('realmode')(leg.mode, leg.routeId),
+								distance = Math.round(leg.distance/1000),
+								foundFare = 0;
+							switch(realMode){
+								case 'RAIL':
+											//get routeshortname
+											switch(leg.routeShortName){
+												case 'LRT 1':
+													foundFare = 10;
+													break;
+												case 'LRT 2':
+													foundFare = 20;
+													break;
+												case 'MRT-3':
+													foundFare = 30;
+													break;
+												case 'PNR MC':
+													foundFare = 40;
+													break;
+											}
+											break;
+								case 'JEEP':
+											var jeepMatrix = fareMatrix.jeep.matrix;
+											foundFare = (distance > jeepMatrix.length) ?
+															jeepMatrix[jeepMatrix.length-1][0] :
+															jeepMatrix[distance][0];	
+											break; 
+								case 'BUS' : 
+											var busMatrix = fareMatrix.bus.matrix;
+											foundFare = (distance > busMatrix.length) ?
+															busMatrix[busMatrix.length-1][0] :
+															busMatrix[distance][0];
+											break;
+							}	
+							leg.fare = foundFare;
+							totalFare += leg.fare;
+						});
+						return totalFare;
+					}
+
 					function isSameTrip(tripA, tripB){
 						//is the same
-
 						if($filter('tominutes')(tripA.duration) != $filter('tominutes')(tripB.duration) ){
 							return false;
 						}
@@ -132,6 +191,14 @@ angular.module('trainguideServices')
 							itineraries.push(tripA);
 						}
 					}
+
+					//loop through itineraries
+					for(var i in itineraries){
+						itineraries[i].fare = calculateFare(itineraries[i]);
+					}
+						
+						
+					
 					data.plan.itineraries = itineraries;
 					console.log(data.plan);
 					callback(data.plan);

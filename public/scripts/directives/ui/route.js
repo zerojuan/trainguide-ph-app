@@ -50,7 +50,7 @@ angular.module('uiModule').directive('route', ['$filter', function($filter){
             '</div>'+
           '</li>'+
         '</ul>'+
-        '<span>{{trip.duration|tominutes}} min</span>'+
+        '<span>{{trip.duration|tominutes}} min </span> <span ng-show="trip.fare > 0">P{{trip.fare}}</span>'+
       '</div>',
     replace : true
   }
