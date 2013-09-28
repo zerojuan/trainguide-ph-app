@@ -1,9 +1,9 @@
 
 angular.module('trainguide.controllers')
 	.controller('MainCtrl', ['$scope', '$http', '$route', 
-		'LinesService', 'StopsService', 'TransfersService', 'FaresService', 'PlacesService', 'CommonAppState', 'DirectionsService',
+		'LinesService', 'StopsService', 'TransfersService', 'FaresService', 'PlacesService', 'CommonAppState', 'DirectionsService', 'RoutesService',
 		function($scope, $http, $route, 
-			LinesService, StopsService, TransfersService, FaresService, PlacesService, CommonAppState, DirectionsService){
+			LinesService, StopsService, TransfersService, FaresService, PlacesService, CommonAppState, DirectionsService, RoutesService){
 
 
 				/** ================================================= **/
@@ -112,7 +112,6 @@ angular.module('trainguide.controllers')
 			]
 				});
 
-<<<<<<< HEAD
 		/** ================================================= **/
 		/** WATCHERS
 		/** ================================================= **/
@@ -126,52 +125,35 @@ angular.module('trainguide.controllers')
 				}},
 				function(data){
 					// $scope.selected.nearbyStops = data;
-					var routeData = [];
+					// var routeData = [];
 
-					for(var i in data){
-						var routes = data[i].routes;
+					// for(var i in data){
+					// 	var routes = data[i].routes;
 
-						for(var j in routes){
-							// console.log('routes[j]', routes[j].agencyId, routes[j].id);
+					// 	for(var j in routes){
+					// 		// console.log('routes[j]', routes[j].agencyId, routes[j].id);
 
-							RoutesService.getRouteInfo(routes[j].agencyId, routes[j].id,
-								function(routeInfo){
-									console.log(routeInfo);
-									routes[j].details = routeInfo;
-								},
-								function(err){
-									console.log('RoutesService error', err);
-								});
-						}
-					}
+					// 		RoutesService.getRouteInfo(routes[j].agencyId, routes[j].id,
+					// 			function(routeInfo){
+					// 				console.log(routeInfo);
+					// 				routes[j].details = routeInfo;
+					// 			},
+					// 			function(err){
+					// 				console.log('RoutesService error', err);
+					// 			});
+					// 	}
+					// }
 
 					$scope.selected.nearbyStops = data;
 					console.log('nearby', $scope.selected.nearbyStops);
 				},
 				function(err){
 					console.log('======== Error!');
-=======
-				/** ================================================= **/
-				/** WATCHERS
-				/** ================================================= **/
-				$scope.$watch('selected.stop', function(newValue){
-					if(newValue){
-										$scope.menuItems[0].selected = false; //reset line sidebar
-						$scope.selectedItemHandler($scope.menuItems[0]);
-										DirectionsService.getStopsNearPoint({from: {
-												lat: $scope.selected.stop.details.stop_lat,
-												lon: $scope.selected.stop.details.stop_lon
-										}},
-										function(data){
-												$scope.selected.nearbyStops = data;
-										},
-										function(err){
-												console.log('======== Error!');
-										});
-										reloadStopsPlaces();
-					}
->>>>>>> Now showing fare data
 				});
+				
+				reloadStopsPlaces();
+			}
+		});
 
 				/** ================================================== **/
 				/** SCOPE METHODS

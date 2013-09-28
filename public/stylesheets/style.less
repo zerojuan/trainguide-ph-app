@@ -342,13 +342,18 @@ table {
               }
             } 
           }
+          span:last-child {
+            font-weight: bold;
+          }
         }
       }   
       .block, .antiscroll-inner, .steps-list {
         width: 255px;
-        height: 200px;
+        // height: 200px;
+        height: 160px;
         @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
-          height: 140px;
+          // height: 140px;
+          height: 100px;
         }
       }        
       .antiscroll-wrap {
@@ -849,7 +854,7 @@ li.PNR.clicked{
     // border-bottom: 1px solid @gray;
   }
 
-  .places-box {
+  .places-box, .stops-box {
     padding-bottom: 10px;
     > div {
       background: @trainlineBg;
