@@ -119,6 +119,8 @@ angular.module('trainguide.controllers')
       if(newValue){
 				$scope.menuItems[0].selected = false; //reset line sidebar
         $scope.selectedItemHandler($scope.menuItems[0]);
+				//tell GA about it
+				_gaq.push(['_trackEvent', newValue.details.stop_name, 'Click']);
 				DirectionsService.getStopsNearPoint({from: {
 					lat: $scope.selected.stop.details.stop_lat,
 					lon: $scope.selected.stop.details.stop_lon
