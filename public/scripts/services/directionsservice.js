@@ -5,9 +5,7 @@ angular.module('trainguideServices')
 
 		var api = 'http://maps.pleasantprogrammer.com/opentripplanner-api-webapp/ws';
 
-		var fareMatrix = {
-
-		}
+		var fareMatrix = {};
 
 		function serialize(obj) {
 			var str = [];
@@ -16,13 +14,13 @@ angular.module('trainguideServices')
 			return str.join("&");
 		}
 
-		DirectionsService.bindFareMatrix = function(type, matrix){
+		DirectionsService.bindFareMatrix = function(type, data){
 			switch(type){
-				case 'TRAIN': fareMatrix.train = matrix;
+				case 'TRAIN': fareMatrix.train = data;							  
 							  break;
-				case 'BUS':   fareMatrix.bus = matrix;
+				case 'BUS':   fareMatrix.bus = data;
 							  break;
-				case 'JEEP':  fareMatrix.jeep = matrix; 
+				case 'JEEP':  fareMatrix.jeep = data; 
 			}
 		}
 
@@ -109,40 +107,46 @@ angular.module('trainguideServices')
 						//loop through each leg
 						var totalFare = 0;
 						angular.forEach(trip.legs, function(leg){
-							//!!!calculate fare
 
 							var realMode = $filter('realmode')(leg.mode, leg.routeId),
 								distance = Math.round(leg.distance/1000),
 								foundFare = 0;
+							var getStationDistance = function(startIndex, endIndex){
+								return Math.abs(startIndex - endIndex);
+							}
+							var getFareFromMatrix = function(distance, fareMatrix){
+								var fare = (distance > fareMatrix.length) ?
+											fareMatrix[fareMatrix.length-1] :
+											fareMatrix[distance];
+								if(fare instanceof Array && fare.length > 1){
+									return fare[0];
+								}
+								return fare;
+							}
 							switch(realMode){
 								case 'RAIL':
+											distance = getStationDistance(leg.from.stopIndex, leg.to.stopIndex);
 											//get routeshortname
 											switch(leg.routeShortName){
 												case 'LRT 1':
-													foundFare = 10;
+													foundFare = getFareFromMatrix(distance, fareMatrix.train.LRT1);
 													break;
 												case 'LRT 2':
-													foundFare = 20;
+													foundFare = getFareFromMatrix(distance, fareMatrix.train.LRT2);
 													break;
 												case 'MRT-3':
-													foundFare = 30;
+													foundFare = getFareFromMatrix(distance, fareMatrix.train.MRT);
 													break;
 												case 'PNR MC':
-													foundFare = 40;
+													foundFare = getFareFromMatrix(distance, fareMatrix.train.PNR);
 													break;
 											}
 											break;
 								case 'JEEP':
-											var jeepMatrix = fareMatrix.jeep.matrix;
-											foundFare = (distance > jeepMatrix.length) ?
-															jeepMatrix[jeepMatrix.length-1][0] :
-															jeepMatrix[distance][0];	
+											foundFare = getFareFromMatrix(distance, fareMatrix.jeep.matrix);	
 											break; 
 								case 'BUS' : 
-											var busMatrix = fareMatrix.bus.matrix;
-											foundFare = (distance > busMatrix.length) ?
-															busMatrix[busMatrix.length-1][0] :
-															busMatrix[distance][0];
+											foundFare = getFareFromMatrix(distance, fareMatrix.bus.matrix);
 											break;
 							}	
 							leg.fare = foundFare;
