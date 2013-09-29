@@ -740,12 +740,12 @@ li.PNR.clicked{
               color: @textHighlight;
             }
             i {
-              border: 1px solid @textNoHighlight;
-              .round-border (5px);
+              // border: 1px solid @textNoHighlight;
+              // .round-border (5px);
               padding: 3px;
               height: 24px;
               &.selected {
-                border: 1px solid @textHighlight;
+                // border: 1px solid @textHighlight;
               }
             }
           }
@@ -753,7 +753,7 @@ li.PNR.clicked{
             cursor: pointer;
             position: relative;
             top: 25px;
-            // background: @linkColor;
+            background: @linkColor;
             height: 5px;
             width: 27px;
           }
@@ -776,7 +776,11 @@ li.PNR.clicked{
       .block {
         .antiscroll-inner {
           .places-list {
-            padding: 10px;
+            padding: 2px;
+            margin: 2px;
+            border: 1px solid @gray;
+            width: 99.4%;
+            height: 99.4%;
             ul {
               display: inline-block;
               width: 100%;
@@ -902,9 +906,23 @@ li.PNR.clicked{
     font-size: 0.9em;
     h6 {
       border-bottom: 1px solid @gray;
+      cursor: pointer;
+    }
+    .down-btn {
+      border-top: 10px solid black;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      cursor: pointer;
+      width: 0px;
+      z-index: 1;
+      float: right;
+      top: -20px;
+      right: 15px;
+      position: relative;
     }
     > ul li div {
       padding: 10px;
+      font-size: 9pt;
       img {
         width: 50px;
         padding-right: 10px;
@@ -922,6 +940,7 @@ li.PNR.clicked{
     text-align: justify;
     p {
       padding-bottom: 10px;
+      font-size: 9pt;
       a {
         &:nth-child(odd){
           margin-right: 8px;
