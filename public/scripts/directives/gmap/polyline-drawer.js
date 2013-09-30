@@ -60,7 +60,8 @@ angular.module('google-maps')
 								position: new google.maps.LatLng(stop.details.stop_lat, stop.details.stop_lon),
 								anchor: RichMarkerPosition.MIDDLE,
 								content: div(path.name),
-								flat: true
+								flat: true,
+								zIndex: 60
 							});
 							var infoWindow = createInfoWindow(stop.details.stop_name);
 							google.maps.event.addListener(marker, 'click', function(){

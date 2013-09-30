@@ -52,15 +52,15 @@ angular.module('google-maps')
 					DirectionsService.setMap(scope.map);
 				});
 
-				scope.$watch('selectedDest', function(){
-					console.log('scope.selectedStop && scope.selectedDest!!!', scope.selectedStop, scope.selectedDest);
-					if(scope.selectedStop && scope.selectedDest){
-						var start = new google.maps.LatLng(scope.selectedStop.details.stop_lat, scope.selectedStop.details.stop_lon);
-						var end = new google.maps.LatLng(scope.selectedDest.coordinates.lat, scope.selectedDest.coordinates.lng);	
-
-						DirectionsService.calcRoute(start, end);
-					}
-				});
+//				scope.$watch('selectedDest', function(){
+//					console.log('scope.selectedStop && scope.selectedDest!!!', scope.selectedStop, scope.selectedDest);
+//					if(scope.selectedStop && scope.selectedDest){
+//						var start = new google.maps.LatLng(scope.selectedStop.details.stop_lat, scope.selectedStop.details.stop_lon);
+//						var end = new google.maps.LatLng(scope.selectedDest.coordinates.lat, scope.selectedDest.coordinates.lng);
+//
+//						DirectionsService.calcRoute(start, end);
+//					}
+//				});
 			},
 			replace: true,
 			template: '<div></div>'

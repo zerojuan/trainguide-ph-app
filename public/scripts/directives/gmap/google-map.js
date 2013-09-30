@@ -242,7 +242,8 @@
 				var marker = new google.maps.Marker({
 					position: new google.maps.LatLng(lat, lng),
 					map: _instance,
-					icon: icon
+					icon: icon,
+					zIndex: 50
 				});
 
 				if (label) {

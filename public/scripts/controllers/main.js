@@ -115,12 +115,25 @@ angular.module('trainguide.controllers')
 		/** ================================================= **/
 		/** WATCHERS
 		/** ================================================= **/
+		$scope.$watch('selected.dest', function(newValue){
+			if(newValue){
+				$scope.selected.direction.to = convertToGeocode(newValue.name, new google.maps.LatLng(newValue.coordinates.lat, newValue.coordinates.lng));
+			}
+		})
 		$scope.$watch('selected.stop', function(newValue){
       if(newValue){
 				$scope.menuItems[0].selected = false; //reset line sidebar
         $scope.selectedItemHandler($scope.menuItems[0]);
 				//tell GA about it
 				_gaq.push(['_trackEvent', newValue.details.stop_name, 'Click']);
+
+				//check the planner if we can supply the "From" state
+				if(!$scope.selected.direction.from){
+					$scope.selected.direction.from = convertToGeocode(newValue.details.stop_name, new google.maps.LatLng(newValue.details.stop_lat, newValue.details.stop_lon));
+				}else if(!$scope.selected.direction.to){
+					$scope.selected.direction.to = convertToGeocode(newValue.details.stop_name, new google.maps.LatLng(newValue.details.stop_lat, newValue.details.stop_lon));
+				}
+
 				DirectionsService.getStopsNearPoint({from: {
 					lat: $scope.selected.stop.details.stop_lat,
 					lon: $scope.selected.stop.details.stop_lon
@@ -265,7 +278,10 @@ angular.module('trainguide.controllers')
 						);
 				};
 
-				$scope.setStop = function(lineName, stopId){
+				$scope.setStop = function(resultPlace){
+					$scope.selected.dest = resultPlace;
+					var lineName = resultPlace.line.line_name;
+					var stopId = resultPlace.stop.stop_id
 					var stops = $scope.lines[lineName].stops;
 					for(var i in stops){
 						if(stops[i].details._id == stopId){
@@ -278,6 +294,15 @@ angular.module('trainguide.controllers')
 				/** ================================================== **/
 				/** LOCAL FUNCTIONS
 				/** ================================================== **/
+				function convertToGeocode(name, location){
+					return {
+						formatted_address: name,
+						geometry: {
+							location: location
+						}
+					};
+				}
+
 				function reloadStopsPlaces() {
 						var limit = 5;
 						var counter = 0;

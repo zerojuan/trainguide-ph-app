@@ -12,7 +12,8 @@ angular.module('uiModule').directive('places', function(){
 			places : '=',
       resultPlaces : '=',
       onSearch : '=',
-      setStop : '='
+      setStop : '=',
+			selectedDest : '='
     },
     link : function(scope, element){
       var query = {};
@@ -61,9 +62,9 @@ angular.module('uiModule').directive('places', function(){
         $('.antiscroll-wrap').antiscroll();
       }
 
-      scope.selectPlace = function(lineId, stopId){
-        console.log('lineId', lineId, 'stopId', stopId);
-        scope.setStop(lineId, stopId);
+      scope.selectPlace = function(resultPlace){
+//        console.log('lineId', lineId, 'stopId', stopId);
+        scope.setStop(resultPlace);
       }
     },
     template :
@@ -74,7 +75,7 @@ angular.module('uiModule').directive('places', function(){
               '<div ng-show="resultPlaces.length==0" class="places-list" ng-transclude>' +
         				'<ul>' +
         				  '<li ng-repeat="place in places">' +
-                    '<a class="places-place" ng-click="selectPlace(place.line.line_name, place.stop.stop_id)" target="_blank">'+
+                    '<a class="places-place" ng-click="selectPlace(place)" target="_blank">'+
           				    '<span class="name">{{place.name}}</span>' +
                       '<span class="dist">{{place.distance}}</span>' +
                       '<div class="{{place.line.line_name}} square"></div>' +
@@ -85,7 +86,7 @@ angular.module('uiModule').directive('places', function(){
               '<div ng-show="resultPlaces.length>0" class="places-list" ng-transclude>' +
                 '<ul>' +
                   '<li ng-repeat="resultPlace in resultPlaces">' +
-                    '<a class="places-place" ng-click="selectPlace(resultPlace.line.line_name, resultPlace.stop.stop_id)" target="_blank">'+
+                    '<a class="places-place" ng-click="selectPlace(resultPlace)" target="_blank">'+
                       '<span class="name">{{resultPlace.name}}</span>' +
                       '<span class="dist">{{resultPlace.distance}}</span>' +
                       '<div class="{{resultPlace.line.line_name}} square"></div>' +

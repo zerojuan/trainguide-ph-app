@@ -16,10 +16,19 @@ angular.module('google-maps')
 					}
 				});
 
+				elm.bind("keyup", function(){
+					console.log("VALUE: " + elm.val());
+					if(elm.val() == ""){
+						scope.place = null;
+						scope.$apply("place");
+					}
+				});
+
 				google.maps.event.addListener(autocomplete, 'place_changed', function(){
 					var place = autocomplete.getPlace();
 					if(!place.geometry){
 						//cannot find place, maybe it's a latlng?
+						console.log("Cannot find place");
 						return;
 					}
 					scope.place = place;
