@@ -167,7 +167,7 @@ angular.module('trainguide.controllers').controller('GMapCtrl', [
         }
       }
       if (!infoWindow) {
-        infoWindow = '<div id="content">' + label + '</div><div class="arrow-up"></div>';
+        infoWindow = '<div id="content" class="infobox">' + label + '</div><div class="arrow-up"></div>';
       }
       console.log('icon: ' + icon);
       $scope.markers.push({
@@ -257,7 +257,8 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
   'PlacesService',
   'CommonAppState',
   'DirectionsService',
-  function ($scope, $http, $route, LinesService, StopsService, TransfersService, FaresService, PlacesService, CommonAppState, DirectionsService) {
+  'RoutesService',
+  function ($scope, $http, $route, LinesService, StopsService, TransfersService, FaresService, PlacesService, CommonAppState, DirectionsService, RoutesService) {
     angular.extend($scope, {
       clickedLatitudeProperty: 11,
       clickedLongitudeProperty: 44,
@@ -295,7 +296,8 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
           to: false,
           from: false
         },
-        itinerary: null
+        itinerary: null,
+        leg: null
       },
       lines: null,
       menuItems: [
@@ -359,10 +361,25 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
         }
       ]
     });
+    $scope.$watch('selected.dest', function (newValue) {
+      if (newValue) {
+        $scope.selected.direction.to = convertToGeocode(newValue.name, new google.maps.LatLng(newValue.coordinates.lat, newValue.coordinates.lng));
+      }
+    });
     $scope.$watch('selected.stop', function (newValue) {
       if (newValue) {
         $scope.menuItems[0].selected = false;
         $scope.selectedItemHandler($scope.menuItems[0]);
+        _gaq.push([
+          '_trackEvent',
+          newValue.details.stop_name,
+          'Click'
+        ]);
+        if (!$scope.selected.direction.from) {
+          $scope.selected.direction.from = convertToGeocode(newValue.details.stop_name, new google.maps.LatLng(newValue.details.stop_lat, newValue.details.stop_lon));
+        } else if (!$scope.selected.direction.to) {
+          $scope.selected.direction.to = convertToGeocode(newValue.details.stop_name, new google.maps.LatLng(newValue.details.stop_lat, newValue.details.stop_lon));
+        }
         DirectionsService.getStopsNearPoint({
           from: {
             lat: $scope.selected.stop.details.stop_lat,
@@ -370,6 +387,7 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
           }
         }, function (data) {
           $scope.selected.nearbyStops = data;
+          console.log('nearby', $scope.selected.nearbyStops);
         }, function (err) {
           console.log('======== Error!');
         });
@@ -464,7 +482,10 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
         console.log('ERROR!!!!!!', data, status, headers, config);
       });
     };
-    $scope.setStop = function (lineName, stopId) {
+    $scope.setStop = function (resultPlace) {
+      $scope.selected.dest = resultPlace;
+      var lineName = resultPlace.line.line_name;
+      var stopId = resultPlace.stop.stop_id;
       var stops = $scope.lines[lineName].stops;
       for (var i in stops) {
         if (stops[i].details._id == stopId) {
@@ -472,6 +493,12 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
         }
       }
     };
+    function convertToGeocode(name, location) {
+      return {
+        formatted_address: name,
+        geometry: { location: location }
+      };
+    }
     function reloadStopsPlaces() {
       var limit = 5;
       var counter = 0;
@@ -830,7 +857,8 @@ angular.module('google-maps').directive('globalizeMap', [
           var marker = new google.maps.Marker({
               position: new google.maps.LatLng(lat, lng),
               map: _instance,
-              icon: icon
+              icon: icon,
+              zIndex: 50
             });
           if (label) {
           }
@@ -1134,7 +1162,10 @@ angular.module('google-maps').directive('itineraryRender', [
     return {
       require: '^googleMap',
       restrict: 'E',
-      scope: { itinerary: '=' },
+      scope: {
+        itinerary: '=',
+        selectedLeg: '='
+      },
       link: function (scope, elm, attrs, ctrl) {
         ctrl.registerMapListener(scope);
         var paths = [];
@@ -1180,7 +1211,8 @@ angular.module('google-maps').directive('itineraryRender', [
                     repeat: '10px'
                   }],
                 map: scope.map,
-                zIndex: 10
+                zIndex: 10,
+                id: leg.endTime
               });
             } else {
               path = new google.maps.Polyline({
@@ -1189,6 +1221,7 @@ angular.module('google-maps').directive('itineraryRender', [
                 strokeWeight: 5,
                 path: decodedPath,
                 zIndex: 10,
+                id: leg.endTime,
                 map: scope.map
               });
             }
@@ -1200,6 +1233,21 @@ angular.module('google-maps').directive('itineraryRender', [
           if (newValue) {
             console.log('Itenerary changed: ', scope.itinerary);
             drawLines();
+          }
+        });
+        scope.$watch('selectedLeg', function (newValue) {
+          if (newValue) {
+            angular.forEach(paths, function (val) {
+              if (newValue.endTime == val.id) {
+                val.setOptions({ strokeColor: '#5cc15a' });
+              } else {
+                val.setOptions({ strokeColor: '#2BA6CB' });
+              }
+            });
+          } else {
+            angular.forEach(paths, function (val) {
+              val.setOptions({ strokeColor: '#2BA6CB' });
+            });
           }
         });
       },
@@ -1250,14 +1298,6 @@ angular.module('google-maps').factory('MapDirectionsService', function () {
         scope.$watch('map', function () {
           DirectionsService.setMap(scope.map);
         });
-        scope.$watch('selectedDest', function () {
-          console.log('scope.selectedStop && scope.selectedDest!!!', scope.selectedStop, scope.selectedDest);
-          if (scope.selectedStop && scope.selectedDest) {
-            var start = new google.maps.LatLng(scope.selectedStop.details.stop_lat, scope.selectedStop.details.stop_lon);
-            var end = new google.maps.LatLng(scope.selectedDest.coordinates.lat, scope.selectedDest.coordinates.lng);
-            DirectionsService.calcRoute(start, end);
-          }
-        });
       },
       replace: true,
       template: '<div></div>'
@@ -1277,9 +1317,17 @@ angular.module('google-maps').directive('placesAutocomplete', [
             autocomplete.bindTo('bounds', newVal);
           }
         });
+        elm.bind('keyup', function () {
+          console.log('VALUE: ' + elm.val());
+          if (elm.val() == '') {
+            scope.place = null;
+            scope.$apply('place');
+          }
+        });
         google.maps.event.addListener(autocomplete, 'place_changed', function () {
           var place = autocomplete.getPlace();
           if (!place.geometry) {
+            console.log('Cannot find place');
             return;
           }
           scope.place = place;
@@ -1347,16 +1395,30 @@ angular.module('google-maps').directive('polylineDrawer', [function () {
                   position: new google.maps.LatLng(stop.details.stop_lat, stop.details.stop_lon),
                   anchor: RichMarkerPosition.MIDDLE,
                   content: div(path.name),
-                  flat: true
+                  flat: true,
+                  zIndex: 60
                 });
+              var infoWindow = createInfoWindow(stop.details.stop_name);
               google.maps.event.addListener(marker, 'click', function () {
                 scope.selectedStop = stop;
+                infoWindow.open(scope.map, marker);
                 setLine();
                 scope.$apply('selectedStop');
               });
             });
           }
         };
+        function createInfoWindow(name) {
+          return new InfoBox({
+            content: '<div class="infobox"><span>' + name + '</span></div><img style="position: fixed; margin-left: 40px; margin-top:-1px;" src="images/bottom-arrow.png"></img>',
+            boxStyle: { opacity: 1 },
+            closeBoxURL: '/images/close.png',
+            maxWidth: 100,
+            pane: 'floatPane',
+            pixelOffset: new google.maps.Size(-50, -60),
+            infoBoxClearance: new google.maps.Size(2, 2)
+          });
+        }
         scope.$watch('selectedStop', function (newValue) {
           if (scope.selectedStop) {
             scope.showDetails = true;
@@ -1404,6 +1466,7 @@ angular.module('google-maps').directive('tripAdder', [
             geocoder.geocode({ 'latLng': clickPos }, function (results, status) {
               if (status == google.maps.GeocoderStatus.OK) {
                 console.log(results);
+                results[0].geometry.location = clickPos;
                 setPlace(results[0]);
               } else {
                 console.log('Geocoder failed: ' + status);
@@ -1437,6 +1500,7 @@ angular.module('google-maps').directive('tripAdder', [
         });
         scope.$watch('direction.to', function (newValue) {
           if (!newValue) {
+            fromMarker.setMap(null);
             return;
           }
           if (fromMarker) {
@@ -1446,11 +1510,13 @@ angular.module('google-maps').directive('tripAdder', [
           fromMarker = new google.maps.Marker({
             position: newValue.geometry.location,
             map: scope.map,
-            icon: 'images/marker_end.png'
+            icon: 'images/marker_end.png',
+            zIndex: 100
           });
         });
         scope.$watch('direction.from', function (newValue) {
           if (!newValue) {
+            toMarker.setMap(null);
             return;
           }
           if (toMarker) {
@@ -1460,7 +1526,8 @@ angular.module('google-maps').directive('tripAdder', [
           toMarker = new google.maps.Marker({
             position: newValue.geometry.location,
             map: scope.map,
-            icon: 'images/marker_start.png'
+            icon: 'images/marker_start.png',
+            zIndex: 100
           });
         });
       }
@@ -1499,7 +1566,8 @@ angular.module('uiModule').directive('direction', [
       transclude: true,
       scope: {
         leg: '=',
-        isLast: '&isLast'
+        isLast: '&isLast',
+        selectedLeg: '='
       },
       link: function (scope, elm, attrs) {
         $('.antiscroll-wrap').antiscroll();
@@ -1515,6 +1583,7 @@ angular.module('uiModule').directive('direction', [
         }
         scope.clickedDirection = function (leg) {
           scope.selectedStep = scope.selectedStep == null ? leg : null;
+          scope.selectedLeg = scope.selectedStep;
         };
       },
       template: '<div>' + '<div class="{{divClass}}" ng-class="{clickable: trueMode!=\'RAIL\'}" ng-click="clickedDirection(leg)">' + '<div class="{{trueMode}} circle {{routeCode}}"></div>' + '<p>{{trueMode}} <span style="font-size: 10px;">{{leg.duration|tominutes}} mins </span> <span ng-show="leg.fare>0">P{{leg.fare}}</span></p>' + '<p ng-hide="showMe"><em>{{leg.route}}</em></p>' + '<p ng-show="showMe">' + '<em>{{leg.from.name}}</em> to <em>{{leg.to.name}}</em>' + '</p>' + '<ul ng-show="leg.steps.length && selectedStep==leg" class="direction-steps">' + '<li ng-repeat="step in leg.steps">' + '<span>{{step.relativeDirection|parseDirection}} on {{step.streetName}}</span>' + '</li>' + '</ul>' + '<p ng-show="trueMode!=\'RAIL\' && (leg.steps.length==0 && selectedStep==leg)" class="direction-steps">' + '<span><em>{{leg.from.name}}</em> to <em>{{leg.to.name}}</em></span>' + '</p>' + '</div>' + '</div>',
@@ -1708,7 +1777,7 @@ angular.module('uiModule').directive('nearby', function () {
         console.log('selectedNearby', scope.selectedNearby);
       };
     },
-    template: '<div ng-switch on="selectedNearby" class="nearby">' + '<ul>' + '<li ng-click="setNearby(\'Places\')" ng-class="{active:selectedNearby==\'Places\'}">' + '<a ng-click="setNearby(\'Places\')" target="_blank">Places</a>' + '</li>' + '<li ng-click="setNearby(\'Stops\')" ng-class="{active:selectedNearby==\'Stops\'}">' + '<a ng-click="setNearby(\'Stops\')" target="_blank">Stops</a>' + '</li>' + '</ul>' + '<div ng-switch-when="Places">' + '<div class="antiscroll-wrap">' + '<div class="block">' + '<div class="antiscroll-inner">' + '<div class="group-list">' + '<placesbox title="Hospital" icon="icon-hospital" on-query-places="getLimitedPlaces" places="selected.hospital" category="Hospital" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Hotel" icon="icon-hotel" on-query-places="getLimitedPlaces" places="selected.hotel" category="Hotel" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Office" icon="icon-office" on-query-places="getLimitedPlaces" places="selected.office" category="Office" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Sightseeing" icon="icon-sights" on-query-places="getLimitedPlaces" places="selected.sights" category="Sightseeing" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Shopping" icon="icon-shopping" on-query-places="getLimitedPlaces" places="selected.shops" category="Shopping" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '</div>' + '</div>' + '</div>' + '</div>' + '</div>' + '<div ng-switch-when="Stops">' + '<div class="antiscroll-wrap">' + '<div class="block">' + '<div class="antiscroll-inner">' + '<div class="group-list">' + 'STOPS' + '</div>' + '</div>' + '</div>' + '</div>' + '</div>' + '</div>',
+    template: '<div ng-switch on="selectedNearby" class="nearby">' + '<ul>' + '<li ng-click="setNearby(\'Places\')" ng-class="{active:selectedNearby==\'Places\'}">' + '<a ng-click="setNearby(\'Places\')" target="_blank">Places</a>' + '</li>' + '<li ng-click="setNearby(\'Stops\')" ng-class="{active:selectedNearby==\'Stops\'}">' + '<a ng-click="setNearby(\'Stops\')" target="_blank">Stops</a>' + '</li>' + '</ul>' + '<div ng-switch-when="Places">' + '<div class="antiscroll-wrap">' + '<div class="block">' + '<div class="antiscroll-inner">' + '<div class="group-list">' + '<placesbox title="Hospital" icon="icon-hospital" on-query-places="getLimitedPlaces" places="selected.hospital" category="Hospital" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Hotel" icon="icon-hotel" on-query-places="getLimitedPlaces" places="selected.hotel" category="Hotel" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Office" icon="icon-office" on-query-places="getLimitedPlaces" places="selected.office" category="Office" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Sightseeing" icon="icon-sights" on-query-places="getLimitedPlaces" places="selected.sights" category="Sightseeing" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Shopping" icon="icon-shopping" on-query-places="getLimitedPlaces" places="selected.shops" category="Shopping" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '</div>' + '</div>' + '</div>' + '</div>' + '</div>' + '<div ng-switch-when="Stops">' + '<div class="antiscroll-wrap">' + '<div class="block">' + '<div class="antiscroll-inner">' + '<div class="group-list">' + '<div class="stops-box">' + '<div><h3>Nearby Stops</h3></div>' + '<ul>' + '<li ng-repeat="nearby in selected.nearbyStops" ng-class="{active:place.isSelected}">' + '<span class="name">{{nearby.stopName}}</span>' + '</li>' + '</ul>' + '</div>' + '</div>' + '</div>' + '</div>' + '</div>' + '</div>' + '</div>',
     replace: true
   };
 });
@@ -1725,7 +1794,8 @@ angular.module('uiModule').directive('places', function () {
       places: '=',
       resultPlaces: '=',
       onSearch: '=',
-      setStop: '='
+      setStop: '=',
+      selectedDest: '='
     },
     link: function (scope, element) {
       var query = {};
@@ -1766,12 +1836,11 @@ angular.module('uiModule').directive('places', function () {
         }
         $('.antiscroll-wrap').antiscroll();
       };
-      scope.selectPlace = function (lineId, stopId) {
-        console.log('lineId', lineId, 'stopId', stopId);
-        scope.setStop(lineId, stopId);
+      scope.selectPlace = function (resultPlace) {
+        scope.setStop(resultPlace);
       };
     },
-    template: '<div>' + '<div class="antiscroll-wrap">' + '<div class="block">' + '<div class="antiscroll-inner">' + '<div ng-show="resultPlaces.length==0" class="places-list" ng-transclude>' + '<ul>' + '<li ng-repeat="place in places">' + '<a class="places-place" ng-click="selectPlace(place.line.line_name, place.stop.stop_id)" target="_blank">' + '<span class="name">{{place.name}}</span>' + '<span class="dist">{{place.distance}}</span>' + '<div class="{{place.line.line_name}} square"></div>' + '</a>' + '</li>' + '</ul>' + '</div>' + '<div ng-show="resultPlaces.length>0" class="places-list" ng-transclude>' + '<ul>' + '<li ng-repeat="resultPlace in resultPlaces">' + '<a class="places-place" ng-click="selectPlace(resultPlace.line.line_name, resultPlace.stop.stop_id)" target="_blank">' + '<span class="name">{{resultPlace.name}}</span>' + '<span class="dist">{{resultPlace.distance}}</span>' + '<div class="{{resultPlace.line.line_name}} square"></div>' + '</a>' + '</li>' + '</ul>' + '</div>' + '</div>' + '</div>' + '</div>' + '<a ng-show="resultPlaces==0 && counter*20<=places.totalcount-20" ng-click="loadPlaces(counter=counter+1, selectedCategory)">Load more...</a>' + '</div>',
+    template: '<div>' + '<div class="antiscroll-wrap">' + '<div class="block">' + '<div class="antiscroll-inner">' + '<div ng-show="resultPlaces.length==0" class="places-list" ng-transclude>' + '<ul>' + '<li ng-repeat="place in places">' + '<a class="places-place" ng-click="selectPlace(place)" target="_blank">' + '<span class="name">{{place.name}}</span>' + '<span class="dist">{{place.distance}}</span>' + '<div class="{{place.line.line_name}} square"></div>' + '</a>' + '</li>' + '</ul>' + '</div>' + '<div ng-show="resultPlaces.length>0" class="places-list" ng-transclude>' + '<ul>' + '<li ng-repeat="resultPlace in resultPlaces">' + '<a class="places-place" ng-click="selectPlace(resultPlace)" target="_blank">' + '<span class="name">{{resultPlace.name}}</span>' + '<span class="dist">{{resultPlace.distance}}</span>' + '<div class="{{resultPlace.line.line_name}} square"></div>' + '</a>' + '</li>' + '</ul>' + '</div>' + '</div>' + '</div>' + '</div>' + '<a ng-show="resultPlaces==0 && counter*20<=places.totalcount-20" ng-click="loadPlaces(counter=counter+1, selectedCategory)">Load more...</a>' + '</div>',
     replace: true
   };
 });
@@ -2045,7 +2114,7 @@ angular.module('uiModule').directive('tips', function () {
         console.log('selectedTip', scope.tips);
       };
     },
-    template: '<div class="tips">' + '<ul>' + '<li ng-repeat="tip in tips" ng-click="clickedTip(tip.title)">' + '<h6>{{tip.title}}</h6>' + '<div ng-show="tip.selected" ng-hide="tip.selected==false">' + '<img src="{{tip.image}}" />' + '<p ng-repeat="detail in tip.details">{{detail}}</p>' + '</div>' + '</li>' + '</ul>' + '</div>',
+    template: '<div class="tips">' + '<ul>' + '<li ng-repeat="tip in tips" ng-click="clickedTip(tip.title)">' + '<h6>{{tip.title}}</h6>' + '<span class="down-btn"></span>' + '<div ng-show="tip.selected" ng-hide="tip.selected==false">' + '<img src="{{tip.image}}" />' + '<p ng-repeat="detail in tip.details">{{detail}}</p>' + '</div>' + '</li>' + '</ul>' + '</div>',
     replace: true
   };
 });
@@ -2079,16 +2148,16 @@ angular.module('trainguideServices').factory('DirectionsService', [
         str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]));
       return str.join('&');
     }
-    DirectionsService.bindFareMatrix = function (type, matrix) {
+    DirectionsService.bindFareMatrix = function (type, data) {
       switch (type) {
       case 'TRAIN':
-        fareMatrix.train = matrix;
+        fareMatrix.train = data;
         break;
       case 'BUS':
-        fareMatrix.bus = matrix;
+        fareMatrix.bus = data;
         break;
       case 'JEEP':
-        fareMatrix.jeep = matrix;
+        fareMatrix.jeep = data;
       }
     };
     DirectionsService.getStopsNearPoint = function (query, callback, err) {
@@ -2158,30 +2227,46 @@ angular.module('trainguideServices').factory('DirectionsService', [
           var totalFare = 0;
           angular.forEach(trip.legs, function (leg) {
             var realMode = $filter('realmode')(leg.mode, leg.routeId), distance = Math.round(leg.distance / 1000), foundFare = 0;
+            var getStationDistance = function (startIndex, endIndex) {
+              return Math.abs(startIndex - endIndex);
+            };
+            var getFareFromMatrix = function (distance, fareMatrix) {
+              var fare = distance >= fareMatrix.length ? fareMatrix[fareMatrix.length - 1] : fareMatrix[distance];
+              if (fare instanceof Array && fare.length > 1) {
+                return fare[0];
+              }
+              return fare;
+            };
             switch (realMode) {
             case 'RAIL':
+              distance = getStationDistance(leg.from.stopIndex, leg.to.stopIndex);
               switch (leg.routeShortName) {
               case 'LRT 1':
-                foundFare = 10;
+                foundFare = getFareFromMatrix(distance, fareMatrix.train.LRT1);
                 break;
               case 'LRT 2':
-                foundFare = 20;
+                foundFare = getFareFromMatrix(distance, fareMatrix.train.LRT2);
                 break;
               case 'MRT-3':
-                foundFare = 30;
+                foundFare = getFareFromMatrix(distance, fareMatrix.train.MRT);
                 break;
               case 'PNR MC':
-                foundFare = 40;
+                distance = Math.round(leg.distance / 1000);
+                for (var i = 0; i < fareMatrix.train.PNR.length; i++) {
+                  var zoneDist = fareMatrix.train.PNR[i][1];
+                  if (distance < zoneDist) {
+                    foundFare = fareMatrix.train.PNR[i][0];
+                    break;
+                  }
+                }
                 break;
               }
               break;
             case 'JEEP':
-              var jeepMatrix = fareMatrix.jeep.matrix;
-              foundFare = distance > jeepMatrix.length ? jeepMatrix[jeepMatrix.length - 1][0] : jeepMatrix[distance][0];
+              foundFare = getFareFromMatrix(distance, fareMatrix.jeep.matrix);
               break;
             case 'BUS':
-              var busMatrix = fareMatrix.bus.matrix;
-              foundFare = distance > busMatrix.length ? busMatrix[busMatrix.length - 1][0] : busMatrix[distance][0];
+              foundFare = getFareFromMatrix(distance, fareMatrix.bus.matrix);
               break;
             }
             leg.fare = foundFare;
@@ -2358,6 +2443,23 @@ angular.module('trainguideServices').factory('PlacesService', [
       });
     };
     return PlacesService;
+  }
+]);
+angular.module('trainguideServices').factory('RoutesService', [
+  '$http',
+  function ($http) {
+    var RoutesService = {};
+    RoutesService.getRouteInfo = function (agency, routeId, callback, err) {
+      $http({
+        method: 'GET',
+        url: '/api/agencies/' + agency + '/routes/' + routeId
+      }).success(function (data, status) {
+        callback(data, status);
+      }).error(function (data, status, headers, config) {
+        err(data, status, headers, config);
+      });
+    };
+    return RoutesService;
   }
 ]);
 angular.module('trainguideServices').factory('StopsService', function () {
