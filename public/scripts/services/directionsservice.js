@@ -115,7 +115,7 @@ angular.module('trainguideServices')
 								return Math.abs(startIndex - endIndex);
 							}
 							var getFareFromMatrix = function(distance, fareMatrix){
-								var fare = (distance > fareMatrix.length) ?
+								var fare = (distance >= fareMatrix.length) ?
 											fareMatrix[fareMatrix.length-1] :
 											fareMatrix[distance];
 								if(fare instanceof Array && fare.length > 1){
@@ -138,7 +138,14 @@ angular.module('trainguideServices')
 													foundFare = getFareFromMatrix(distance, fareMatrix.train.MRT);
 													break;
 												case 'PNR MC':
-													foundFare = getFareFromMatrix(distance, fareMatrix.train.PNR);
+													distance = Math.round(leg.distance/1000);
+													for(var i = 0; i < fareMatrix.train.PNR.length; i++){
+														var zoneDist = fareMatrix.train.PNR[i][1];
+														if(distance < zoneDist){
+															foundFare = fareMatrix.train.PNR[i][0];
+															break;
+														}
+													}
 													break;
 											}
 											break;
