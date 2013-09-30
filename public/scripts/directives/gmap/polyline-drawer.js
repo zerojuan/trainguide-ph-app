@@ -62,15 +62,31 @@ angular.module('google-maps')
 								content: div(path.name),
 								flat: true
 							});
-
+							var infoWindow = createInfoWindow(stop.details.stop_name);
 							google.maps.event.addListener(marker, 'click', function(){
 								scope.selectedStop = stop;
+								infoWindow.open(scope.map, marker);
 								setLine();
 								scope.$apply('selectedStop');
 							});
 						});
 
 					}
+				}
+
+				function createInfoWindow(name){
+					//console.log('Creating new info window: ' + name);
+					return new InfoBox({
+						content : '<div class="infobox"><span>'+name+'</span></div><img style="position: fixed; margin-left: 40px; margin-top:-1px;" src="images/bottom-arrow.png"></img>',
+						boxStyle :{
+							opacity : 1
+						},
+						closeBoxURL : "/images/close.png",
+						maxWidth : 100,
+						pane: "floatPane",
+						pixelOffset: new google.maps.Size(-50, -60),
+						infoBoxClearance: new google.maps.Size(2,2)
+					});
 				}
 
 				scope.$watch('selectedStop', function(newValue){

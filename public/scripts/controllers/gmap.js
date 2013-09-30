@@ -28,7 +28,7 @@ angular.module('trainguide.controllers')
 			}
 
 			if(!infoWindow){
-				infoWindow = '<div id="content">'+label+'</div><div class="arrow-up"></div>';
+				infoWindow = '<div id="content" class="infobox">'+label+'</div><div class="arrow-up"></div>';
 			}
 
 			console.log('icon: ' + icon);

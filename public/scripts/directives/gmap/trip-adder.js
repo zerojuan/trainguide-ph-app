@@ -27,6 +27,7 @@ angular.module('google-maps')
 						geocoder.geocode({'latLng': clickPos}, function(results, status){
 							if(status == google.maps.GeocoderStatus.OK){
 								console.log(results);
+								results[0].geometry.location = clickPos;
 								setPlace(results[0]);
 							}else{
 								console.log("Geocoder failed: " + status);
