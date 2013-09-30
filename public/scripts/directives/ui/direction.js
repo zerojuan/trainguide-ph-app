@@ -6,7 +6,8 @@ angular.module('uiModule').directive('direction', ['$filter', function($filter){
     transclude : true,
     scope : {
       leg : '=',
-      isLast: '&isLast'
+      isLast: '&isLast',
+			selectedLeg: '='
     },
     link : function(scope, elm, attrs){
       $('.antiscroll-wrap').antiscroll();
@@ -24,7 +25,8 @@ angular.module('uiModule').directive('direction', ['$filter', function($filter){
       }
 
       scope.clickedDirection = function(leg){
-        scope.selectedStep = (scope.selectedStep == null) ? leg : null; 
+        scope.selectedStep = (scope.selectedStep == null) ? leg : null;
+				scope.selectedLeg = scope.selectedStep;
       };
     },
     template :

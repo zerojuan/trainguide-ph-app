@@ -47,7 +47,8 @@ angular.module('trainguide.controllers')
 										to: false,
 										from: false
 								},
-								itinerary: null
+								itinerary: null,
+								leg: null
 						},
 						lines: null,
 						menuItems: [

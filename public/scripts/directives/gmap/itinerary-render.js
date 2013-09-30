@@ -5,7 +5,8 @@ angular.module('google-maps')
 			require: '^googleMap',
 			restrict: 'E',
 			scope: {
-				itinerary: '='
+				itinerary: '=',
+				selectedLeg: '='
 			},
 			link: function(scope, elm, attrs, ctrl){
 				ctrl.registerMapListener(scope);
@@ -61,7 +62,8 @@ angular.module('google-maps')
 									repeat: '10px'
 								}],
 								map: scope.map,
-								zIndex: 10
+								zIndex: 10,
+								id: leg.endTime
 							});
 						}else{
 							path = new google.maps.Polyline({
@@ -70,6 +72,7 @@ angular.module('google-maps')
 								strokeWeight : 5,
 								path : decodedPath,
 								zIndex: 10,
+								id: leg.endTime,
 								map: scope.map
 							});
 						}
@@ -83,6 +86,22 @@ angular.module('google-maps')
 					if(newValue){
 						console.log('Itenerary changed: ', scope.itinerary);
 						drawLines();	
+					}
+				});
+
+				scope.$watch('selectedLeg', function(newValue){
+					if(newValue){
+						angular.forEach(paths, function(val){
+							if(newValue.endTime == val.id){
+								val.setOptions({strokeColor: '#5cc15a'});
+							}else{
+								val.setOptions({strokeColor: '#2BA6CB'});
+							}
+						});
+					}else{
+						angular.forEach(paths, function(val){
+							val.setOptions({strokeColor: '#2BA6CB'});
+						});
 					}
 				});
 			},

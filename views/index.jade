@@ -17,7 +17,7 @@ block content
 					draggable="true",
 					style="height: 100%; width: 100%;")
 					map-router(selected-stop='selected.stop', selected-dest='selected.dest')
-					itinerary-render(itinerary='selected.itinerary')
+					itinerary-render(itinerary='selected.itinerary', selected-leg='selected.leg')
 					polyline-drawer(paths="lines", selected-line='selected.line', selected-stop="selected.stop", show-details='showDetails', selected-item="selectedItem")
 					globalize-map
 					trip-adder(is-search='selected.isSearch', direction='selected.direction')
