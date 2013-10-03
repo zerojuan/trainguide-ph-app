@@ -26,6 +26,10 @@ angular.module('uiModule').directive('nearby', function(){
             '<div class="block">'+
               '<div class="antiscroll-inner">'+
                 '<div class="group-list">'+
+                  '<div ng-hide="{{selected.hospital || selected.hotel || selected.office || selected.sights || selected.shops}}">'+
+                    '<h6></h6>'+
+                    '<p class="slideshow-content">No nearby places for this station in our database</p>'+
+                  '</div>'+
                   '<placesbox title="Hospital" icon="icon-hospital" on-query-places="getLimitedPlaces" places="selected.hospital" category="Hospital" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>'+
                   '<placesbox title="Hotel" icon="icon-hotel" on-query-places="getLimitedPlaces" places="selected.hotel" category="Hotel" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>'+
                   '<placesbox title="Office" icon="icon-office" on-query-places="getLimitedPlaces" places="selected.office" category="Office" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>'+

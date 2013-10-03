@@ -19,7 +19,7 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 				.attr("width", 260)
 				.attr("height", svgHeight);
 			// var lineWidth = 10;
-			var lineWidth = 7;
+			var lineWidth = 13;
 			var centerX = 123;
 			svg.append("rect")
 				.attr("class", "vertical")
@@ -35,7 +35,7 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 					console.log('svgHeight', svgHeight, 'linestops: ', newValue.stops);
 					y = d3.scale.linear()
 								.domain([0, newValue.stops.length-1])
-								.range([0, svgHeight-30]);
+								.range([0, svgHeight-40]);
 
 					for(var i in newValue.stops){
 						svg.selectAll(".vertical")
@@ -44,7 +44,7 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 								if(newValue.name == "PNR"){
 									return svgHeight-140	
 								}
-								return svgHeight-30
+								return svgHeight-40
 							})
 							.attr("class", "vertical " + newValue.name);
 						// svg.selectAll(".transfer").remove();
@@ -54,6 +54,40 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 						text.enter().append("text")
 							.attr("class", function(d,i){
 								var _class = "label";
+
+								if(d.disabled){
+									if(i < newValue.stops.length){
+										svg.append("rect")
+											.attr("class", "disabled")
+											.attr("x", centerX - lineWidth/2)
+											.attr("y", (y(i) - 5))
+											.attr("width", lineWidth)
+											.attr("height", (y(i+1) - y(i)));	
+									}
+									
+								}
+								if(i == 0 || i == newValue.stops.length-1){
+									return _class + " ends";
+								}
+								return _class;
+							})
+							.attr("x", centerX - 20)
+							.attr("y", function(d,i){return (y(i)+23)})
+							.text(function(d,i){
+								var name = d.details.stop_name;
+								if(i == 0 || i == newValue.stops.length-1){
+									name = d.details.stop_name.toUpperCase();
+								}
+
+								//remove last element
+								var localNames = name.split(" ");
+								localNames.pop();
+								name = localNames.join(" ");
+
+								if(name == "Cubao" || name == "Blumentritt"){
+									name = d.details.stop_name;
+								}
+
 								if(d.transfer){
 									var names = d.transfer.stop_name.split(" ");
 									svg.append("text")
@@ -74,40 +108,18 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 										// 	.text(function(){
 										// 		return names[1].toUpperCase();
 										// 	});
-											if(names[2]){
-												svg.append("text")
-													.attr("class", "transfer")
-													.attr("x", centerX + 40)
-													.attr("y", (y(i)+33))
-													.text(function(){
-														return names[2].toUpperCase();
-													});	
-											}
+										if(names[2]){
+											svg.append("text")
+												.attr("class", "transfer")
+												.attr("x", centerX + 40)
+												.attr("y", (y(i)+33))
+												.text(function(){
+													return names[2].toUpperCase();
+												});
+										}
 									}
 								}
-								if(d.disabled){
-									if(i < newValue.stops.length){
-										svg.append("rect")
-											.attr("class", "disabled")
-											.attr("x", centerX - lineWidth/2)
-											.attr("y", (y(i) - 5))
-											.attr("width", lineWidth)
-											.attr("height", (y(i+1) - y(i)));	
-									}
-									
-								}
-								if(i == 0 || i == newValue.stops.length-1){
-									return _class + " ends";
-								}
-								return _class;
-							})
-							.attr("x", centerX - 20)
-							.attr("y", function(d,i){return (y(i)+23)})
-							.text(function(d,i){
-								if(i == 0 || i == newValue.stops.length-1){
-									return d.details.stop_name.toUpperCase();
-								}
-								return d.details.stop_name;
+								return name;
 							})
 							.on("click", function(d){
 								scope.onSelectedStop(d);
@@ -122,7 +134,7 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 									svg.append("rect")
 										.attr("class", "transfer " + d.transfer.line_name)
 										// .attr("x", centerX + 9)
-										.attr("x", centerX + 11)
+										.attr("x", centerX + 13)
 										// .attr("y", (y(i)+15))
 										.attr("y", (y(i)+18))
 										// .attr("width", 20)
@@ -132,9 +144,9 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 										.attr("fill", "#333");
 									svg.append("circle")
 										.attr("class", "transfer " + d.transfer.line_name)
-										.attr("cx", centerX+25)
+										.attr("cx", centerX+27)
 										.attr("cy", (y(i)+20))
-										.attr("r", 7)
+										.attr("r", 9)
 										.on("click", function(){
 											scope.onSelectedStop(StopsService.getStopById(d.transfer.stop_id));
 										});
@@ -159,10 +171,10 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 							.attr("cy", function(d,i){return y(i)+20})
 							.attr("r", function(d,i){
 								if(d.transfer){
-									return 7;
+									return 9;
 								}
 								if(i == 0 || i == newValue.stops.length-1){
-									return 7;
+									return 9;
 								}
 								return 4.5;
 							})

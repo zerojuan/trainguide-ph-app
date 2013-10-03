@@ -91,6 +91,7 @@ angular.module('trainguideServices')
 				date: dateNow+'&time=11:59am',
 				fromPlace: from.lat+','+from.lng,
 				toPlace: to.lat+','+to.lng,
+				numItineraries: 2,
 				mode: 'TRANSIT,WALK'
 			});
 

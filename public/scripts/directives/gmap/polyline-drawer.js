@@ -34,10 +34,12 @@ angular.module('google-maps')
 					}
 				}
 
-				var div = function(name){
-					var m = document.createElement('DIV');
-					m.innerHTML = '<div class="stop-marker '+name+'-marker" style="width: 20px; height: 20px;"></div>';
-					return m;
+				var getIcon = function(name){
+					var icon = {
+						anchor: new google.maps.Point(11, 11),
+						url: "images/marker-"+name+".png"
+					}
+					return icon;
 				}
 
 				var drawLines = function(){
@@ -49,20 +51,21 @@ angular.module('google-maps')
 							strokeColor: path.color,
 							strokeOpacity : 0.9,
 							strokeWeight : 6,
-							path : decodedPath
+							path : decodedPath,
+							zIndex: 5
 						});
 
 						line.setMap(scope.map);
 
 						angular.forEach(path.stops, function(stop){
-							var marker = new RichMarker({
+							var marker = new google.maps.Marker({
 								map: scope.map,
 								position: new google.maps.LatLng(stop.details.stop_lat, stop.details.stop_lon),
-								anchor: RichMarkerPosition.MIDDLE,
-								content: div(path.name),
-								flat: true,
-								zIndex: 60
+								icon: getIcon(path.name),
+								zIndex: 0
 							});
+
+
 							var infoWindow = createInfoWindow(stop.details.stop_name);
 							google.maps.event.addListener(marker, 'click', function(){
 								scope.selectedStop = stop;
