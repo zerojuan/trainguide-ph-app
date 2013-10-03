@@ -10,6 +10,36 @@ angular.module('uiModule').directive('nearby', function(){
         scope.selectedNearby = choice;
         console.log('selectedNearby', scope.selectedNearby);
       };
+			function updateHideDiv(){
+				console.log("Hide DiV?");
+				var selected = scope.selected;
+				if((selected.hospital.data && selected.hospital.data.length > 0) ||
+					(selected.hotel.data && selected.hotel.data.length > 0) ||
+					(selected.office.data && selected.office.data.length > 0) ||
+					(selected.sights.data && selected.sights.data.length > 0) ||
+					(selected.shops.data && selected.shops.data.length > 0)){
+					scope.hideDiv = true;
+				}else{
+					scope.hideDiv = false;
+				}
+
+				console.log("HIDEDIV: " , scope.hideDiv);
+			}
+			scope.$watch("selected.hospital", function(newValue){
+				updateHideDiv();
+			}, true);
+			scope.$watch("selected.hotel", function(newValue){
+				updateHideDiv();
+			}, true);
+			scope.$watch("selected.office", function(newValue){
+				updateHideDiv();
+			}, true);
+			scope.$watch("selected.sights", function(newValue){
+				updateHideDiv();
+			}, true);
+			scope.$watch("selected.shops", function(newValue){
+				updateHideDiv();
+			}, true);
     },
     template :
       '<div ng-switch on="selectedNearby" class="nearby">'+
@@ -23,7 +53,7 @@ angular.module('uiModule').directive('nearby', function(){
         '</ul>'+
         '<div ng-switch-when="Places">'+
 					'<div class="group-list">'+
-						'<div ng-hide="selected.hospital.data || selected.hotel.data || selected.office.data || selected.sights.data || selected.shops.data">'+
+						'<div ng-hide="hideDiv">'+
 							'<h6></h6>'+
 							'<p class="slideshow-content">No nearby places for this station in our database</p>'+
 						'</div>'+

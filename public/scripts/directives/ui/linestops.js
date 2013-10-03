@@ -12,6 +12,8 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 		},
 		link : function(scope, element, attr){
 			// console.log(element);
+			$('.preloader-container').fadeOut();
+
 			var y = null;
 			var svgHeight = $(window).height() - 90;
 			var svg = d3.select("#line-stop-svg").append("svg")

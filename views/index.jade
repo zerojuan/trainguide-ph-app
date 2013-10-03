@@ -3,6 +3,8 @@ extends layouts/layout
 
 block content
 	div(ng-app="trainguide")
+		.preloader-container
+			.preloader
 		div(ng-controller="MainCtrl", ng-cloak)
 			include slidegroup
 			include sidebar	
