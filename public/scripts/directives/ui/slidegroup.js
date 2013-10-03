@@ -41,16 +41,12 @@ angular.module('uiModule').directive('slideGroup', ['CommonAppState', function(C
 		}],
 		link: function($scope, $elm, $attr){
 			var adjustScrollWidths =  function(){
-				$('.block').css('width', width);
-				$('.antiscroll-inner').css('width', width);
-				$('.group-list').css('width', width);
+				$('.group-list').css('width', width-2);
 				$('.places-list').css('width', width-20);
 				$('.steps-list').css('width', width);
 			}
 
 			var adjustScrollHeights = function(){
-				$('.block').css('height', height-300);
-				$('.antiscroll-inner').css('height', height-300);
 				$('.group-list').css('height', height-300);
 			}
 
@@ -64,12 +60,7 @@ angular.module('uiModule').directive('slideGroup', ['CommonAppState', function(C
 				$('#trainmap').css('width', width);
 				$('#trainmap').css('height', height-480);
 				adjustScrollWidths();
-				adjustScrollHeights();
-
-				$(window).resize(function(){
-					adjustScrollWidths();
-					adjustScrollHeights();
-				});
+				//adjustScrollHeights();
 			}
 
 			var width = $('.sidebar').width();
@@ -82,6 +73,11 @@ angular.module('uiModule').directive('slideGroup', ['CommonAppState', function(C
 				$('.container').removeClass('adjust');
 				$('.contact-desc').removeClass('active');
 			}
+
+			$(window).resize(function(){
+				adjustScrollWidths();
+				//	adjustScrollHeights();
+			});
 
 			$scope.$watch("selectedItem", function(newValue, oldValue){
 				// console.log("Selected Item Changed", newValue);

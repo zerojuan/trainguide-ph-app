@@ -346,89 +346,82 @@ table {
             font-weight: bold;
           }
         }
-      }   
-      .block, .antiscroll-inner, .steps-list {
+      }
+      .steps-list {
+        overflow: auto;
         width: 255px;
-        // height: 200px;
-        height: 160px;
+        position: relative;
+        bottom: 10px;
         @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
           // height: 140px;
           height: 100px;
         }
-      }        
-      .antiscroll-wrap {
-        .block {
-          .antiscroll-inner {
-            .steps-list {
-              .steps {
-                padding-left: 20px;
-              }
-              .align {
-                padding-left: 6px; 
-              }
-              .clickable {
-                cursor: pointer;
-              }
-              .WALK {
-                border-style: dotted;
-                border-left-width: 6px;
-                &.circle {
-                  .circle-shape;
-                }
-              }
-              .JEEP, .BUS {                
-                border-style: solid;
-                border-left-width: 6px;
-              }
-              .JEEP {
-                border-color: @jeepColor;
-                &.circle {
-                  .circle-shape(@jeepColor);
-                }
-              }
-              .BUS {
-                border-color: @busColor;
-                &.circle {
-                  .circle-shape(@busColor);
-                }
-              }
-              .RAIL {
-                border-style: solid;
-                border-left-width: 6px;
-                &.LRT1 {
-                  border-color: @lrt1;
-                  &.circle {
-                    .circle-shape(@lrt1);
-                  }
-                }
-                &.LRT2 {
-                  border-color: @lrt2;
-                  &.circle {
-                    .circle-shape(@lrt2);
-                  }
-                }
-                &.MRT {
-                  border-color: @mrt;
-                  &.circle {
-                    .circle-shape(@mrt);
-                  }
-                }
-                &.PNR {
-                  border-color: @pnr;
-                  &.circle {
-                    .circle-shape(@pnr);
-                  }
-                }
-              }
-              p, ul.direction-steps {
-                padding-left: 15px;
-                font-size: 0.8em;
-                padding-top: 0.3em;
-                padding-bottom: 0.3em;
-                background-color: white;
-              } 
+        .steps {
+          padding-left: 20px;
+        }
+        .align {
+          padding-left: 6px;
+        }
+        .clickable {
+          cursor: pointer;
+        }
+        .WALK {
+          border-style: dotted;
+          border-left-width: 6px;
+          &.circle {
+            .circle-shape;
+          }
+        }
+        .JEEP, .BUS {
+          border-style: solid;
+          border-left-width: 6px;
+        }
+        .JEEP {
+          border-color: @jeepColor;
+          &.circle {
+            .circle-shape(@jeepColor);
+          }
+        }
+        .BUS {
+          border-color: @busColor;
+          &.circle {
+            .circle-shape(@busColor);
+          }
+        }
+        .RAIL {
+          border-style: solid;
+          border-left-width: 6px;
+          &.LRT1 {
+            border-color: @lrt1;
+            &.circle {
+              .circle-shape(@lrt1);
             }
           }
+          &.LRT2 {
+            border-color: @lrt2;
+            &.circle {
+              .circle-shape(@lrt2);
+            }
+          }
+          &.MRT {
+            border-color: @mrt;
+            &.circle {
+              .circle-shape(@mrt);
+            }
+          }
+          &.PNR {
+            border-color: @pnr;
+            &.circle {
+              .circle-shape(@pnr);
+            }
+          }
+        }
+        p, ul.direction-steps {
+          padding-left: 15px;
+          font-size: 0.8em;
+          padding-top: 0.3em;
+          padding-bottom: 0.3em;
+          background-color: white;
         }
       }
     }
@@ -459,6 +452,12 @@ table {
       }
     }
   }
+}
+
+.error{
+  font-style: italic;
+  margin-left: 5px;
+  margin-bottom: 10px;
 }
 
 /* line colors */
@@ -596,6 +595,7 @@ li.PNR.clicked{
     bottom: 0px;
     top: 35px;
     position: absolute;
+    overflow-y: hidden;
     // border-top: 1px solid @gray;
     .line-nav {
       // background: #fdc33c;
@@ -703,9 +703,11 @@ li.PNR.clicked{
           }
         }
       }
-      .block, .antiscroll-inner, .group-list {
+      .group-list {
+        overflow: auto;
         width: 255px;
-        height: 380px;
+        //position: relative;
+        bottom: 20px;
         @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
           height: 320px;
         }
@@ -777,46 +779,38 @@ li.PNR.clicked{
       position: absolute;
       right: 10px;
     }
-    .block, .antiscroll-inner, .places-list {
+    .places-list {
+      // padding: 2px;
+      // margin: 2px;
+      overflow: auto;
       width: 255px;
-      height: 540px;
+      //position: relative;
+      bottom: 10px;
       @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
         height: 490px;
       }
-    }
-    .antiscroll-wrap {
-      .block {
-        .antiscroll-inner {
-          .places-list {
-            // padding: 2px;
-            // margin: 2px;
-            width: 99.4%;
-            height: 99.4%;
-            ul {
-              display: inline-block;
-              width: 100%;
-              padding: 5px;
-              a {
-                float: none;
-                padding: 0px;
-                .name {
-                  float: left;
-                  width: 65%;
-                  font-size: 9pt;
-                  line-height: 10pt;
-                }
-                .dist {
-                  float: left;
-                  padding-left: 20px;
-                  font-size: 9pt;
-                }  
-                .square {
-                  float: right;
-                  width: 10px;
-                  height: 10px;
-                } 
-              }
-            } 
+      ul {
+        display: inline-block;
+        width: 100%;
+        padding: 5px;
+        a {
+          float: none;
+          padding: 0px;
+          .name {
+            float: left;
+            width: 65%;
+            font-size: 9pt;
+            line-height: 10pt;
+          }
+          .dist {
+            float: left;
+            padding-left: 20px;
+            font-size: 9pt;
+          }
+          .square {
+            float: right;
+            width: 10px;
+            height: 10px;
           }
         }
       }
@@ -948,7 +942,6 @@ li.PNR.clicked{
   .download {
     padding: 10px;
     font-size: 0.9em;
-    text-align: justify;
     p {
       padding-bottom: 10px;
       font-size: 9pt;

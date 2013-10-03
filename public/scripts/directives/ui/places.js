@@ -19,9 +19,7 @@ angular.module('uiModule').directive('places', function(){
       var query = {};
       var height = $('.sidebar').height();
 
-      var adjustScrollHeight = function(){        
-        $('.block').css('height', height-152);
-        $('.antiscroll-inner').css('height', height-152);
+      var adjustScrollHeight = function(){
         $('.places-list').css('height', height-152);
         $('.places-container').css('height', height-152);
       }
@@ -70,7 +68,7 @@ angular.module('uiModule').directive('places', function(){
           scope.onQueryPlaces(qry); 
         }
         $('.antiscroll-wrap').antiscroll();
-        adjustScrollHeight();
+        //adjustScrollHeight();
       }
 
       scope.selectPlace = function(resultPlace){
@@ -80,34 +78,28 @@ angular.module('uiModule').directive('places', function(){
     },
     template :
       '<div>'+
-        '<div class="antiscroll-wrap">'+
-          '<div class="block">'+
-            '<div class="antiscroll-inner">'+
-              '<div ng-show="resultPlaces.length==0" class="places-list" ng-transclude>' +
-        				'<ul>' +
-        				  '<li ng-repeat="place in places">' +
-                    '<a class="places-place" ng-click="selectPlace(place)" target="_blank">'+
-          				    '<span class="name">{{place.name}}</span>' +
-                      '<span class="dist">{{place.distance}}</span>' +
-                      '<div class="{{place.line.line_name}} square"></div>' +
-                    '</a>'+
-        				  '</li>' +
-        				'</ul>' +
-        			'</div>'+
-              '<div ng-show="resultPlaces.length>0" class="places-list" ng-transclude>' +
-                '<ul>' +
-                  '<li ng-repeat="resultPlace in resultPlaces">' +
-                    '<a class="places-place" ng-click="selectPlace(resultPlace)" target="_blank">'+
-                      '<span class="name">{{resultPlace.name}}</span>' +
-                      '<span class="dist">{{resultPlace.distance}}</span>' +
-                      '<div class="{{resultPlace.line.line_name}} square"></div>' +
-                    '</a>'+
-                  '</li>' +
-                '</ul>' +
-              '</div>'+
-            '</div>'+
-          '</div>'+
-        '</div>'+
+				'<div ng-show="resultPlaces.length==0" class="places-list" ng-transclude>' +
+					'<ul>' +
+						'<li ng-repeat="place in places">' +
+							'<a class="places-place" ng-click="selectPlace(place)" target="_blank">'+
+								'<span class="name">{{place.name}}</span>' +
+								'<span class="dist">{{place.distance}}</span>' +
+								'<div class="{{place.line.line_name}} square"></div>' +
+							'</a>'+
+						'</li>' +
+					'</ul>' +
+				'</div>'+
+				'<div ng-show="resultPlaces.length>0" class="places-list" ng-transclude>' +
+					'<ul>' +
+						'<li ng-repeat="resultPlace in resultPlaces">' +
+							'<a class="places-place" ng-click="selectPlace(resultPlace)" target="_blank">'+
+								'<span class="name">{{resultPlace.name}}</span>' +
+								'<span class="dist">{{resultPlace.distance}}</span>' +
+								'<div class="{{resultPlace.line.line_name}} square"></div>' +
+							'</a>'+
+						'</li>' +
+					'</ul>' +
+				'</div>'+
         '<a class="loadmore-link" ng-show="resultPlaces==0 && counter*20<=places.totalcount-20" ng-click="loadPlaces(counter=counter+1, selectedCategory)">Load more...</a>'+
       '</div>',
     replace : true

@@ -22,23 +22,17 @@ angular.module('uiModule').directive('nearby', function(){
           '</li>'+
         '</ul>'+
         '<div ng-switch-when="Places">'+
-          '<div class="antiscroll-wrap">'+
-            '<div class="block">'+
-              '<div class="antiscroll-inner">'+
-                '<div class="group-list">'+
-                  '<div ng-hide="{{selected.hospital || selected.hotel || selected.office || selected.sights || selected.shops}}">'+
-                    '<h6></h6>'+
-                    '<p class="slideshow-content">No nearby places for this station in our database</p>'+
-                  '</div>'+
-                  '<placesbox title="Hospital" icon="icon-hospital" on-query-places="getLimitedPlaces" places="selected.hospital" category="Hospital" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>'+
-                  '<placesbox title="Hotel" icon="icon-hotel" on-query-places="getLimitedPlaces" places="selected.hotel" category="Hotel" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>'+
-                  '<placesbox title="Office" icon="icon-office" on-query-places="getLimitedPlaces" places="selected.office" category="Office" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>'+
-                  '<placesbox title="Sightseeing" icon="icon-sights" on-query-places="getLimitedPlaces" places="selected.sights" category="Sightseeing" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>'+
-                  '<placesbox title="Shopping" icon="icon-shopping" on-query-places="getLimitedPlaces" places="selected.shops" category="Shopping" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>'+
-                '</div>'+
-              '</div>'+
-            '</div>'+
-          '</div>'+
+					'<div class="group-list">'+
+						'<div ng-hide="selected.hospital.data || selected.hotel.data || selected.office.data || selected.sights.data || selected.shops.data">'+
+							'<h6></h6>'+
+							'<p class="slideshow-content">No nearby places for this station in our database</p>'+
+						'</div>'+
+						'<placesbox title="Hospital" icon="icon-hospital" on-query-places="getLimitedPlaces" places="selected.hospital" category="Hospital" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>'+
+						'<placesbox title="Hotel" icon="icon-hotel" on-query-places="getLimitedPlaces" places="selected.hotel" category="Hotel" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>'+
+						'<placesbox title="Office" icon="icon-office" on-query-places="getLimitedPlaces" places="selected.office" category="Office" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>'+
+						'<placesbox title="Sightseeing" icon="icon-sights" on-query-places="getLimitedPlaces" places="selected.sights" category="Sightseeing" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>'+
+						'<placesbox title="Shopping" icon="icon-shopping" on-query-places="getLimitedPlaces" places="selected.shops" category="Shopping" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>'+
+					'</div>'+
         '</div>'+        
         '<div ng-switch-when="Stops">'+
           '<div class="antiscroll-wrap">'+
