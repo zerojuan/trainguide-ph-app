@@ -67,7 +67,8 @@ angular.module('google-maps')
 
 				scope.$watch('direction.to', function(newValue){
 					if(!newValue){
-						fromMarker.setMap(null);
+						if(fromMarker)
+							fromMarker.setMap(null);
 						return;
 					}
 					if(fromMarker){
@@ -78,13 +79,15 @@ angular.module('google-maps')
 						position: newValue.geometry.location,
 						map: scope.map,
 						icon: 'images/marker_end.png',
-						zIndex: 100
+						zIndex: 9000,
+						animation: google.maps.Animation.DROP
 					});
 				});
 
 				scope.$watch('direction.from', function(newValue){
 					if(!newValue){
-						toMarker.setMap(null);
+						if(toMarker)
+							toMarker.setMap(null);
 						return;
 					}
 					if(toMarker){
@@ -95,7 +98,8 @@ angular.module('google-maps')
 						position: newValue.geometry.location,
 						map: scope.map,
 						icon: 'images/marker_start.png',
-						zIndex: 100
+						zIndex: 9000,
+						animation: google.maps.Animation.DROP
 					});
 				});
 			}

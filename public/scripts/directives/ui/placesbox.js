@@ -28,7 +28,7 @@ angular.module('uiModule').directive('placesbox', function(){
 				}
 				console.log('shops qry', qry);
 				scope.onQueryPlaces(qry);
-				$('.antiscroll-wrap').antiscroll();
+				element('.antiscroll-wrap').antiscroll();
 			}
 
 			scope.selectDest = function(dest){

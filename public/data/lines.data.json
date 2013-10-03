@@ -635,7 +635,7 @@
                 "details": {
                     "stop_id": "LTFRB_4962",
                     "stop_code": "",
-                    "stop_name": "LRT Balintawak",
+                    "stop_name": "Balintawak LRT",
                     "stop_desc": "",
                     "stop_lat": 14.6574,
                     "stop_lon": 121.004,
@@ -1133,7 +1133,7 @@
                 "details": {
                     "stop_id": "LTFRB_4975",
                     "stop_code": "",
-                    "stop_name": "Magellanes MRT ",
+                    "stop_name": "Magellanes MRT",
                     "stop_desc": "",
                     "stop_lat": 14.5421,
                     "stop_lon": 121.02,
@@ -1235,7 +1235,7 @@
                 "details": {
                     "stop_id": "LTFRB_4972",
                     "stop_code": "",
-                    "stop_name": "Guadalupe MRT ",
+                    "stop_name": "Guadalupe MRT",
                     "stop_desc": "",
                     "stop_lat": 14.5666,
                     "stop_lon": 121.045,
@@ -1269,7 +1269,7 @@
                 "details": {
                     "stop_id": "LTFRB_4971",
                     "stop_code": "",
-                    "stop_name": "Boni MRT ",
+                    "stop_name": "Boni MRT",
                     "stop_desc": "",
                     "stop_lat": 14.5729,
                     "stop_lon": 121.048,
@@ -1303,7 +1303,7 @@
                 "details": {
                     "stop_id": "LTFRB_4970",
                     "stop_code": "",
-                    "stop_name": "Shaw MRT ",
+                    "stop_name": "Shaw MRT",
                     "stop_desc": "",
                     "stop_lat": 14.581,
                     "stop_lon": 121.054,
@@ -1892,7 +1892,7 @@
                 "details": {
                     "stop_id": "LTFRB_5000",
                     "stop_code": "",
-                    "stop_name": "Pasay Road PNR ",
+                    "stop_name": "Pasay Road PNR",
                     "stop_desc": "",
                     "stop_lat": 14.550863665696266,
                     "stop_lon": 121.01152896881105,
@@ -1926,7 +1926,7 @@
                 "details": {
                     "stop_id": "LTFRB_5001",
                     "stop_code": "",
-                    "stop_name": "EDSA PNR ",
+                    "stop_name": "EDSA PNR",
                     "stop_desc": "",
                     "stop_lat": 14.540717572369005,
                     "stop_lon": 121.01696848869324,
@@ -2131,7 +2131,7 @@
                 "details": {
                     "stop_id": "STOP_881853",
                     "stop_code": "",
-                    "stop_name": "Muntinlupa PNR ",
+                    "stop_name": "Muntinlupa PNR",
                     "stop_desc": "",
                     "stop_lat": 14.38924983545789,
                     "stop_lon": 121.04761004447936,
