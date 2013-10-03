@@ -71,7 +71,7 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 								}
 								return _class;
 							})
-							.attr("x", centerX - 20)
+							.attr("x", centerX - 17)
 							.attr("y", function(d,i){return (y(i)+23)})
 							.text(function(d,i){
 								var name = d.details.stop_name;
@@ -95,6 +95,9 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 										.attr("x", centerX + 40)
 										.attr("y", (y(i)+23))
 										.text(function(){
+											if(names[0] == "Blumentritt" || names[0] == "Magellanes"){
+												return names[0].toUpperCase();
+											}
 											return names[0].toUpperCase() + " " + names[1].toUpperCase();
 										})
 										.on("click", function(){
@@ -108,6 +111,15 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 										// 	.text(function(){
 										// 		return names[1].toUpperCase();
 										// 	});
+										if(names[0] == "Blumentritt" || names[0] == "Magellanes"){
+											svg.append("text")
+												.attr("class", "transfer")
+												.attr("x", centerX + 40)
+												.attr("y", (y(i)+33))
+												.text(function(){
+													return names[1].toUpperCase();
+												});
+										}
 										if(names[2]){
 											svg.append("text")
 												.attr("class", "transfer")
