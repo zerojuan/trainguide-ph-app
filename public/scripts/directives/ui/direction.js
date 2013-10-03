@@ -10,7 +10,12 @@ angular.module('uiModule').directive('direction', ['$filter', function($filter){
 			selectedLeg: '='
     },
     link : function(scope, elm, attrs){
+      var height = $('.sidebar').height();
+
       $('.antiscroll-wrap').antiscroll();
+      $('.block').css('height', height-477);
+      $('.antiscroll-inner').css('height', height-477);
+      $('.steps-list').css('height', height-477);
       
       scope.selectedStep = null;
       scope.divClass = 'align';

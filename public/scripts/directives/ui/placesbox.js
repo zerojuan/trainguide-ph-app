@@ -17,6 +17,7 @@ angular.module('uiModule').directive('placesbox', function(){
 			var limit = 5;
 			scope.$watch('places', function(){
 				console.log("Places value: ", scope.places);
+				$('.antiscroll-wrap').antiscroll();
 			}, true);
 
 			scope.loadPlaces = function(counter){
@@ -28,7 +29,6 @@ angular.module('uiModule').directive('placesbox', function(){
 				}
 				console.log('shops qry', qry);
 				scope.onQueryPlaces(qry);
-				$('.antiscroll-wrap').antiscroll();
 			}
 
 			scope.selectDest = function(dest){

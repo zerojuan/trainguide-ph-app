@@ -612,6 +612,9 @@ li.PNR.clicked{
           color: @trainlineColor;
           cursor: pointer;
           font-size: 10.8pt;
+          @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+            font-size: 10pt;
+          }
           &:last-child {
             border-right: none;
           }
@@ -765,6 +768,15 @@ li.PNR.clicked{
       //   font-weight: bolder;
       // }
     }
+    .places-container {
+      border: 1px solid @gray;
+      margin: 10px;
+    }
+    .loadmore-link {
+      bottom: 0px;
+      position: absolute;
+      right: 10px;
+    }
     .block, .antiscroll-inner, .places-list {
       width: 255px;
       height: 540px;
@@ -776,15 +788,14 @@ li.PNR.clicked{
       .block {
         .antiscroll-inner {
           .places-list {
-            padding: 2px;
-            margin: 2px;
-            border: 1px solid @gray;
+            // padding: 2px;
+            // margin: 2px;
             width: 99.4%;
             height: 99.4%;
             ul {
               display: inline-block;
               width: 100%;
-              padding: 10px 0px;
+              padding: 5px;
               a {
                 float: none;
                 padding: 0px;

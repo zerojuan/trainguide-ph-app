@@ -40,6 +40,20 @@ angular.module('uiModule').directive('slideGroup', ['CommonAppState', function(C
 			}
 		}],
 		link: function($scope, $elm, $attr){
+			var adjustScrollWidths =  function(){
+				$('.block').css('width', width);
+				$('.antiscroll-inner').css('width', width);
+				$('.group-list').css('width', width);
+				$('.places-list').css('width', width-20);
+				$('.steps-list').css('width', width);
+			}
+
+			var adjustScrollHeights = function(){
+				$('.block').css('height', height-300);
+				$('.antiscroll-inner').css('height', height-300);
+				$('.group-list').css('height', height-300);
+			}
+
 			var slideOut = function(callback){
 				var width = $('.sidebar').width();
 				// console.log('Sliding out:', width);
@@ -47,10 +61,21 @@ angular.module('uiModule').directive('slideGroup', ['CommonAppState', function(C
 				$($elm).css('width', width+'px');	
 				$('.container').addClass('adjust');
 				$('.contact-desc').addClass('active');
+				$('#trainmap').css('width', width);
+				$('#trainmap').css('height', height-480);
+				adjustScrollWidths();
+				adjustScrollHeights();
+
+				$(window).resize(function(){
+					adjustScrollWidths();
+					adjustScrollHeights();
+				});
 			}
 
 			var width = $('.sidebar').width();
 			$($elm).css('width', width+'px');
+
+			var height = $('.sidebar').height();
 
 			var slideIn = function(callback){
 				$($elm).css('right', '0px');

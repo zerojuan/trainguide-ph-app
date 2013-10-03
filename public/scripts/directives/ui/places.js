@@ -17,6 +17,16 @@ angular.module('uiModule').directive('places', function(){
     },
     link : function(scope, element){
       var query = {};
+      var height = $('.sidebar').height();
+
+      var adjustScrollHeight = function(){        
+        $('.block').css('height', height-152);
+        $('.antiscroll-inner').css('height', height-152);
+        $('.places-list').css('height', height-152);
+        $('.places-container').css('height', height-152);
+      }
+
+      adjustScrollHeight();
 
       scope.$watch("searchStr", function(newValue, oldValue){
         // console.log('newValue', newValue, 'oldValue', oldValue);
@@ -60,6 +70,7 @@ angular.module('uiModule').directive('places', function(){
           scope.onQueryPlaces(qry); 
         }
         $('.antiscroll-wrap').antiscroll();
+        adjustScrollHeight();
       }
 
       scope.selectPlace = function(resultPlace){
@@ -97,7 +108,7 @@ angular.module('uiModule').directive('places', function(){
             '</div>'+
           '</div>'+
         '</div>'+
-        '<a ng-show="resultPlaces==0 && counter*20<=places.totalcount-20" ng-click="loadPlaces(counter=counter+1, selectedCategory)">Load more...</a>'+
+        '<a class="loadmore-link" ng-show="resultPlaces==0 && counter*20<=places.totalcount-20" ng-click="loadPlaces(counter=counter+1, selectedCategory)">Load more...</a>'+
       '</div>',
     replace : true
   }
