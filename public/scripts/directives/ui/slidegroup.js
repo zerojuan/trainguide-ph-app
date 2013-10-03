@@ -46,10 +46,6 @@ angular.module('uiModule').directive('slideGroup', ['CommonAppState', function(C
 				$('.steps-list').css('width', width);
 			}
 
-			var adjustScrollHeights = function(){
-				$('.group-list').css('height', height-300);
-			}
-
 			var slideOut = function(callback){
 				var width = $('.sidebar').width();
 				// console.log('Sliding out:', width);
@@ -60,7 +56,6 @@ angular.module('uiModule').directive('slideGroup', ['CommonAppState', function(C
 				$('#trainmap').css('width', width);
 				$('#trainmap').css('height', height-480);
 				adjustScrollWidths();
-				//adjustScrollHeights();
 			}
 
 			var width = $('.sidebar').width();
@@ -76,7 +71,6 @@ angular.module('uiModule').directive('slideGroup', ['CommonAppState', function(C
 
 			$(window).resize(function(){
 				adjustScrollWidths();
-				//	adjustScrollHeights();
 			});
 
 			$scope.$watch("selectedItem", function(newValue, oldValue){

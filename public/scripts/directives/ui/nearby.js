@@ -35,20 +35,14 @@ angular.module('uiModule').directive('nearby', function(){
 					'</div>'+
         '</div>'+        
         '<div ng-switch-when="Stops">'+
-          '<div class="antiscroll-wrap">'+
-            '<div class="block">'+
-              '<div class="antiscroll-inner">'+
-                '<div class="group-list">'+
-                  '<div class="stops-box">'+
-                    '<div><h3>Nearby Stops</h3></div>'+
-                    '<ul>'+
-                      '<li ng-repeat="nearby in selected.nearbyStops" ng-class="{active:place.isSelected}">'+
-                          '<span class="name">{{nearby.stopName}}</span>'+
-                      '</li>'+
-                    '</ul>'+
-                  '</div>'+
-                '</div>'+
-              '</div>'+
+          '<div class="group-list">'+
+            '<div class="stops-box">'+
+              '<div><h3>Nearby Stops</h3></div>'+
+              '<ul>'+
+                '<li ng-repeat="nearby in selected.nearbyStops" ng-class="{active:place.isSelected}">'+
+                    '<span class="name">{{nearby.stopName}}</span>'+
+                '</li>'+
+              '</ul>'+
             '</div>'+
           '</div>'+
         '</div>'+

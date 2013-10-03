@@ -12,8 +12,18 @@ angular.module('uiModule').directive('direction', ['$filter', function($filter){
     link : function(scope, elm, attrs){
       var height = $('.sidebar').height();
 
-      //$('.steps-list').css('height', height-477);
+      var adjustScrollHeight = function(){
+        var calculatedHeight = height - ($('.header').height() + $('.control-tabs').height() 
+          + $('form').height() + $('.directions ul').height() + $('.directions h6').height());
+        if(height < 700)
+          $('.steps-list').css('height', height-480);
+      }
+
+      $(window).resize(function(){
+        adjustScrollHeight();
+      })
       
+      adjustScrollHeight();
       scope.selectedStep = null;
       scope.divClass = 'align';
       scope.trueMode = $filter('realmode')(scope.leg.mode, scope.leg.routeId);

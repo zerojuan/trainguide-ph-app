@@ -313,6 +313,8 @@ table {
             margin: 0px;
             width: 80%;
             text-align: left;
+            height: 80px;
+            max-height: 80px;
             li.route-steps {
               display: inline-block;
               margin: 0 auto;
@@ -350,12 +352,9 @@ table {
       .steps-list {
         overflow: auto;
         width: 255px;
+        // height: 212px;
         position: relative;
-        bottom: 10px;
-        @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
-          // height: 140px;
-          height: 100px;
-        }
+        bottom: 0px;
         .steps {
           padding-left: 20px;
         }
@@ -595,7 +594,7 @@ li.PNR.clicked{
     bottom: 0px;
     top: 35px;
     position: absolute;
-    overflow-y: hidden;
+    overflow: hidden;
     // border-top: 1px solid @gray;
     .line-nav {
       // background: #fdc33c;
@@ -780,15 +779,7 @@ li.PNR.clicked{
       right: 10px;
     }
     .places-list {
-      // padding: 2px;
-      // margin: 2px;
       overflow: auto;
-      width: 255px;
-      //position: relative;
-      bottom: 10px;
-      @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
-        height: 490px;
-      }
       ul {
         display: inline-block;
         width: 100%;

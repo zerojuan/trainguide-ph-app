@@ -15,9 +15,22 @@ angular.module('uiModule').directive('placesbox', function(){
 		},
 		link : function(scope, element, attr){
 			var limit = 5;
+			var height = $('.sidebar').height();
+
+			var adjustScrollHeights = function(){
+				var calculatedHeight = height - ($('.line-nav').height() + $('.images-box').height());
+				$('.group-list').css('height', calculatedHeight - 24);
+			}
+
+			$(window).resize(function(){
+				adjustScrollHeights();
+			});
+
 			scope.$watch('places', function(){
 				console.log("Places value: ", scope.places);
-				$('.antiscroll-wrap').antiscroll();
+				// $('.antiscroll-wrap').antiscroll();
+
+				adjustScrollHeights();
 			}, true);
 
 			scope.loadPlaces = function(counter){

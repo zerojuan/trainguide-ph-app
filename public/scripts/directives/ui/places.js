@@ -20,9 +20,16 @@ angular.module('uiModule').directive('places', function(){
       var height = $('.sidebar').height();
 
       var adjustScrollHeight = function(){
-        $('.places-list').css('height', height-152);
-        $('.places-container').css('height', height-152);
+        var calculatedHeight = height - ($('.title-box').height() + $('.categories-list').height() + $('.loadmore-link').height());
+        
+        console.log('calculatedHeight', calculatedHeight, 'height', height);
+        $('.places-list').css('height', calculatedHeight - 142);
+        $('.places-container').css('height', calculatedHeight - 141);
       }
+
+      $(window).resize(function(){
+        adjustScrollHeight();
+      });
 
       adjustScrollHeight();
 
@@ -67,8 +74,8 @@ angular.module('uiModule').directive('places', function(){
           }
           scope.onQueryPlaces(qry); 
         }
-        $('.antiscroll-wrap').antiscroll();
-        //adjustScrollHeight();
+
+        // adjustScrollHeight();
       }
 
       scope.selectPlace = function(resultPlace){
