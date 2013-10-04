@@ -1169,6 +1169,7 @@ angular.module('google-maps').directive('itineraryRender', [
       link: function (scope, elm, attrs, ctrl) {
         ctrl.registerMapListener(scope);
         var paths = [];
+        var pathColor = '#FE0000';
         scope.onMapReady = function (map) {
           scope.map = map;
         };
@@ -1193,7 +1194,6 @@ angular.module('google-maps').directive('itineraryRender', [
           for (var legs in scope.itinerary.legs) {
             var leg = scope.itinerary.legs[legs];
             var decodedPath = google.maps.geometry.encoding.decodePath(leg.legGeometry.points);
-            var color = '#2BA6CB';
             var lineSymbol = {
                 path: 'M 0,-1 0,1',
                 strokeOpacity: 1,
@@ -1202,7 +1202,7 @@ angular.module('google-maps').directive('itineraryRender', [
             var path = null;
             if (leg.mode == 'WALK') {
               path = new google.maps.Polyline({
-                strokeColor: color,
+                strokeColor: pathColor,
                 path: decodedPath,
                 strokeOpacity: 0,
                 icons: [{
@@ -1216,7 +1216,7 @@ angular.module('google-maps').directive('itineraryRender', [
               });
             } else {
               path = new google.maps.Polyline({
-                strokeColor: color,
+                strokeColor: pathColor,
                 strokeOpacity: 0.9,
                 strokeWeight: 5,
                 path: decodedPath,
@@ -1241,12 +1241,12 @@ angular.module('google-maps').directive('itineraryRender', [
               if (newValue.endTime == val.id) {
                 val.setOptions({ strokeColor: '#5cc15a' });
               } else {
-                val.setOptions({ strokeColor: '#2BA6CB' });
+                val.setOptions({ strokeColor: pathColor });
               }
             });
           } else {
             angular.forEach(paths, function (val) {
-              val.setOptions({ strokeColor: '#2BA6CB' });
+              val.setOptions({ strokeColor: pathColor });
             });
           }
         });
@@ -1658,7 +1658,9 @@ angular.module('uiModule').directive('lineStops', [
         showDetails: '=showDetails'
       },
       link: function (scope, element, attr) {
-        $('.preloader-container').fadeOut();
+        $('.preloader-container').fadeOut(function () {
+          $(this).remove();
+        });
         var y = null;
         var svgHeight = $(window).height() - 90;
         var svg = d3.select('#line-stop-svg').append('svg').attr('class', 'line-stop-chart').attr('width', 260).attr('height', svgHeight);

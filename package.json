@@ -1,6 +1,6 @@
 {
   "name": "trainguide-ph-app",
-  "version": "0.2.1d",
+  "version": "0.2.2",
   "private": true,
   "scripts": {
     "start": "node app.js"
