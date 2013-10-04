@@ -12,7 +12,9 @@ angular.module('uiModule').directive('lineStops', ['CommonAppState', 'StopsServi
 		},
 		link : function(scope, element, attr){
 			// console.log(element);
-			$('.preloader-container').fadeOut();
+			$('.preloader-container').fadeOut(function(){
+				$(this).remove();
+			});
 
 			var y = null;
 			var svgHeight = $(window).height() - 90;
