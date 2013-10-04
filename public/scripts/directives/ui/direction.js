@@ -13,10 +13,10 @@ angular.module('uiModule').directive('direction', ['$filter', function($filter){
       var height = $('.sidebar').height();
 
       var adjustScrollHeight = function(){
-        var calculatedHeight = height - ($('.header').height() + $('.control-tabs').height() 
-          + $('form').height() + $('.directions ul').height() + $('.directions h6').height());
-        if(height < 700)
-          $('.steps-list').css('height', height-480);
+				var directionsStart = $('.steps-list').position().top;
+				var directionsEnd = $('.footer').position().top;
+				var calculatedHeight = (directionsEnd - directionsStart);
+				$('.steps-list').css('height', calculatedHeight);
       }
 
       $(window).resize(function(){
@@ -35,6 +35,10 @@ angular.module('uiModule').directive('direction', ['$filter', function($filter){
         if(scope.trueMode == 'RAIL')
         scope.divClass += ' ' + scope.routeCode;
       }
+
+			scope.$watch('leg', function(){
+				adjustScrollHeight();
+			}, true);
 
       scope.clickedDirection = function(leg){
         scope.selectedStep = (scope.selectedStep == null) ? leg : null;
