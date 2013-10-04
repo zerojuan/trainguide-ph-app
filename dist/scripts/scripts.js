@@ -1373,10 +1373,12 @@ angular.module('google-maps').directive('polylineDrawer', [function () {
             }
           }
         };
-        var div = function (name) {
-          var m = document.createElement('DIV');
-          m.innerHTML = '<div class="stop-marker ' + name + '-marker" style="width: 20px; height: 20px;"></div>';
-          return m;
+        var getIcon = function (name) {
+          var icon = {
+              anchor: new google.maps.Point(11, 11),
+              url: 'images/marker-' + name + '.png'
+            };
+          return icon;
         };
         var drawLines = function () {
           for (var prop in scope.paths) {
@@ -1386,17 +1388,16 @@ angular.module('google-maps').directive('polylineDrawer', [function () {
                 strokeColor: path.color,
                 strokeOpacity: 0.9,
                 strokeWeight: 6,
-                path: decodedPath
+                path: decodedPath,
+                zIndex: 5
               });
             line.setMap(scope.map);
             angular.forEach(path.stops, function (stop) {
-              var marker = new RichMarker({
+              var marker = new google.maps.Marker({
                   map: scope.map,
                   position: new google.maps.LatLng(stop.details.stop_lat, stop.details.stop_lon),
-                  anchor: RichMarkerPosition.MIDDLE,
-                  content: div(path.name),
-                  flat: true,
-                  zIndex: 60
+                  icon: getIcon(path.name),
+                  zIndex: 0
                 });
               var infoWindow = createInfoWindow(stop.details.stop_name);
               google.maps.event.addListener(marker, 'click', function () {
@@ -1500,7 +1501,8 @@ angular.module('google-maps').directive('tripAdder', [
         });
         scope.$watch('direction.to', function (newValue) {
           if (!newValue) {
-            fromMarker.setMap(null);
+            if (fromMarker)
+              fromMarker.setMap(null);
             return;
           }
           if (fromMarker) {
@@ -1511,12 +1513,14 @@ angular.module('google-maps').directive('tripAdder', [
             position: newValue.geometry.location,
             map: scope.map,
             icon: 'images/marker_end.png',
-            zIndex: 100
+            zIndex: 9000,
+            animation: google.maps.Animation.DROP
           });
         });
         scope.$watch('direction.from', function (newValue) {
           if (!newValue) {
-            toMarker.setMap(null);
+            if (toMarker)
+              toMarker.setMap(null);
             return;
           }
           if (toMarker) {
@@ -1527,7 +1531,8 @@ angular.module('google-maps').directive('tripAdder', [
             position: newValue.geometry.location,
             map: scope.map,
             icon: 'images/marker_start.png',
-            zIndex: 100
+            zIndex: 9000,
+            animation: google.maps.Animation.DROP
           });
         });
       }
@@ -1570,7 +1575,17 @@ angular.module('uiModule').directive('direction', [
         selectedLeg: '='
       },
       link: function (scope, elm, attrs) {
-        $('.antiscroll-wrap').antiscroll();
+        var height = $('.sidebar').height();
+        var adjustScrollHeight = function () {
+          var directionsStart = $('.steps-list').position().top;
+          var directionsEnd = $('.footer').position().top;
+          var calculatedHeight = directionsEnd - directionsStart;
+          $('.steps-list').css('height', calculatedHeight);
+        };
+        $(window).resize(function () {
+          adjustScrollHeight();
+        });
+        adjustScrollHeight();
         scope.selectedStep = null;
         scope.divClass = 'align';
         scope.trueMode = $filter('realmode')(scope.leg.mode, scope.leg.routeId);
@@ -1581,6 +1596,9 @@ angular.module('uiModule').directive('direction', [
           if (scope.trueMode == 'RAIL')
             scope.divClass += ' ' + scope.routeCode;
         }
+        scope.$watch('leg', function () {
+          adjustScrollHeight();
+        }, true);
         scope.clickedDirection = function (leg) {
           scope.selectedStep = scope.selectedStep == null ? leg : null;
           scope.selectedLeg = scope.selectedStep;
@@ -1640,10 +1658,11 @@ angular.module('uiModule').directive('lineStops', [
         showDetails: '=showDetails'
       },
       link: function (scope, element, attr) {
+        $('.preloader-container').fadeOut();
         var y = null;
         var svgHeight = $(window).height() - 90;
         var svg = d3.select('#line-stop-svg').append('svg').attr('class', 'line-stop-chart').attr('width', 260).attr('height', svgHeight);
-        var lineWidth = 7;
+        var lineWidth = 13;
         var centerX = 123;
         svg.append('rect').attr('class', 'vertical').attr('x', centerX - lineWidth / 2).attr('width', lineWidth).attr('y', 20);
         scope.$watch('selectedLine', function (newValue, oldValue) {
@@ -1656,35 +1675,20 @@ angular.module('uiModule').directive('lineStops', [
               newValue.stops.length - 1
             ]).range([
               0,
-              svgHeight - 30
+              svgHeight - 40
             ]);
             for (var i in newValue.stops) {
               svg.selectAll('.vertical').attr('height', function (d) {
                 if (newValue.name == 'PNR') {
                   return svgHeight - 140;
                 }
-                return svgHeight - 30;
+                return svgHeight - 40;
               }).attr('class', 'vertical ' + newValue.name);
               var text = svg.selectAll('.label').data(newValue.stops, function (d) {
                   return d.stop_id;
                 });
               text.enter().append('text').attr('class', function (d, i) {
                 var _class = 'label';
-                if (d.transfer) {
-                  var names = d.transfer.stop_name.split(' ');
-                  svg.append('text').attr('class', 'transfer').attr('x', centerX + 40).attr('y', y(i) + 23).text(function () {
-                    return names[0].toUpperCase() + ' ' + names[1].toUpperCase();
-                  }).on('click', function () {
-                    scope.onSelectedStop(StopsService.getStopById(d.transfer.stop_id));
-                  });
-                  if (names.length > 1) {
-                    if (names[2]) {
-                      svg.append('text').attr('class', 'transfer').attr('x', centerX + 40).attr('y', y(i) + 33).text(function () {
-                        return names[2].toUpperCase();
-                      });
-                    }
-                  }
-                }
                 if (d.disabled) {
                   if (i < newValue.stops.length) {
                     svg.append('rect').attr('class', 'disabled').attr('x', centerX - lineWidth / 2).attr('y', y(i) - 5).attr('width', lineWidth).attr('height', y(i + 1) - y(i));
@@ -1694,13 +1698,43 @@ angular.module('uiModule').directive('lineStops', [
                   return _class + ' ends';
                 }
                 return _class;
-              }).attr('x', centerX - 20).attr('y', function (d, i) {
+              }).attr('x', centerX - 17).attr('y', function (d, i) {
                 return y(i) + 23;
               }).text(function (d, i) {
+                var name = d.details.stop_name;
                 if (i == 0 || i == newValue.stops.length - 1) {
-                  return d.details.stop_name.toUpperCase();
+                  name = d.details.stop_name.toUpperCase();
                 }
-                return d.details.stop_name;
+                var localNames = name.split(' ');
+                localNames.pop();
+                name = localNames.join(' ');
+                if (name == 'Cubao' || name == 'Blumentritt') {
+                  name = d.details.stop_name;
+                }
+                if (d.transfer) {
+                  var names = d.transfer.stop_name.split(' ');
+                  svg.append('text').attr('class', 'transfer').attr('x', centerX + 40).attr('y', y(i) + 23).text(function () {
+                    if (names[0] == 'Blumentritt' || names[0] == 'Magellanes') {
+                      return names[0].toUpperCase();
+                    }
+                    return names[0].toUpperCase() + ' ' + names[1].toUpperCase();
+                  }).on('click', function () {
+                    scope.onSelectedStop(StopsService.getStopById(d.transfer.stop_id));
+                  });
+                  if (names.length > 1) {
+                    if (names[0] == 'Blumentritt' || names[0] == 'Magellanes') {
+                      svg.append('text').attr('class', 'transfer').attr('x', centerX + 40).attr('y', y(i) + 33).text(function () {
+                        return names[1].toUpperCase();
+                      });
+                    }
+                    if (names[2]) {
+                      svg.append('text').attr('class', 'transfer').attr('x', centerX + 40).attr('y', y(i) + 33).text(function () {
+                        return names[2].toUpperCase();
+                      });
+                    }
+                  }
+                }
+                return name;
               }).on('click', function (d) {
                 scope.onSelectedStop(d);
               });
@@ -1711,8 +1745,8 @@ angular.module('uiModule').directive('lineStops', [
               dots.enter().append('circle').attr('class', function (d, i) {
                 var _class = 'stop ';
                 if (d.transfer) {
-                  svg.append('rect').attr('class', 'transfer ' + d.transfer.line_name).attr('x', centerX + 11).attr('y', y(i) + 18).attr('width', 10).attr('height', 3).attr('fill', '#333');
-                  svg.append('circle').attr('class', 'transfer ' + d.transfer.line_name).attr('cx', centerX + 25).attr('cy', y(i) + 20).attr('r', 7).on('click', function () {
+                  svg.append('rect').attr('class', 'transfer ' + d.transfer.line_name).attr('x', centerX + 13).attr('y', y(i) + 18).attr('width', 10).attr('height', 3).attr('fill', '#333');
+                  svg.append('circle').attr('class', 'transfer ' + d.transfer.line_name).attr('cx', centerX + 27).attr('cy', y(i) + 20).attr('r', 9).on('click', function () {
                     scope.onSelectedStop(StopsService.getStopById(d.transfer.stop_id));
                   });
                   return _class += 'transferee';
@@ -1729,10 +1763,10 @@ angular.module('uiModule').directive('lineStops', [
                 return y(i) + 20;
               }).attr('r', function (d, i) {
                 if (d.transfer) {
-                  return 7;
+                  return 9;
                 }
                 if (i == 0 || i == newValue.stops.length - 1) {
-                  return 7;
+                  return 9;
                 }
                 return 4.5;
               }).on('click', function (d) {
@@ -1776,8 +1810,33 @@ angular.module('uiModule').directive('nearby', function () {
         scope.selectedNearby = choice;
         console.log('selectedNearby', scope.selectedNearby);
       };
+      function updateHideDiv() {
+        console.log('Hide DiV?');
+        var selected = scope.selected;
+        if (selected.hospital.data && selected.hospital.data.length > 0 || selected.hotel.data && selected.hotel.data.length > 0 || selected.office.data && selected.office.data.length > 0 || selected.sights.data && selected.sights.data.length > 0 || selected.shops.data && selected.shops.data.length > 0) {
+          scope.hideDiv = true;
+        } else {
+          scope.hideDiv = false;
+        }
+        console.log('HIDEDIV: ', scope.hideDiv);
+      }
+      scope.$watch('selected.hospital', function (newValue) {
+        updateHideDiv();
+      }, true);
+      scope.$watch('selected.hotel', function (newValue) {
+        updateHideDiv();
+      }, true);
+      scope.$watch('selected.office', function (newValue) {
+        updateHideDiv();
+      }, true);
+      scope.$watch('selected.sights', function (newValue) {
+        updateHideDiv();
+      }, true);
+      scope.$watch('selected.shops', function (newValue) {
+        updateHideDiv();
+      }, true);
     },
-    template: '<div ng-switch on="selectedNearby" class="nearby">' + '<ul>' + '<li ng-click="setNearby(\'Places\')" ng-class="{active:selectedNearby==\'Places\'}">' + '<a ng-click="setNearby(\'Places\')" target="_blank">Places</a>' + '</li>' + '<li ng-click="setNearby(\'Stops\')" ng-class="{active:selectedNearby==\'Stops\'}">' + '<a ng-click="setNearby(\'Stops\')" target="_blank">Stops</a>' + '</li>' + '</ul>' + '<div ng-switch-when="Places">' + '<div class="antiscroll-wrap">' + '<div class="block">' + '<div class="antiscroll-inner">' + '<div class="group-list">' + '<placesbox title="Hospital" icon="icon-hospital" on-query-places="getLimitedPlaces" places="selected.hospital" category="Hospital" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Hotel" icon="icon-hotel" on-query-places="getLimitedPlaces" places="selected.hotel" category="Hotel" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Office" icon="icon-office" on-query-places="getLimitedPlaces" places="selected.office" category="Office" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Sightseeing" icon="icon-sights" on-query-places="getLimitedPlaces" places="selected.sights" category="Sightseeing" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Shopping" icon="icon-shopping" on-query-places="getLimitedPlaces" places="selected.shops" category="Shopping" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '</div>' + '</div>' + '</div>' + '</div>' + '</div>' + '<div ng-switch-when="Stops">' + '<div class="antiscroll-wrap">' + '<div class="block">' + '<div class="antiscroll-inner">' + '<div class="group-list">' + '<div class="stops-box">' + '<div><h3>Nearby Stops</h3></div>' + '<ul>' + '<li ng-repeat="nearby in selected.nearbyStops" ng-class="{active:place.isSelected}">' + '<span class="name">{{nearby.stopName}}</span>' + '</li>' + '</ul>' + '</div>' + '</div>' + '</div>' + '</div>' + '</div>' + '</div>' + '</div>',
+    template: '<div ng-switch on="selectedNearby" class="nearby">' + '<ul>' + '<li ng-click="setNearby(\'Places\')" ng-class="{active:selectedNearby==\'Places\'}">' + '<a ng-click="setNearby(\'Places\')" target="_blank">Places</a>' + '</li>' + '<li ng-click="setNearby(\'Stops\')" ng-class="{active:selectedNearby==\'Stops\'}">' + '<a ng-click="setNearby(\'Stops\')" target="_blank">Stops</a>' + '</li>' + '</ul>' + '<div ng-switch-when="Places">' + '<div class="group-list">' + '<div ng-hide="hideDiv">' + '<h6></h6>' + '<p class="slideshow-content">No nearby places for this station in our database</p>' + '</div>' + '<placesbox title="Hospital" icon="icon-hospital" on-query-places="getLimitedPlaces" places="selected.hospital" category="Hospital" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Hotel" icon="icon-hotel" on-query-places="getLimitedPlaces" places="selected.hotel" category="Hotel" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Office" icon="icon-office" on-query-places="getLimitedPlaces" places="selected.office" category="Office" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Sightseeing" icon="icon-sights" on-query-places="getLimitedPlaces" places="selected.sights" category="Sightseeing" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Shopping" icon="icon-shopping" on-query-places="getLimitedPlaces" places="selected.shops" category="Shopping" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '</div>' + '</div>' + '<div ng-switch-when="Stops">' + '<div class="group-list">' + '<div class="stops-box">' + '<div><h3>Nearby Stops</h3></div>' + '<ul>' + '<li ng-repeat="nearby in selected.nearbyStops" ng-class="{active:place.isSelected}">' + '<span class="name">{{nearby.stopName}}</span>' + '</li>' + '</ul>' + '</div>' + '</div>' + '</div>' + '</div>',
     replace: true
   };
 });
@@ -1799,6 +1858,17 @@ angular.module('uiModule').directive('places', function () {
     },
     link: function (scope, element) {
       var query = {};
+      var height = $('.sidebar').height();
+      var adjustScrollHeight = function () {
+        var calculatedHeight = height - ($('.title-box').height() + $('.categories-list').height() + $('.loadmore-link').height());
+        console.log('calculatedHeight', calculatedHeight, 'height', height);
+        $('.places-list').css('height', calculatedHeight - 142);
+        $('.places-container').css('height', calculatedHeight - 141);
+      };
+      $(window).resize(function () {
+        adjustScrollHeight();
+      });
+      adjustScrollHeight();
       scope.$watch('searchStr', function (newValue, oldValue) {
         if (newValue || newValue === '') {
           scope.resultPlaces = [];
@@ -1834,13 +1904,12 @@ angular.module('uiModule').directive('places', function () {
             };
           scope.onQueryPlaces(qry);
         }
-        $('.antiscroll-wrap').antiscroll();
       };
       scope.selectPlace = function (resultPlace) {
         scope.setStop(resultPlace);
       };
     },
-    template: '<div>' + '<div class="antiscroll-wrap">' + '<div class="block">' + '<div class="antiscroll-inner">' + '<div ng-show="resultPlaces.length==0" class="places-list" ng-transclude>' + '<ul>' + '<li ng-repeat="place in places">' + '<a class="places-place" ng-click="selectPlace(place)" target="_blank">' + '<span class="name">{{place.name}}</span>' + '<span class="dist">{{place.distance}}</span>' + '<div class="{{place.line.line_name}} square"></div>' + '</a>' + '</li>' + '</ul>' + '</div>' + '<div ng-show="resultPlaces.length>0" class="places-list" ng-transclude>' + '<ul>' + '<li ng-repeat="resultPlace in resultPlaces">' + '<a class="places-place" ng-click="selectPlace(resultPlace)" target="_blank">' + '<span class="name">{{resultPlace.name}}</span>' + '<span class="dist">{{resultPlace.distance}}</span>' + '<div class="{{resultPlace.line.line_name}} square"></div>' + '</a>' + '</li>' + '</ul>' + '</div>' + '</div>' + '</div>' + '</div>' + '<a ng-show="resultPlaces==0 && counter*20<=places.totalcount-20" ng-click="loadPlaces(counter=counter+1, selectedCategory)">Load more...</a>' + '</div>',
+    template: '<div>' + '<div ng-show="resultPlaces.length==0" class="places-list" ng-transclude>' + '<ul>' + '<li ng-repeat="place in places">' + '<a class="places-place" ng-click="selectPlace(place)" target="_blank">' + '<span class="name">{{place.name}}</span>' + '<span class="dist">{{place.distance}}</span>' + '<div class="{{place.line.line_name}} square"></div>' + '</a>' + '</li>' + '</ul>' + '</div>' + '<div ng-show="resultPlaces.length>0" class="places-list" ng-transclude>' + '<ul>' + '<li ng-repeat="resultPlace in resultPlaces">' + '<a class="places-place" ng-click="selectPlace(resultPlace)" target="_blank">' + '<span class="name">{{resultPlace.name}}</span>' + '<span class="dist">{{resultPlace.distance}}</span>' + '<div class="{{resultPlace.line.line_name}} square"></div>' + '</a>' + '</li>' + '</ul>' + '</div>' + '<a class="loadmore-link" ng-show="resultPlaces==0 && counter*20<=places.totalcount-20" ng-click="loadPlaces(counter=counter+1, selectedCategory)">Load more...</a>' + '</div>',
     replace: true
   };
 });
@@ -1860,8 +1929,17 @@ angular.module('uiModule').directive('placesbox', function () {
     },
     link: function (scope, element, attr) {
       var limit = 5;
+      var height = $('.sidebar').height();
+      var adjustScrollHeights = function () {
+        var calculatedHeight = height - ($('.line-nav').height() + $('.images-box').height());
+        $('.group-list').css('height', calculatedHeight - 24);
+      };
+      $(window).resize(function () {
+        adjustScrollHeights();
+      });
       scope.$watch('places', function () {
         console.log('Places value: ', scope.places);
+        adjustScrollHeights();
       }, true);
       scope.loadPlaces = function (counter) {
         var qry = {
@@ -1872,7 +1950,6 @@ angular.module('uiModule').directive('placesbox', function () {
           };
         console.log('shops qry', qry);
         scope.onQueryPlaces(qry);
-        $('.antiscroll-wrap').antiscroll();
       };
       scope.selectDest = function (dest) {
         if (scope.selectedDest) {
@@ -2036,20 +2113,32 @@ angular.module('uiModule').directive('slideGroup', [
         }
       ],
       link: function ($scope, $elm, $attr) {
+        var adjustScrollWidths = function () {
+          $('.group-list').css('width', width - 2);
+          $('.places-list').css('width', width - 20);
+          $('.steps-list').css('width', width);
+        };
         var slideOut = function (callback) {
           var width = $('.sidebar').width();
           $($elm).css('right', width + 'px');
           $($elm).css('width', width + 'px');
           $('.container').addClass('adjust');
           $('.contact-desc').addClass('active');
+          $('#trainmap').css('width', width);
+          $('#trainmap').css('height', height - 480);
+          adjustScrollWidths();
         };
         var width = $('.sidebar').width();
         $($elm).css('width', width + 'px');
+        var height = $('.sidebar').height();
         var slideIn = function (callback) {
           $($elm).css('right', '0px');
           $('.container').removeClass('adjust');
           $('.contact-desc').removeClass('active');
         };
+        $(window).resize(function () {
+          adjustScrollWidths();
+        });
         $scope.$watch('selectedItem', function (newValue, oldValue) {
           if (newValue === false) {
             slideIn();
@@ -2214,6 +2303,7 @@ angular.module('trainguideServices').factory('DirectionsService', [
           date: dateNow + '&time=11:59am',
           fromPlace: from.lat + ',' + from.lng,
           toPlace: to.lat + ',' + to.lng,
+          numItineraries: 2,
           mode: 'TRANSIT,WALK'
         });
       var url = api + '/plan?' + query + '&callback=JSON_CALLBACK';
