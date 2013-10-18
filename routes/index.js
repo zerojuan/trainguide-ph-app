@@ -6,7 +6,7 @@
 
 exports.index = function(req, res){
 	console.log("Req: " + req.production);
-  res.render('index', { title: 'Trainguide.PH', production: req.production});
+    res.render('index', { title: 'Trainguide.PH', production: req.production});
 };
 
 exports.partials = function(req, res){
