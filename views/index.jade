@@ -32,7 +32,7 @@ block append scripts
 	script(src="./components/jquery.svg/jquery.svg.js")
 	script(src="./components/d3/d3.js")
 	script(src="./components/jquery-mousewheel.js")
-	if !production
+	if !isProduction()
 		script(src='./scripts/main-app.js')
 		script(src='./scripts/controllers/main.js')
 		script(src='./scripts/controllers/gmap.js')

@@ -53,17 +53,20 @@ function createApplication(env){
     app.use(require('less-middleware')({ src: __dirname + '/public' }));
 
     // development only
-    if ('development' == env.NODE_ENV) {
+    if ('production' == env.NODE_ENV) {
+        app.use(express.static(path.join(__dirname, 'dist')));
+    }else{
         app.use(express.static(path.join(__dirname, 'public')));
         app.use(express.errorHandler());
-    }else{
-        app.use(express.static(path.join(__dirname, 'dist')));
+    }
+
+    app.locals.isProduction = function(){
+        return 'production' == env.NODE_ENV;
     }
 
     app.get('/viewer', viewer.index);
 
     app.get('/', function(req, res){
-        req.production = 'development' != env.NODE_ENV;
         routes.index(req, res);
     });
     app.get('/views', routes.partials);

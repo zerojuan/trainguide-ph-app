@@ -5,7 +5,7 @@ html
 		link(rel="shortcut icon", href="/images/favicon.ico", type="image/x-icon")
 		link(rel="icon", href="/images/favicon.ico", type="image/x-icon")
 		link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Open+Sans:400,300')
-		if !production
+		if !isProduction()
 			link(rel='stylesheet', href='/stylesheets/foundation.css')
 			link(rel='stylesheet', href='/stylesheets/style.css')
 			link(rel='stylesheet', href='/stylesheets/antiscroll.css')
@@ -15,4 +15,4 @@ html
 		block content
 
 		include scripts
-		script(src='./components/analytics.js')
+		script(src='/components/analytics.js')
