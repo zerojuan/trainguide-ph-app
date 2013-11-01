@@ -27,6 +27,12 @@ module.exports = function(grunt){
 				}
 			}
 		},
+		karma: {
+			unit: {
+				configFile: 'karma.conf.js',
+				singleRun: true
+			}
+		},
 		shell: {
 			'add' : {
 				command: 'git add *'
@@ -219,6 +225,11 @@ module.exports = function(grunt){
 //		'uglify',
 //		'rev',
 		'usemin'
+	]);
+
+	grunt.registerTask('test', [
+		'clean:dist',
+		'karma'
 	]);
 
 	grunt.registerTask('deploy', [

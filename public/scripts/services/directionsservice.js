@@ -22,6 +22,7 @@ angular.module('trainguideServices')
 							  break;
 				case 'JEEP':  fareMatrix.jeep = data; 
 			}
+			return fareMatrix;
 		}
 
 		DirectionsService.getStopsNearPoint = function(query, callback, err){
@@ -99,11 +100,13 @@ angular.module('trainguideServices')
 			console.log(url);
 			$http.jsonp(url)
 				.success(function(data){
+
 					if(data.error){
 						err(data.error);
 						return;
 					}
 
+					console.log('data!!!', data);
 					function calculateFare(trip){
 						//loop through each leg
 						var totalFare = 0;

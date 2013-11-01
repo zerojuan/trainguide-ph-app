@@ -1,6 +1,4 @@
 $(document).ready(function(){
-  console.log('populate_preview loaded!');
-  console.log('method', formMethod, 'action', formAction);
   
   $('#input-place').submit(function(evt){
     evt.preventDefault();

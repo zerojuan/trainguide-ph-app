@@ -5,6 +5,10 @@
     "angular": "1.0.6",
     "jquery": "~2.0.3",
     "jquery.svg": "latest",
-    "d3": "~3.2.8"
+    "d3": "~3.2.8",
+    "angular-mocks": "~1.0.8"
+  },
+  "resolutions": {
+    "angular": "1.0.8"
   }
 }
