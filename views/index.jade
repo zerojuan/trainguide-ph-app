@@ -2,28 +2,28 @@
 extends layouts/layout
 
 block content
-	div(ng-app="trainguide")
-		.preloader-container
-			.preloader
-		div(ng-controller="MainCtrl", ng-cloak)
-			include slidegroup
-			include sidebar	
-			.container(ng-controller="GMapCtrl")
-				.google-map(center="centerProperty",
-					zoom="zoomProperty",
-					paths="pathsProperty",
-					markers="markers",
-					stop-markers="stopMarkersProperty",
-					latitude="clickedLatitudeProperty",
-					longitude="clickedLongitudeProperty",
-					draggable="true",
-					style="height: 100%; width: 100%;")
-					map-router(selected-stop='selected.stop', selected-dest='selected.dest')
-					itinerary-render(itinerary='selected.itinerary', selected-leg='selected.leg')
-					polyline-drawer(paths="lines", selected-line='selected.line', selected-stop="selected.stop", show-details='showDetails', selected-item="selectedItem")
-					globalize-map
-					trip-adder(is-search='selected.isSearch', direction='selected.direction')
-			ng-view
+    div(ng-app="trainguide")
+        .preloader-container
+            .preloader
+        div(ng-controller="MainCtrl", ng-cloak)
+            include slidegroup
+            include sidebar
+            .container(ng-controller="GMapCtrl")
+                .google-map(center="centerProperty",
+                zoom="zoomProperty",
+                paths="pathsProperty",
+                markers="markers",
+                stop-markers="stopMarkersProperty",
+                latitude="clickedLatitudeProperty",
+                longitude="clickedLongitudeProperty",
+                draggable="true",
+                style="height: 100%; width: 100%;")
+                    map-router(selected-stop='selected.stop', selected-dest='selected.dest')
+                    itinerary-render(itinerary='selected.itinerary', selected-leg='selected.leg')
+                    polyline-drawer(paths="lines", selected-line='selected.line', selected-stop="selected.stop", show-details='showDetails', selected-item="selectedItem")
+                    globalize-map
+                    trip-adder(is-search='selected.isSearch', direction='selected.direction')
+            ng-view
 
 block append scripts
 	script(src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry&key=AIzaSyAeFiH4LhZTvKbXDNr2I8TrL9MauXt02PQ&sensor=true")
