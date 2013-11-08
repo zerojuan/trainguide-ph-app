@@ -1,6 +1,6 @@
 
 angular.module('google-maps')
-	.directive('tripAdder', ['PlacesService', function(PlacesService){
+	.directive('tripAdder', ['PlacesService', 'GeocoderService', function(PlacesService, GeocoderService){
 		return {
 			require: '^googleMap',
 			restrict: 'E',
@@ -22,16 +22,20 @@ angular.module('google-maps')
 
 				function onClickMap(event){
 					var clickPos = event.latLng;
+					console.log('event', event);
 					if(scope.isSearch.to ||
 						scope.isSearch.from){
-						geocoder.geocode({'latLng': clickPos}, function(results, status){
-							if(status == google.maps.GeocoderStatus.OK){
-								console.log(results);
-								results[0].geometry.location = clickPos;
-								setPlace(results[0]);
-							}else{
-								console.log("Geocoder failed: " + status);
-							}
+						// geocoder.geocode({'latLng': clickPos}, function(results, status){
+						// 	if(status == google.maps.GeocoderStatus.OK){
+						// 		console.log(results);
+						// 		results[0].geometry.location = clickPos;
+						// 		setPlace(results[0]);
+						// 	}else{
+						// 		console.log("Geocoder failed: " + status);
+						// 	}
+						// });
+						GeocoderService.geocode(clickPos, function(data){
+							setPlace(data[0]);
 						});
 					}
 				}

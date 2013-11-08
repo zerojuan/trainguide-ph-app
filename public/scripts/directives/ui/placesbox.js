@@ -27,7 +27,7 @@ angular.module('uiModule').directive('placesbox', function(){
 			});
 
 			scope.$watch('places', function(){
-				console.log("Places value: ", scope.places);
+				// console.log("Places value: ", scope.places);
 				// $('.antiscroll-wrap').antiscroll();
 
 				adjustScrollHeights();

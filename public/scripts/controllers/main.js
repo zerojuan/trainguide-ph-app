@@ -5,8 +5,7 @@ angular.module('trainguide.controllers')
 		function($scope, $http, $route, $location,
 			LinesService, StopsService, TransfersService, FaresService, PlacesService, CommonAppState, DirectionsService, RoutesService){
 
-                console.log("This is the state params: ", ($location.search()).tlo, ($location.search()).tla);
-                $location.search('flo', 10505);
+        console.log("This is the state params: ", ($location.search()).tlo, ($location.search()).tla);
             
 				/** ================================================= **/
 				/** SCOPE VARIABLES

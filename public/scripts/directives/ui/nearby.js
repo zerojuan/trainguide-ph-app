@@ -11,7 +11,7 @@ angular.module('uiModule').directive('nearby', function(){
         console.log('selectedNearby', scope.selectedNearby);
       };
 			function updateHideDiv(){
-				console.log("Hide DiV?");
+				// console.log("Hide DiV?");
 				var selected = scope.selected;
 				if((selected.hospital.data && selected.hospital.data.length > 0) ||
 					(selected.hotel.data && selected.hotel.data.length > 0) ||
@@ -23,7 +23,7 @@ angular.module('uiModule').directive('nearby', function(){
 					scope.hideDiv = false;
 				}
 
-				console.log("HIDEDIV: " , scope.hideDiv);
+				// console.log("HIDEDIV: " , scope.hideDiv);
 			}
 			scope.$watch("selected.hospital", function(newValue){
 				updateHideDiv();
