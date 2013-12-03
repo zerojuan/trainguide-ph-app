@@ -111,11 +111,12 @@ angular.module('viewerApp').controller('ViewerCtrl', [
 ]);
 angular.module('trainguide.controllers').controller('DirectionCtrl', [
   '$scope',
+  '$filter',
   '$location',
   'DirectionsService',
   'GeocoderService',
   'StopsService',
-  function ($scope, $location, DirectionsService, GeocoderService, StopsService) {
+  function ($scope, $filter, $location, DirectionsService, GeocoderService, StopsService) {
     angular.extend($scope, {
       direction: { activeTrip: null },
       plan: null,
@@ -131,7 +132,8 @@ angular.module('trainguide.controllers').controller('DirectionCtrl', [
           flo: $location.search().flo,
           fla: $location.search().fla,
           tlo: $location.search().tlo,
-          tla: $location.search().tla
+          tla: $location.search().tla,
+          li: $location.search().li
         };
       console.log('PARAMETERS? ', tripSaved);
       if (tripSaved.flo && tripSaved.fla) {
@@ -155,6 +157,13 @@ angular.module('trainguide.controllers').controller('DirectionCtrl', [
           $scope.getDirections();
       }
     }
+    var setLine = function (routeid) {
+      var trueLine = $scope.lines[$filter('lineCode')(routeid)];
+      $scope.selected.line = trueLine;
+      $scope.getLineDetails(trueLine);
+      $scope.menuItems[0].selected = false;
+      $scope.selectedItemHandler($scope.menuItems[0]);
+    };
     $scope.getDirections = function () {
       $scope.loadingQuery = true;
       DirectionsService.getDirections({
@@ -167,11 +176,18 @@ angular.module('trainguide.controllers').controller('DirectionCtrl', [
         $scope.selected.itinerary = $scope.plan.itineraries[0];
         $scope.loadingQuery = false;
         $scope.errorMessage = null;
+        var legs = $scope.selected.itinerary.legs;
+        for (var index in legs) {
+          if (legs[index].route) {
+            setLine(legs[index].route);
+          }
+        }
         var lnglat = {
             flo: data.from.lon,
             fla: data.from.lat,
             tlo: data.to.lon,
-            tla: data.to.lat
+            tla: data.to.lat,
+            li: $scope.selected.line.name
           };
         $location.search(lnglat);
       }, function (err) {
