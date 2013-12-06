@@ -72,46 +72,46 @@ angular.module('trainguide.controllers')
 						],
 						selectedItem : false,
 						tips : [
-				{
-					title : 'Ticketing',
-					selected : true,
-					details : [
-						'The MRT and LRT use magnetic cards that are bought at ticket windows. Both single journey tickets and Stored Value Tickets (SVT) worth 100 Pesos can be bought.',
-						'Simply slip the card into the turnstile slot and pass through. SVTs deduct the right amount once you exit from the station and give you a "bonus ride" which means any amount left (from .50) entitles you to one last ride.',
-						'The PNR uses traditional paper tickets, bought at a ticket booth in each station.'
-					],
-					image : '/images/logo_card.png'
-				},
-				{
-					title : 'Time',
-					selected : false,
-					details : [
-						'Trains are packed during rush hour (6-8:30AM and 5:30-8PM) so schedule your trips around that time. Weekends are usually less crowded.',
-						'In the large stations, ticket lines can take up to 20 minutes of your time, and security checks only make it longer. Get an SVT to skip the ticket line and save time. If SVTs aren\'t available, buy two tickets to your destination, one for going, and one for returning.',
-						'PNR trains start running around 5:05, then arrive every 30 min. Arriving a little earlier than scheduled is a good idea. On Sundays the trains run every hour.'
-					],
-					image : '/images/logo_time.png'
-				},
-				{
-					title : 'Safety',
-					selected : false,
-					details : [
-						'The train system is generally safe, but petty crime can occur. Security guards man all stations and police have booths at major stations, in case of emergency or for general inquiries.',
-						'The first train cars of all the train lines are reserved for women, the elderly, children and the disabled.'
-					],
-					image : '/images/logo_safety.png'
-				},
-				{
-					title : 'Airport',
-					selected : false,
-					details : [
-						'There are shuttle buses from EDSA/Taft station to the airport, but their departure times fluctuate.',
-						'There are no lines to the airport as of yet, but a spur line to the airport is being explored.',
-						'The nearest station to the NAIA1 and 2 is Baclaran station on LRT1. For NAIA3, the nearest station is PNR Nichols. You\'ll still need to take a taxi to the airport from these stations.'
-					],
-					image : '/images/logo_airport.png'
-				}
-			]
+							{
+								title : 'Ticketing',
+								selected : true,
+								details : [
+									'The MRT and LRT use magnetic cards that are bought at ticket windows. Both single journey tickets and Stored Value Tickets (SVT) worth 100 Pesos can be bought.',
+									'Simply slip the card into the turnstile slot and pass through. SVTs deduct the right amount once you exit from the station and give you a "bonus ride" which means any amount left (from .50) entitles you to one last ride.',
+									'The PNR uses traditional paper tickets, bought at a ticket booth in each station.'
+								],
+								image : '/images/logo_card.png'
+							},
+							{
+								title : 'Time',
+								selected : false,
+								details : [
+									'Trains are packed during rush hour (6-8:30AM and 5:30-8PM) so schedule your trips around that time. Weekends are usually less crowded.',
+									'In the large stations, ticket lines can take up to 20 minutes of your time, and security checks only make it longer. Get an SVT to skip the ticket line and save time. If SVTs aren\'t available, buy two tickets to your destination, one for going, and one for returning.',
+									'PNR trains start running around 5:05, then arrive every 30 min. Arriving a little earlier than scheduled is a good idea. On Sundays the trains run every hour.'
+								],
+								image : '/images/logo_time.png'
+							},
+							{
+								title : 'Safety',
+								selected : false,
+								details : [
+									'The train system is generally safe, but petty crime can occur. Security guards man all stations and police have booths at major stations, in case of emergency or for general inquiries.',
+									'The first train cars of all the train lines are reserved for women, the elderly, children and the disabled.'
+								],
+								image : '/images/logo_safety.png'
+							},
+							{
+								title : 'Airport',
+								selected : false,
+								details : [
+									'There are shuttle buses from EDSA/Taft station to the airport, but their departure times fluctuate.',
+									'There are no lines to the airport as of yet, but a spur line to the airport is being explored.',
+									'The nearest station to the NAIA1 and 2 is Baclaran station on LRT1. For NAIA3, the nearest station is PNR Nichols. You\'ll still need to take a taxi to the airport from these stations.'
+								],
+								image : '/images/logo_airport.png'
+							}
+						]
 				});
 
 		/** ================================================= **/
@@ -189,6 +189,8 @@ angular.module('trainguide.controllers')
 
 										}else{
 												$scope.selectedItem = false;
+							          $location.path('');
+							          $location.search('li', null); 
 										}
 								}else{
 										$scope.menuItems[i].selected = false;
@@ -346,50 +348,50 @@ angular.module('trainguide.controllers')
 				}
 
 				function initialize() {
-						LinesService.getLines(function(data, status){
-								$scope.lines = data;
-								for(key in data){
-										$scope.lines[key].name = key;
-								}
-								$scope.lines.LRT1.color = "#fdc33c";
-								$scope.lines.LRT2.color = "#ad86bc";
-								$scope.lines.MRT.color = "#5384c4";
-								$scope.lines.PNR.color = "#f28740";
-								StopsService.setLines($scope.lines);
+					LinesService.getLines(function(data, status){
+							$scope.lines = data;
+							for(key in data){
+									$scope.lines[key].name = key;
+							}
+							$scope.lines.LRT1.color = "#fdc33c";
+							$scope.lines.LRT2.color = "#ad86bc";
+							$scope.lines.MRT.color = "#5384c4";
+							$scope.lines.PNR.color = "#f28740";
+							StopsService.setLines($scope.lines);
 
-								var fareData = {};
-								fareData.MRT = $scope.lines.MRT.fare;
-								fareData.LRT1 = $scope.lines.LRT1.fare;
-								fareData.LRT2 = $scope.lines.LRT2.fare;
-								fareData.PNR = $scope.lines.PNR.fare;
+							var fareData = {};
+							fareData.MRT = $scope.lines.MRT.fare;
+							fareData.LRT1 = $scope.lines.LRT1.fare;
+							fareData.LRT2 = $scope.lines.LRT2.fare;
+							fareData.PNR = $scope.lines.PNR.fare;
 
-								DirectionsService.bindFareMatrix('TRAIN', fareData);
-								FaresService.getPUB(function(data){
-									DirectionsService.bindFareMatrix('BUS', data);
-								});
-								FaresService.getPUJ(function(data){
-									DirectionsService.bindFareMatrix('JEEP', data);
-								});
+							DirectionsService.bindFareMatrix('TRAIN', fareData);
+							FaresService.getPUB(function(data){
+								DirectionsService.bindFareMatrix('BUS', data);
+							});
+							FaresService.getPUJ(function(data){
+								DirectionsService.bindFareMatrix('JEEP', data);
+							});
 
-								TransfersService.getAllTransfers(function(data){
-										$scope.transfers = data;
-										//iterate each transfer
-										for (var i = 0; i < $scope.transfers.length; i++) {
-												var fromStop = StopsService.getStopById($scope.transfers[i].from_stop_id);
-												var toStop = StopsService.getStopById($scope.transfers[i].to_stop_id);
-												// console.log('fromStop', fromStop, 'toStop', toStop);
-												fromStop.transfer = {
-														line_name : toStop.line_name,
-														stop_id : toStop.details.stop_id,
-														stop_name : toStop.details.stop_name,
-														stop_lon : toStop.details.stop_lon,
-														stop_lat : toStop.details.stop_lat
-												};
-										};
-								}, function(data, status, headers, config){
-										console.log('Error!', data, status, headers, config);
-								});
-						});
+							TransfersService.getAllTransfers(function(data){
+									$scope.transfers = data;
+									//iterate each transfer
+									for (var i = 0; i < $scope.transfers.length; i++) {
+											var fromStop = StopsService.getStopById($scope.transfers[i].from_stop_id);
+											var toStop = StopsService.getStopById($scope.transfers[i].to_stop_id);
+											// console.log('fromStop', fromStop, 'toStop', toStop);
+											fromStop.transfer = {
+													line_name : toStop.line_name,
+													stop_id : toStop.details.stop_id,
+													stop_name : toStop.details.stop_name,
+													stop_lon : toStop.details.stop_lon,
+													stop_lat : toStop.details.stop_lat
+											};
+									};
+							}, function(data, status, headers, config){
+									console.log('Error!', data, status, headers, config);
+							});
+					});
 				}
 
 				initialize();

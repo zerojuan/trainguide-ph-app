@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('uiModule').directive('slideGroup', ['CommonAppState', function(CommonAppState){
+angular.module('uiModule').directive('slideGroup', ['$location','CommonAppState', function($location, CommonAppState){
 	return {
 		restrict : 'E',
 		transclude : true,
@@ -34,8 +34,6 @@ angular.module('uiModule').directive('slideGroup', ['CommonAppState', function(C
 			}
 
 			this.addSlide = function(slide){
-				// console.log("SLIDE: ", slide);
-				//if(slides.length == 0) $scope.select(slide);
 				slides.push(slide);
 			}
 		}],
@@ -48,7 +46,6 @@ angular.module('uiModule').directive('slideGroup', ['CommonAppState', function(C
 
 			var slideOut = function(callback){
 				var width = $('.sidebar').width();
-				// console.log('Sliding out:', width);
 				$($elm).css('right', width+'px');
 				$($elm).css('width', width+'px');	
 				$('.container').addClass('adjust');
@@ -74,8 +71,7 @@ angular.module('uiModule').directive('slideGroup', ['CommonAppState', function(C
 			});
 
 			$scope.$watch("selectedItem", function(newValue, oldValue){
-				// console.log("Selected Item Changed", newValue);
-				if(newValue === false){
+				if(newValue === false && !($location.search()).li){
 					slideIn();
 				}else{
 					if(!newValue.selected){
@@ -83,37 +79,23 @@ angular.module('uiModule').directive('slideGroup', ['CommonAppState', function(C
 					}else{
 						if(newValue.stop){
 							$scope.selectByTitle('Line');
-							// $elm.find('#stop-content').show();
-							// $elm.find('#line-content').hide();
 							$scope.showDetails = true;
-							// console.log('slidegroup.js selectedItem if(newValue.stop) showDetails: ', $scope.showDetails);
 						}else{
-							// $elm.find('#stop-content').hide();
-							// $elm.find('#line-content').show();
 							$scope.showDetails = false;
 							$scope.selectByTitle(newValue.title);
-							// console.log('slidegroup.js selectedItem else(newValue.stop) showDetails: ', $scope.showDetails);
 						}
 						slideOut();
 					}
-					// console.log('slidegroup.js selectedItem: ', $scope.selectedItem);
 				}
 			});
 
 			$scope.$watch("selectedLine", function(newValue, oldValue){
 				if(newValue){
-					// console.log('slidegroup.js selectedLine newValue: ', newValue);
 					slideOut();
-					// $('.slide[title="Line"]').addClass('active');
    				$scope.selectByTitle('Line');
-   				// console.log('slidegroup.js selectedLine slide', $scope.slides);
-					// $elm.find('#stop-content').hide();
-					// $elm.find('#line-content').show();
-					// console.log('slidegroup.js selectedStop', $scope.selectedStop, 'selectedItem', $scope.selectedItem);
 					if($scope.selectedStop != null){
 						$scope.showDetails = true;	
 					}
-					// console.log('slidegroup.js selectedLine showDetails: ', $scope.showDetails);
 				}
 			});
 		},

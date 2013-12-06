@@ -12,25 +12,22 @@ angular.module('uiModule').directive('lines', ['CommonAppState', function(Common
 			getLineDetails : '='
 		},
 		link : function(scope, element){
-				console.log('lines.js selectedStop', scope.selectedStop);
 			scope.$watch("selectedStop", function(newValue, oldValue){
 				if(newValue){
 					element.find('.stop-desc').html('<h2>'+newValue.details.stop_name+'</h2>');
-					// element.find('.line-desc').hide();
-				}//else{
-				// 	element.find('.line-desc').show();
-				// 	element.find('.stop-desc').hide();
-				// }
-				// console.log('lines.js selectedStop', scope.selectedStop);
+				}
+			});
+
+			scope.$watch("selectedLine", function(newValue, oldValue){
+				if(newValue)
+					scope.lineSelected(newValue);
 			});
 
 			scope.lineSelected = function(line){
-				// console.log('Selected: ', line);
 				scope.selectedLine = line;
 				scope.selectedStop = null;
 				scope.showDetails = false;
 				scope.getLineDetails(line);
-				// console.log('lines.js selectedStop showDetails: ', scope.showDetails);
 			}
 		},
 		template :

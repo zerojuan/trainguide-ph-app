@@ -21,11 +21,8 @@ angular.module('trainguide.controllers')
 				flo: ($location.search()).flo,
 				fla: ($location.search()).fla,
 				tlo: ($location.search()).tlo,
-				tla: ($location.search()).tla,
-				li: ($location.search()).li
+				tla: ($location.search()).tla
 			};
-
-			console.log('PARAMETERS? ', tripSaved);
 
 			if(tripSaved.flo && tripSaved.fla){						
 				GeocoderService.geocode(latLng(tripSaved.fla, tripSaved.flo), function(data){
@@ -48,15 +45,22 @@ angular.module('trainguide.controllers')
 			function check(){
 				if(success===2) $scope.getDirections();	
 			}			
-		}
-
-		var setLine = function(routeid){
-			var trueLine = $scope.lines[$filter('lineCode')(routeid)];
-			$scope.selected.line = trueLine;
-			$scope.getLineDetails(trueLine);
-			$scope.menuItems[0].selected = false;
-			$scope.selectedItemHandler($scope.menuItems[0]);
 		};
+
+		var setLine = function(line){
+			$scope.selected.line = line;
+			$scope.getLineDetails(line);
+			$scope.menuItems[0].selected = false;
+			$scope.selectedItemHandler($scope.menuItems[0]);	
+		};
+
+		$scope.$watch('lines', function(newValue){
+			if(newValue){
+				if(($location.search()).li){
+					setLine($scope.lines[($location.search()).li]);
+				}	
+			}
+		});
 
 		$scope.getDirections = function(){
 			$scope.loadingQuery = true;
@@ -71,7 +75,8 @@ angular.module('trainguide.controllers')
 					var legs = $scope.selected.itinerary.legs;
 					for(var index in legs){
 						if(legs[index].route){
-							setLine(legs[index].route);
+							var trueLine = $scope.lines[$filter('lineCode')(legs[index].route)];
+							setLine(trueLine);
 						}
 					}
 
@@ -82,6 +87,7 @@ angular.module('trainguide.controllers')
 						tla: data.to.lat,
 						li: $scope.selected.line.name
 					};
+          $location.path('');
 					$location.search(lnglat);
 				},
 				function(err){

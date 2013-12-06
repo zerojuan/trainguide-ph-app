@@ -15,8 +15,6 @@ angular.module('uiModule').directive('categories', function(){
         console.log('selectedCategory', newValue);
       });
 
-      // console.log('categories', scope.categories);
-
       scope.setCategory = function(category){
         scope.selectedCategory = category;
       }

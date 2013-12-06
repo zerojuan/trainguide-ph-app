@@ -4,7 +4,7 @@
  * Date: 7/12/13
  * Time: 7:04 AM
  */
-angular.module('uiModule').directive('radioGroup', [function(){
+angular.module('uiModule').directive('radioGroup', ['$location', function($location){
   return {
     restrict : 'E',
     transclude : true,
@@ -12,7 +12,7 @@ angular.module('uiModule').directive('radioGroup', [function(){
       '<div>'+
       '<ul>' +
         '<li ng-repeat="i in menuItems">'+
-          '<a ng-click="navClick(i)" ng-class="{active:i.selected}" href="#{{i.title}}"><span>{{i.title}}</span></a>'+
+          '<a ng-click="navClick(i)" ng-class="{active:i.selected}"><span>{{i.title}}</span></a>'+
         '</li>'+
       '</ul>'+
       '</div>',
@@ -20,51 +20,30 @@ angular.module('uiModule').directive('radioGroup', [function(){
       menuItems : '=menuItems',
       selectedItemHandler : '=selectedItemHandler',
       selectedItem : '=selectedItem',
+      selectedLine : '=selectedLine',
       showDetails : '=showDetails'   
     },                
-    link: function(scope, elm, attr, ctrl){  
-    // console.log("Hello world");   
+    link: function(scope, elm, attr, ctrl){
       scope.previousItem = null;      
-      scope.navClick = function(item){        
-        // console.log("Previous Item: ", scope.previousItem);
+      scope.navClick = function(item){ 
+        $location.path(item.title);     
+        if(scope.selectedLine){
+          $location.search('li', scope.selectedLine.name); 
+        }
 
-				scope.selectedItemHandler(item);
+        if(item.title != 'Line' && ($location.search()).li){
+          $location.search('li', null); 
+        }
+
+        scope.selectedItemHandler(item);
         $('.container').removeClass('adjust');
-        // if(scope.previousItem){
-        //  scope.previousItem.selected = false;                    
-        //  if(scope.previousItem.title == item.title){
-        //    item.selected = true;
-        //    scope.previousItem = null;
-        //  }else{
-        //    scope.previousItem = item;
-        //  }
-        // }else{
-        //  scope.previousItem = item;  
+        scope.showDetails = false;  
+
+        // if(scope.selectedItem){
+        //   $location.path('');
+        //   $location.search('li', null); 
         // }
-
-        //item.selected = !item.selected;
-
-        scope.showDetails = false;
-        // console.log('radiogroup.js navClick showDetails', scope.showDetails);
       }
-
-      // scope.$watch("selectedItem", function(newValue, oldValue){
-      //   console.log("Changed Selected Item...", newValue);
-                
-      //   if(newValue){
-      //     if(newValue.stop){
-      //       for(var i in scope.menuItems){
-      //         if(scope.menuItems[i].title == newValue.title){
-      //           scope.menuItems[i].selected = newValue.selected;
-      //         }else{
-      //           scope.menuItems[i].selected = false;
-      //         }
-      //       }   
-      //     }         
-      //   }      
-
-        // console.log('radiogroup.js selectedItem', scope.selectedItem);
-      // });
     },
     replace: true
   }
