@@ -132,10 +132,8 @@ angular.module('trainguide.controllers').controller('DirectionCtrl', [
           flo: $location.search().flo,
           fla: $location.search().fla,
           tlo: $location.search().tlo,
-          tla: $location.search().tla,
-          li: $location.search().li
+          tla: $location.search().tla
         };
-      console.log('PARAMETERS? ', tripSaved);
       if (tripSaved.flo && tripSaved.fla) {
         GeocoderService.geocode(latLng(tripSaved.fla, tripSaved.flo), function (data) {
           $scope.selected.direction.from = data[0];
@@ -157,13 +155,20 @@ angular.module('trainguide.controllers').controller('DirectionCtrl', [
           $scope.getDirections();
       }
     }
-    var setLine = function (routeid) {
-      var trueLine = $scope.lines[$filter('lineCode')(routeid)];
-      $scope.selected.line = trueLine;
-      $scope.getLineDetails(trueLine);
+    ;
+    var setLine = function (line) {
+      $scope.selected.line = line;
+      $scope.getLineDetails(line);
       $scope.menuItems[0].selected = false;
       $scope.selectedItemHandler($scope.menuItems[0]);
     };
+    $scope.$watch('lines', function (newValue) {
+      if (newValue) {
+        if ($location.search().li) {
+          setLine($scope.lines[$location.search().li]);
+        }
+      }
+    });
     $scope.getDirections = function () {
       $scope.loadingQuery = true;
       DirectionsService.getDirections({
@@ -179,7 +184,8 @@ angular.module('trainguide.controllers').controller('DirectionCtrl', [
         var legs = $scope.selected.itinerary.legs;
         for (var index in legs) {
           if (legs[index].route) {
-            setLine(legs[index].route);
+            var trueLine = $scope.lines[$filter('lineCode')(legs[index].route)];
+            setLine(trueLine);
           }
         }
         var lnglat = {
@@ -189,6 +195,7 @@ angular.module('trainguide.controllers').controller('DirectionCtrl', [
             tla: data.to.lat,
             li: $scope.selected.line.name
           };
+        $location.path('');
         $location.search(lnglat);
       }, function (err) {
         console.log('Some error occured', err);
@@ -463,6 +470,8 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
             $scope.selectedItem = $scope.menuItems[i];
           } else {
             $scope.selectedItem = false;
+            $location.path('');
+            $location.search('li', null);
           }
         } else {
           $scope.menuItems[i].selected = false;
@@ -1676,11 +1685,14 @@ angular.module('uiModule').directive('lines', [
         getLineDetails: '='
       },
       link: function (scope, element) {
-        console.log('lines.js selectedStop', scope.selectedStop);
         scope.$watch('selectedStop', function (newValue, oldValue) {
           if (newValue) {
             element.find('.stop-desc').html('<h2>' + newValue.details.stop_name + '</h2>');
           }
+        });
+        scope.$watch('selectedLine', function (newValue, oldValue) {
+          if (newValue)
+            scope.lineSelected(newValue);
         });
         scope.lineSelected = function (line) {
           scope.selectedLine = line;
@@ -1696,9 +1708,10 @@ angular.module('uiModule').directive('lines', [
 ]);
 'use strict';
 angular.module('uiModule').directive('lineStops', [
+  '$location',
   'CommonAppState',
   'StopsService',
-  function (CommonAppState, StopsService) {
+  function ($location, CommonAppState, StopsService) {
     return {
       restrict: 'E',
       transclude: true,
@@ -1720,6 +1733,7 @@ angular.module('uiModule').directive('lineStops', [
         svg.append('rect').attr('class', 'vertical').attr('x', centerX - lineWidth / 2).attr('width', lineWidth).attr('y', 20);
         scope.$watch('selectedLine', function (newValue, oldValue) {
           if (newValue && newValue.stops) {
+            $location.search('li', newValue.name);
             svg.selectAll('.transfer').remove();
             svg.selectAll('.disabled').remove();
             console.log('svgHeight', svgHeight, 'linestops: ', newValue.stops);
@@ -2014,20 +2028,30 @@ angular.module('uiModule').directive('placesbox', function () {
     replace: true
   };
 });
-angular.module('uiModule').directive('radioGroup', [function () {
+angular.module('uiModule').directive('radioGroup', [
+  '$location',
+  function ($location) {
     return {
       restrict: 'E',
       transclude: true,
-      template: '<div>' + '<ul>' + '<li ng-repeat="i in menuItems">' + '<a ng-click="navClick(i)" ng-class="{active:i.selected}" href="#{{i.title}}"><span>{{i.title}}</span></a>' + '</li>' + '</ul>' + '</div>',
+      template: '<div>' + '<ul>' + '<li ng-repeat="i in menuItems">' + '<a ng-click="navClick(i)" ng-class="{active:i.selected}"><span>{{i.title}}</span></a>' + '</li>' + '</ul>' + '</div>',
       scope: {
         menuItems: '=menuItems',
         selectedItemHandler: '=selectedItemHandler',
         selectedItem: '=selectedItem',
+        selectedLine: '=selectedLine',
         showDetails: '=showDetails'
       },
       link: function (scope, elm, attr, ctrl) {
         scope.previousItem = null;
         scope.navClick = function (item) {
+          $location.path(item.title);
+          if (scope.selectedLine) {
+            $location.search('li', scope.selectedLine.name);
+          }
+          if (item.title != 'Line' && $location.search().li) {
+            $location.search('li', null);
+          }
           scope.selectedItemHandler(item);
           $('.container').removeClass('adjust');
           scope.showDetails = false;
@@ -2035,7 +2059,8 @@ angular.module('uiModule').directive('radioGroup', [function () {
       },
       replace: true
     };
-  }]);
+  }
+]);
 'use strict';
 angular.module('uiModule').directive('route', [
   '$filter',
@@ -2125,8 +2150,9 @@ angular.module('uiModule').directive('slide', [function () {
   }]);
 'use strict';
 angular.module('uiModule').directive('slideGroup', [
+  '$location',
   'CommonAppState',
-  function (CommonAppState) {
+  function ($location, CommonAppState) {
     return {
       restrict: 'E',
       transclude: true,
@@ -2190,7 +2216,7 @@ angular.module('uiModule').directive('slideGroup', [
           adjustScrollWidths();
         });
         $scope.$watch('selectedItem', function (newValue, oldValue) {
-          if (newValue === false) {
+          if (newValue === false && !$location.search().li) {
             slideIn();
           } else {
             if (!newValue.selected) {
