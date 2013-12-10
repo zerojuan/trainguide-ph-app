@@ -56,8 +56,14 @@ angular.module('trainguide.controllers')
 
 		$scope.$watch('lines', function(newValue){
 			if(newValue){
+				if(($location.search().st)){
+					console.log(($location.search()).st);
+					$scope.selected.stop = StopsService.getStopById(($location.search()).st);
+					console.log('$scope.selectedStop', $scope.selected.stop);
+				}
 				if(($location.search()).li){
 					setLine($scope.lines[($location.search()).li]);
+					loadDirections();
 				}	
 			}
 		});
@@ -96,8 +102,6 @@ angular.module('trainguide.controllers')
 					$scope.errorMessage = err.msg;
 				});
 		}
-
-		loadDirections();
 
 //		getRealMode: function(mode, routeId) {
 //			if(mode == 'BUS') {

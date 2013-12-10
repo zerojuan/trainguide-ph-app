@@ -349,21 +349,21 @@ angular.module('trainguide.controllers')
 
 				function initialize() {
 					LinesService.getLines(function(data, status){
-							$scope.lines = data;
+							var lines = data;
 							for(key in data){
-									$scope.lines[key].name = key;
+									lines[key].name = key;
 							}
-							$scope.lines.LRT1.color = "#fdc33c";
-							$scope.lines.LRT2.color = "#ad86bc";
-							$scope.lines.MRT.color = "#5384c4";
-							$scope.lines.PNR.color = "#f28740";
-							StopsService.setLines($scope.lines);
+							lines.LRT1.color = "#fdc33c";
+							lines.LRT2.color = "#ad86bc";
+							lines.MRT.color = "#5384c4";
+							lines.PNR.color = "#f28740";
+							StopsService.setLines(lines);
 
 							var fareData = {};
-							fareData.MRT = $scope.lines.MRT.fare;
-							fareData.LRT1 = $scope.lines.LRT1.fare;
-							fareData.LRT2 = $scope.lines.LRT2.fare;
-							fareData.PNR = $scope.lines.PNR.fare;
+							fareData.MRT = lines.MRT.fare;
+							fareData.LRT1 = lines.LRT1.fare;
+							fareData.LRT2 = lines.LRT2.fare;
+							fareData.PNR = lines.PNR.fare;
 
 							DirectionsService.bindFareMatrix('TRAIN', fareData);
 							FaresService.getPUB(function(data){
@@ -388,6 +388,7 @@ angular.module('trainguide.controllers')
 													stop_lat : toStop.details.stop_lat
 											};
 									};
+									$scope.lines = lines;
 							}, function(data, status, headers, config){
 									console.log('Error!', data, status, headers, config);
 							});

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('google-maps')
-	.directive('polylineDrawer', [function(){
+	.directive('polylineDrawer', ['$location', function($location){
 		return {
 			require: '^googleMap',
 			restrict: 'E',
@@ -103,6 +103,7 @@ angular.module('google-maps')
 						scope.map.setZoom(16);
 
 						setLine();
+						$location.search({li: scope.selectedLine.name, st: scope.selectedStop.stop_id});
 					}
 
 				});

@@ -9,11 +9,14 @@ angular.module('uiModule').directive('lineStops', ['$location', 'CommonAppState'
 				selectedItem: '=selectedItem',
 				selectedLine : '=selectedLine',
 				selectedStop: '=selectedStop',
-				showDetails: '=showDetails'
+				showDetails: '=showDetails',
+				lines: '=lines'
 			},
 			link : function(scope, element, attr){
-				$('.preloader-container').fadeOut(function(){
-					$(this).remove();
+				scope.$watch('lines', function(newValue){
+					$('.preloader-container').fadeOut(function(){
+						$(this).remove();
+					});
 				});
 
 				var y = null;
@@ -211,6 +214,9 @@ angular.module('uiModule').directive('lineStops', ['$location', 'CommonAppState'
 					scope.selectedStop = stop;
 					scope.showDetails = true;
 					scope.$apply();
+
+					console.log('scope.selectedLine', scope.selectedLine, 'scope.selectedStop', scope.selectedStop);
+					$location.search({li: scope.selectedLine.name, st: scope.selectedStop.stop_id});
 				}
 
 				scope.$watch('selectedStop', function(newValue, oldValue){
