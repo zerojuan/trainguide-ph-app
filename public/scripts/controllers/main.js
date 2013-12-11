@@ -373,12 +373,15 @@ angular.module('trainguide.controllers')
 								DirectionsService.bindFareMatrix('JEEP', data);
 							});
 
+
+							$scope.lines = lines;
+
 							TransfersService.getAllTransfers(function(data){
-									$scope.transfers = data;
+								
 									//iterate each transfer
-									for (var i = 0; i < $scope.transfers.length; i++) {
-											var fromStop = StopsService.getStopById($scope.transfers[i].from_stop_id);
-											var toStop = StopsService.getStopById($scope.transfers[i].to_stop_id);
+									for (var i = 0; i < data.length; i++) {
+											var fromStop = StopsService.getStopById(data[i].from_stop_id);
+											var toStop = StopsService.getStopById(data[i].to_stop_id);
 											// console.log('fromStop', fromStop, 'toStop', toStop);
 											fromStop.transfer = {
 													line_name : toStop.line_name,
@@ -388,7 +391,8 @@ angular.module('trainguide.controllers')
 													stop_lat : toStop.details.stop_lat
 											};
 									};
-									$scope.lines = lines;
+
+									$scope.transfers = data;
 							}, function(data, status, headers, config){
 									console.log('Error!', data, status, headers, config);
 							});

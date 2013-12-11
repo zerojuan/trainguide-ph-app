@@ -164,8 +164,14 @@ angular.module('trainguide.controllers').controller('DirectionCtrl', [
     };
     $scope.$watch('lines', function (newValue) {
       if (newValue) {
+        if ($location.search().st) {
+          console.log($location.search().st);
+          $scope.selected.stop = StopsService.getStopById($location.search().st);
+          console.log('$scope.selectedStop', $scope.selected.stop);
+        }
         if ($location.search().li) {
           setLine($scope.lines[$location.search().li]);
+          loadDirections();
         }
       }
     });
@@ -203,7 +209,6 @@ angular.module('trainguide.controllers').controller('DirectionCtrl', [
         $scope.errorMessage = err.msg;
       });
     };
-    loadDirections();
   }
 ]);
 angular.module('trainguide.controllers').controller('GMapCtrl', [
@@ -605,20 +610,20 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
     }
     function initialize() {
       LinesService.getLines(function (data, status) {
-        $scope.lines = data;
+        var lines = data;
         for (key in data) {
-          $scope.lines[key].name = key;
+          lines[key].name = key;
         }
-        $scope.lines.LRT1.color = '#fdc33c';
-        $scope.lines.LRT2.color = '#ad86bc';
-        $scope.lines.MRT.color = '#5384c4';
-        $scope.lines.PNR.color = '#f28740';
-        StopsService.setLines($scope.lines);
+        lines.LRT1.color = '#fdc33c';
+        lines.LRT2.color = '#ad86bc';
+        lines.MRT.color = '#5384c4';
+        lines.PNR.color = '#f28740';
+        StopsService.setLines(lines);
         var fareData = {};
-        fareData.MRT = $scope.lines.MRT.fare;
-        fareData.LRT1 = $scope.lines.LRT1.fare;
-        fareData.LRT2 = $scope.lines.LRT2.fare;
-        fareData.PNR = $scope.lines.PNR.fare;
+        fareData.MRT = lines.MRT.fare;
+        fareData.LRT1 = lines.LRT1.fare;
+        fareData.LRT2 = lines.LRT2.fare;
+        fareData.PNR = lines.PNR.fare;
         DirectionsService.bindFareMatrix('TRAIN', fareData);
         FaresService.getPUB(function (data) {
           DirectionsService.bindFareMatrix('BUS', data);
@@ -626,11 +631,11 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
         FaresService.getPUJ(function (data) {
           DirectionsService.bindFareMatrix('JEEP', data);
         });
+        $scope.lines = lines;
         TransfersService.getAllTransfers(function (data) {
-          $scope.transfers = data;
-          for (var i = 0; i < $scope.transfers.length; i++) {
-            var fromStop = StopsService.getStopById($scope.transfers[i].from_stop_id);
-            var toStop = StopsService.getStopById($scope.transfers[i].to_stop_id);
+          for (var i = 0; i < data.length; i++) {
+            var fromStop = StopsService.getStopById(data[i].from_stop_id);
+            var toStop = StopsService.getStopById(data[i].to_stop_id);
             fromStop.transfer = {
               line_name: toStop.line_name,
               stop_id: toStop.details.stop_id,
@@ -640,6 +645,7 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
             };
           }
           ;
+          $scope.transfers = data;
         }, function (data, status, headers, config) {
           console.log('Error!', data, status, headers, config);
         });
@@ -1408,7 +1414,9 @@ angular.module('google-maps').directive('placesAutocomplete', [
   }
 ]);
 'use strict';
-angular.module('google-maps').directive('polylineDrawer', [function () {
+angular.module('google-maps').directive('polylineDrawer', [
+  '$location',
+  function ($location) {
     return {
       require: '^googleMap',
       restrict: 'E',
@@ -1492,6 +1500,10 @@ angular.module('google-maps').directive('polylineDrawer', [function () {
             scope.map.setCenter(position);
             scope.map.setZoom(16);
             setLine();
+            $location.search({
+              li: scope.selectedLine.name,
+              st: scope.selectedStop.stop_id
+            });
           }
         });
         scope.$watch('paths', function () {
@@ -1506,7 +1518,8 @@ angular.module('google-maps').directive('polylineDrawer', [function () {
         });
       }
     };
-  }]);
+  }
+]);
 angular.module('google-maps').directive('tripAdder', [
   'PlacesService',
   'GeocoderService',
@@ -1719,7 +1732,8 @@ angular.module('uiModule').directive('lineStops', [
         selectedItem: '=selectedItem',
         selectedLine: '=selectedLine',
         selectedStop: '=selectedStop',
-        showDetails: '=showDetails'
+        showDetails: '=showDetails',
+        transfers: '=transfers'
       },
       link: function (scope, element, attr) {
         $('.preloader-container').fadeOut(function () {
@@ -1731,37 +1745,38 @@ angular.module('uiModule').directive('lineStops', [
         var lineWidth = 13;
         var centerX = 123;
         svg.append('rect').attr('class', 'vertical').attr('x', centerX - lineWidth / 2).attr('width', lineWidth).attr('y', 20);
-        scope.$watch('selectedLine', function (newValue, oldValue) {
-          if (newValue && newValue.stops) {
-            $location.search('li', newValue.name);
+        var paint = function (line) {
+          if (line && line.stops) {
+            $location.search('li', line.name);
+            svg.selectAll('.label').remove();
+            svg.selectAll('.stop').remove();
             svg.selectAll('.transfer').remove();
             svg.selectAll('.disabled').remove();
-            console.log('svgHeight', svgHeight, 'linestops: ', newValue.stops);
             y = d3.scale.linear().domain([
               0,
-              newValue.stops.length - 1
+              line.stops.length - 1
             ]).range([
               0,
               svgHeight - 40
             ]);
-            for (var i in newValue.stops) {
+            for (var i in line.stops) {
               svg.selectAll('.vertical').attr('height', function (d) {
-                if (newValue.name == 'PNR') {
+                if (line.name == 'PNR') {
                   return svgHeight - 140;
                 }
                 return svgHeight - 40;
-              }).attr('class', 'vertical ' + newValue.name);
-              var text = svg.selectAll('.label').data(newValue.stops, function (d) {
+              }).attr('class', 'vertical ' + line.name);
+              var text = svg.selectAll('.label').data(line.stops, function (d) {
                   return d.stop_id;
                 });
               text.enter().append('text').attr('class', function (d, i) {
                 var _class = 'label';
                 if (d.disabled) {
-                  if (i < newValue.stops.length) {
+                  if (i < line.stops.length) {
                     svg.append('rect').attr('class', 'disabled').attr('x', centerX - lineWidth / 2).attr('y', y(i) - 5).attr('width', lineWidth).attr('height', y(i + 1) - y(i));
                   }
                 }
-                if (i == 0 || i == newValue.stops.length - 1) {
+                if (i == 0 || i == line.stops.length - 1) {
                   return _class + ' ends';
                 }
                 return _class;
@@ -1769,7 +1784,7 @@ angular.module('uiModule').directive('lineStops', [
                 return y(i) + 23;
               }).text(function (d, i) {
                 var name = d.details.stop_name;
-                if (i == 0 || i == newValue.stops.length - 1) {
+                if (i == 0 || i == line.stops.length - 1) {
                   name = d.details.stop_name.toUpperCase();
                 }
                 var localNames = name.split(' ');
@@ -1806,7 +1821,7 @@ angular.module('uiModule').directive('lineStops', [
                 scope.onSelectedStop(d);
               });
               text.exit().remove();
-              var dots = svg.selectAll('.stop').data(newValue.stops, function (d) {
+              var dots = svg.selectAll('.stop').data(line.stops, function (d) {
                   return d.stop_id;
                 });
               dots.enter().append('circle').attr('class', function (d, i) {
@@ -1822,8 +1837,8 @@ angular.module('uiModule').directive('lineStops', [
                   dots.append('rect').attr('class', 'disabled').attr('x', centerX - lineWidth / 2).attr('y', y(i)).attr('width', lineWidth).attr('height', y(i + 1) + 20);
                   return _class += 'disabled';
                 }
-                if (i == 0 || i == newValue.stops.length - 1) {
-                  return _class += newValue.name;
+                if (i == 0 || i == line.stops.length - 1) {
+                  return _class += line.name;
                 }
                 return _class;
               }).attr('cx', centerX).attr('cy', function (d, i) {
@@ -1832,7 +1847,7 @@ angular.module('uiModule').directive('lineStops', [
                 if (d.transfer) {
                   return 9;
                 }
-                if (i == 0 || i == newValue.stops.length - 1) {
+                if (i == 0 || i == line.stops.length - 1) {
                   return 9;
                 }
                 return 4.5;
@@ -1842,6 +1857,12 @@ angular.module('uiModule').directive('lineStops', [
               dots.exit().remove();
             }
           }
+        };
+        scope.$watch('selectedLine', function (newValue, oldValue) {
+          paint(newValue);
+        });
+        scope.$watch('transfers', function (newVal, oldVal) {
+          paint(scope.selectedLine);
         });
         scope.onSelectedStop = function (stop) {
           for (var i in scope.selectedLine.stops) {
@@ -1851,6 +1872,10 @@ angular.module('uiModule').directive('lineStops', [
           scope.selectedStop = stop;
           scope.showDetails = true;
           scope.$apply();
+          $location.search({
+            li: scope.selectedLine.name,
+            st: scope.selectedStop.stop_id
+          });
         };
         scope.$watch('selectedStop', function (newValue, oldValue) {
           if (scope.selectedLine) {

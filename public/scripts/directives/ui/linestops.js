@@ -10,13 +10,11 @@ angular.module('uiModule').directive('lineStops', ['$location', 'CommonAppState'
 				selectedLine : '=selectedLine',
 				selectedStop: '=selectedStop',
 				showDetails: '=showDetails',
-				lines: '=lines'
+				transfers: '=transfers'
 			},
 			link : function(scope, element, attr){
-				scope.$watch('lines', function(newValue){
-					$('.preloader-container').fadeOut(function(){
-						$(this).remove();
-					});
+				$('.preloader-container').fadeOut(function(){
+					$(this).remove();
 				});
 
 				var y = null;
@@ -34,36 +32,38 @@ angular.module('uiModule').directive('lineStops', ['$location', 'CommonAppState'
 					.attr("width", lineWidth)
 					.attr("y", 20);
 
-				scope.$watch('selectedLine', function(newValue, oldValue){
-					if(newValue && newValue.stops){
-						$location.search('li', newValue.name);
+				var paint = function(line){
+					if(line && line.stops){
+						$location.search('li', line.name);
+						svg.selectAll(".label").remove();
+						svg.selectAll(".stop").remove();
 						svg.selectAll(".transfer").remove();
 						svg.selectAll(".disabled").remove();
-						console.log('svgHeight', svgHeight, 'linestops: ', newValue.stops);
+						// console.log('svgHeight', svgHeight, 'linestops: ', line.stops);
 						y = d3.scale.linear()
-									.domain([0, newValue.stops.length-1])
+									.domain([0, line.stops.length-1])
 									.range([0, svgHeight-40]);
 
-						for(var i in newValue.stops){
+						for(var i in line.stops){
 							svg.selectAll(".vertical")
 								// .attr("height", svgHeight-30)
 								.attr("height", function(d){
-									if(newValue.name == "PNR"){
+									if(line.name == "PNR"){
 										return svgHeight-140	
 									}
 									return svgHeight-40
 								})
-								.attr("class", "vertical " + newValue.name);
+								.attr("class", "vertical " + line.name);
 							// svg.selectAll(".transfer").remove();
 							
 							var text = svg.selectAll(".label")
-								.data(newValue.stops, function(d){return d.stop_id;});
+								.data(line.stops, function(d){return d.stop_id;});
 							text.enter().append("text")
 								.attr("class", function(d,i){
 									var _class = "label";
 
 									if(d.disabled){
-										if(i < newValue.stops.length){
+										if(i < line.stops.length){
 											svg.append("rect")
 												.attr("class", "disabled")
 												.attr("x", centerX - lineWidth/2)
@@ -73,7 +73,7 @@ angular.module('uiModule').directive('lineStops', ['$location', 'CommonAppState'
 										}
 										
 									}
-									if(i == 0 || i == newValue.stops.length-1){
+									if(i == 0 || i == line.stops.length-1){
 										return _class + " ends";
 									}
 									return _class;
@@ -82,7 +82,7 @@ angular.module('uiModule').directive('lineStops', ['$location', 'CommonAppState'
 								.attr("y", function(d,i){return (y(i)+23)})
 								.text(function(d,i){
 									var name = d.details.stop_name;
-									if(i == 0 || i == newValue.stops.length-1){
+									if(i == 0 || i == line.stops.length-1){
 										name = d.details.stop_name.toUpperCase();
 									}
 
@@ -145,7 +145,7 @@ angular.module('uiModule').directive('lineStops', ['$location', 'CommonAppState'
 								});
 							text.exit().remove();
 							var dots = svg.selectAll(".stop")
-								.data(newValue.stops, function(d){return d.stop_id;});
+								.data(line.stops, function(d){return d.stop_id;});
 							dots.enter().append("circle")
 								.attr("class", function(d,i){
 									var _class = "stop ";
@@ -180,9 +180,9 @@ angular.module('uiModule').directive('lineStops', ['$location', 'CommonAppState'
 											.attr("height", y(i+1)+20);
 										return _class += "disabled";
 									}
-									// return _class+= newValue.name;
-									if(i == 0 || i == newValue.stops.length-1){
-										return _class+= newValue.name;
+									// return _class+= line.name;
+									if(i == 0 || i == line.stops.length-1){
+										return _class+= line.name;
 									}
 									return _class;
 								})
@@ -192,7 +192,7 @@ angular.module('uiModule').directive('lineStops', ['$location', 'CommonAppState'
 									if(d.transfer){
 										return 9;
 									}
-									if(i == 0 || i == newValue.stops.length-1){
+									if(i == 0 || i == line.stops.length-1){
 										return 9;
 									}
 									return 4.5;
@@ -204,7 +204,15 @@ angular.module('uiModule').directive('lineStops', ['$location', 'CommonAppState'
 							
 						}
 					}
+				};
+
+				scope.$watch('selectedLine', function(newValue, oldValue){
+					paint(newValue);
 				});
+
+				scope.$watch('transfers', function(newVal, oldVal){
+					paint(scope.selectedLine);	
+				})
 
 				scope.onSelectedStop = function(stop){
 					for(var i in scope.selectedLine.stops){
@@ -215,7 +223,6 @@ angular.module('uiModule').directive('lineStops', ['$location', 'CommonAppState'
 					scope.showDetails = true;
 					scope.$apply();
 
-					console.log('scope.selectedLine', scope.selectedLine, 'scope.selectedStop', scope.selectedStop);
 					$location.search({li: scope.selectedLine.name, st: scope.selectedStop.stop_id});
 				}
 

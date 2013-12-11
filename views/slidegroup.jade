@@ -10,7 +10,7 @@ slide-group(selected-item='selectedItem', selected-stop='selected.stop', selecte
 						nearby
 							
 					#line-content(ng-class="{true:'nodetails', false:'showdetails'}[showDetails]")
-						line-stops(selected-item="selectedItem", selected-line='selected.line', selected-stop='selected.stop', show-details='showDetails', lines='lines')
+						line-stops(selected-item="selectedItem", selected-line='selected.line', selected-stop='selected.stop', show-details='showDetails', transfers='transfers')
 
 		slide(title='Places')
 			div(ng-controller='PlaceCtrl')

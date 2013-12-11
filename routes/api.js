@@ -127,7 +127,9 @@ module.exports = {
 	},
 	transfers: {
 		list: function(req, res){
+			console.log("START: " + new Date());
 			gtfs.Transfer.find({}, function(err, transferData){
+				console.log("END: " + new Date());
 				if(transferData){
 					res.send(transferData);
 				}else{
