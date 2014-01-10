@@ -1761,9 +1761,6 @@ angular.module('uiModule').directive('lineStops', [
             ]);
             for (var i in line.stops) {
               svg.selectAll('.vertical').attr('height', function (d) {
-                if (line.name == 'PNR') {
-                  return svgHeight - 140;
-                }
                 return svgHeight - 40;
               }).attr('class', 'vertical ' + line.name);
               var text = svg.selectAll('.label').data(line.stops, function (d) {
@@ -1771,11 +1768,6 @@ angular.module('uiModule').directive('lineStops', [
                 });
               text.enter().append('text').attr('class', function (d, i) {
                 var _class = 'label';
-                if (d.disabled) {
-                  if (i < line.stops.length) {
-                    svg.append('rect').attr('class', 'disabled').attr('x', centerX - lineWidth / 2).attr('y', y(i) - 5).attr('width', lineWidth).attr('height', y(i + 1) - y(i));
-                  }
-                }
                 if (i == 0 || i == line.stops.length - 1) {
                   return _class + ' ends';
                 }
@@ -1832,10 +1824,6 @@ angular.module('uiModule').directive('lineStops', [
                     scope.onSelectedStop(StopsService.getStopById(d.transfer.stop_id));
                   });
                   return _class += 'transferee';
-                }
-                if (d.disabled) {
-                  dots.append('rect').attr('class', 'disabled').attr('x', centerX - lineWidth / 2).attr('y', y(i)).attr('width', lineWidth).attr('height', y(i + 1) + 20);
-                  return _class += 'disabled';
                 }
                 if (i == 0 || i == line.stops.length - 1) {
                   return _class += line.name;

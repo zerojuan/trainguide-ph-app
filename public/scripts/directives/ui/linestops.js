@@ -48,9 +48,9 @@ angular.module('uiModule').directive('lineStops', ['$location', 'CommonAppState'
 							svg.selectAll(".vertical")
 								// .attr("height", svgHeight-30)
 								.attr("height", function(d){
-									if(line.name == "PNR"){
-										return svgHeight-140	
-									}
+									// if(line.name == "PNR"){
+									// 	return svgHeight-140	
+									// }
 									return svgHeight-40
 								})
 								.attr("class", "vertical " + line.name);
@@ -62,17 +62,17 @@ angular.module('uiModule').directive('lineStops', ['$location', 'CommonAppState'
 								.attr("class", function(d,i){
 									var _class = "label";
 
-									if(d.disabled){
-										if(i < line.stops.length){
-											svg.append("rect")
-												.attr("class", "disabled")
-												.attr("x", centerX - lineWidth/2)
-												.attr("y", (y(i) - 5))
-												.attr("width", lineWidth)
-												.attr("height", (y(i+1) - y(i)));	
-										}
+									// if(d.disabled){
+									// 	if(i < line.stops.length){
+									// 		svg.append("rect")
+									// 			.attr("class", "disabled")
+									// 			.attr("x", centerX - lineWidth/2)
+									// 			.attr("y", (y(i) - 5))
+									// 			.attr("width", lineWidth)
+									// 			.attr("height", (y(i+1) - y(i)));	
+									// 	}
 										
-									}
+									// }
 									if(i == 0 || i == line.stops.length-1){
 										return _class + " ends";
 									}
@@ -171,16 +171,16 @@ angular.module('uiModule').directive('lineStops', ['$location', 'CommonAppState'
 											});
 										return _class+= "transferee";
 									}
-									if(d.disabled){
-										dots.append("rect")
-											.attr("class", "disabled")
-											.attr("x", centerX - lineWidth/2)
-											.attr("y", (y(i)))
-											.attr("width", lineWidth)
-											.attr("height", y(i+1)+20);
-										return _class += "disabled";
-									}
-									// return _class+= line.name;
+									// if(d.disabled){
+									// 	dots.append("rect")
+									// 		.attr("class", "disabled")
+									// 		.attr("x", centerX - lineWidth/2)
+									// 		.attr("y", (y(i)))
+									// 		.attr("width", lineWidth)
+									// 		.attr("height", y(i+1)+20);
+									// 	return _class += "disabled";
+									// }
+									// // return _class+= line.name;
 									if(i == 0 || i == line.stops.length-1){
 										return _class+= line.name;
 									}
