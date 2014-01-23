@@ -4,6 +4,10 @@ angular.module('uiModule').directive('nearby', function(){
   return {
     restrict : 'E',
     transclude : true,
+    scope : {
+      selected : '=',
+      selectedDest : '='
+    },
     link : function(scope){
       scope.selectedNearby = "Places";
       scope.setNearby = function(choice){
@@ -25,6 +29,16 @@ angular.module('uiModule').directive('nearby', function(){
 
 				// console.log("HIDEDIV: " , scope.hideDiv);
 			}
+
+      scope.selectDest = function(dest){
+        if(scope.selectedDest){
+          scope.selectedDest.isSelected = false;
+        }
+        scope.selectedDest = dest;
+        scope.selectedDest.isSelected = true;
+        console.log('selectedDest!!!', scope.selectedDest);
+      }
+
 			scope.$watch("selected.hospital", function(newValue){
 				updateHideDiv();
 			}, true);
@@ -70,7 +84,12 @@ angular.module('uiModule').directive('nearby', function(){
               '<div><h3>Nearby Stops</h3></div>'+
               '<ul>'+
                 '<li ng-repeat="nearby in selected.nearbyStops" ng-class="{active:place.isSelected}">'+
-                    '<span class="name">{{nearby.stopName}}</span>'+
+                    '<a class="name" ng-click="selectDest(nearby)" target="_blank">{{nearby.stopName}}</a>'+
+                    '<ul class="square">'+
+                      '<li ng-repeat="routes in nearby.routes">'+
+                        '<span>{{routes.route_long_name}}</span>'+
+                      '</li>'+
+                    '</ul>'+
                 '</li>'+
               '</ul>'+
             '</div>'+

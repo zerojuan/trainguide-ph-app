@@ -141,28 +141,53 @@ angular.module('trainguide.controllers')
 					lon: $scope.selected.stop.details.stop_lon
 				}},
 				function(data){
-					// $scope.selected.nearbyStops = data;
-					// var routeData = [];
+					var insertIntoRoutes = function(route, i, j, routeData){
+						RoutesService.getRouteInfo(route.agencyId, route.id,
+							function(routeInfo){
+								console.log('route inside', route);
+								route.details = routeInfo;
 
-					// for(var i in data){
-					// 	var routes = data[i].routes;
+								for(var k in routeData){
+									if(routeData[k].route_long_name == routeInfo.route_long_name){
+										routeData.splice(k, 1);
+									}
+								}
 
-					// 	for(var j in routes){
-					// 		// console.log('routes[j]', routes[j].agencyId, routes[j].id);
+								if(routeData.length < 5){
+									routeData.push(route.details);	
+								}
 
-					// 		RoutesService.getRouteInfo(routes[j].agencyId, routes[j].id,
-					// 			function(routeInfo){
-					// 				console.log(routeInfo);
-					// 				routes[j].details = routeInfo;
-					// 			},
-					// 			function(err){
-					// 				console.log('RoutesService error', err);
-					// 			});
-					// 	}
-					// }
+								if(routeData.length > 0){
+									data[i].routes = routeData;
+									$scope.selected.nearbyStops = data;
+									console.log('nearby', $scope.selected.nearbyStops);		
+								}
+							},
+							function(err){
+								console.log('RoutesService error', err);
+							});
+					}
+					for(var i in data){
+						var routes = data[i].routes;
+						data[i]['name'] = data[i].stopName;
+						data[i]['coordinates'] = {
+							lat: data[i].stopLat,
+							lng: data[i].stopLon
+						};
+						var routeData = [];
+						var count = 0;
 
-					$scope.selected.nearbyStops = data;
-					console.log('nearby', $scope.selected.nearbyStops);
+						for(var j in routes){
+							// console.log('routes[j]', routes[j].agencyId, routes[j].id);
+
+							console.log('routes[j]', routes[j]);			
+							if(count < 10){
+								insertIntoRoutes(routes[j], i, j, routeData)
+
+								count++;
+							}		
+						}
+					}
 				},
 				function(err){
 					console.log('======== Error!');

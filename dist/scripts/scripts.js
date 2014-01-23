@@ -454,8 +454,44 @@ angular.module('trainguide.controllers').controller('MainCtrl', [
             lon: $scope.selected.stop.details.stop_lon
           }
         }, function (data) {
-          $scope.selected.nearbyStops = data;
-          console.log('nearby', $scope.selected.nearbyStops);
+          var insertIntoRoutes = function (route, i, j, routeData) {
+            RoutesService.getRouteInfo(route.agencyId, route.id, function (routeInfo) {
+              console.log('route inside', route);
+              route.details = routeInfo;
+              for (var k in routeData) {
+                if (routeData[k].route_long_name == routeInfo.route_long_name) {
+                  routeData.splice(k, 1);
+                }
+              }
+              if (routeData.length < 5) {
+                routeData.push(route.details);
+              }
+              if (routeData.length > 0) {
+                data[i].routes = routeData;
+                $scope.selected.nearbyStops = data;
+                console.log('nearby', $scope.selected.nearbyStops);
+              }
+            }, function (err) {
+              console.log('RoutesService error', err);
+            });
+          };
+          for (var i in data) {
+            var routes = data[i].routes;
+            data[i]['name'] = data[i].stopName;
+            data[i]['coordinates'] = {
+              lat: data[i].stopLat,
+              lng: data[i].stopLon
+            };
+            var routeData = [];
+            var count = 0;
+            for (var j in routes) {
+              console.log('routes[j]', routes[j]);
+              if (count < 10) {
+                insertIntoRoutes(routes[j], i, j, routeData);
+                count++;
+              }
+            }
+          }
         }, function (err) {
           console.log('======== Error!');
         });
@@ -1884,6 +1920,10 @@ angular.module('uiModule').directive('nearby', function () {
   return {
     restrict: 'E',
     transclude: true,
+    scope: {
+      selected: '=',
+      selectedDest: '='
+    },
     link: function (scope) {
       scope.selectedNearby = 'Places';
       scope.setNearby = function (choice) {
@@ -1898,6 +1938,14 @@ angular.module('uiModule').directive('nearby', function () {
           scope.hideDiv = false;
         }
       }
+      scope.selectDest = function (dest) {
+        if (scope.selectedDest) {
+          scope.selectedDest.isSelected = false;
+        }
+        scope.selectedDest = dest;
+        scope.selectedDest.isSelected = true;
+        console.log('selectedDest!!!', scope.selectedDest);
+      };
       scope.$watch('selected.hospital', function (newValue) {
         updateHideDiv();
       }, true);
@@ -1914,7 +1962,7 @@ angular.module('uiModule').directive('nearby', function () {
         updateHideDiv();
       }, true);
     },
-    template: '<div ng-switch on="selectedNearby" class="nearby">' + '<ul>' + '<li ng-click="setNearby(\'Places\')" ng-class="{active:selectedNearby==\'Places\'}">' + '<a ng-click="setNearby(\'Places\')" target="_blank">Places</a>' + '</li>' + '<li ng-click="setNearby(\'Stops\')" ng-class="{active:selectedNearby==\'Stops\'}">' + '<a ng-click="setNearby(\'Stops\')" target="_blank">Stops</a>' + '</li>' + '</ul>' + '<div ng-switch-when="Places">' + '<div class="group-list">' + '<div ng-hide="hideDiv">' + '<h6></h6>' + '<p class="slideshow-content">No nearby places for this station in our database</p>' + '</div>' + '<placesbox title="Hospital" icon="icon-hospital" on-query-places="getLimitedPlaces" places="selected.hospital" category="Hospital" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Hotel" icon="icon-hotel" on-query-places="getLimitedPlaces" places="selected.hotel" category="Hotel" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Office" icon="icon-office" on-query-places="getLimitedPlaces" places="selected.office" category="Office" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Sightseeing" icon="icon-sights" on-query-places="getLimitedPlaces" places="selected.sights" category="Sightseeing" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Shopping" icon="icon-shopping" on-query-places="getLimitedPlaces" places="selected.shops" category="Shopping" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '</div>' + '</div>' + '<div ng-switch-when="Stops">' + '<div class="group-list">' + '<div class="stops-box">' + '<div><h3>Nearby Stops</h3></div>' + '<ul>' + '<li ng-repeat="nearby in selected.nearbyStops" ng-class="{active:place.isSelected}">' + '<span class="name">{{nearby.stopName}}</span>' + '</li>' + '</ul>' + '</div>' + '</div>' + '</div>' + '</div>',
+    template: '<div ng-switch on="selectedNearby" class="nearby">' + '<ul>' + '<li ng-click="setNearby(\'Places\')" ng-class="{active:selectedNearby==\'Places\'}">' + '<a ng-click="setNearby(\'Places\')" target="_blank">Places</a>' + '</li>' + '<li ng-click="setNearby(\'Stops\')" ng-class="{active:selectedNearby==\'Stops\'}">' + '<a ng-click="setNearby(\'Stops\')" target="_blank">Stops</a>' + '</li>' + '</ul>' + '<div ng-switch-when="Places">' + '<div class="group-list">' + '<div ng-hide="hideDiv">' + '<h6></h6>' + '<p class="slideshow-content">No nearby places for this station in our database</p>' + '</div>' + '<placesbox title="Hospital" icon="icon-hospital" on-query-places="getLimitedPlaces" places="selected.hospital" category="Hospital" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Hotel" icon="icon-hotel" on-query-places="getLimitedPlaces" places="selected.hotel" category="Hotel" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Office" icon="icon-office" on-query-places="getLimitedPlaces" places="selected.office" category="Office" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Sightseeing" icon="icon-sights" on-query-places="getLimitedPlaces" places="selected.sights" category="Sightseeing" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '<placesbox title="Shopping" icon="icon-shopping" on-query-places="getLimitedPlaces" places="selected.shops" category="Shopping" stopname="selected.stop.details.stop_name" selected-dest="selected.dest"></placesbox>' + '</div>' + '</div>' + '<div ng-switch-when="Stops">' + '<div class="group-list">' + '<div class="stops-box">' + '<div><h3>Nearby Stops</h3></div>' + '<ul>' + '<li ng-repeat="nearby in selected.nearbyStops" ng-class="{active:place.isSelected}">' + '<a class="name" ng-click="selectDest(nearby)" target="_blank">{{nearby.stopName}}</a>' + '<ul class="square">' + '<li ng-repeat="routes in nearby.routes">' + '<span>{{routes.route_long_name}}</span>' + '</li>' + '</ul>' + '</li>' + '</ul>' + '</div>' + '</div>' + '</div>' + '</div>',
     replace: true
   };
 });

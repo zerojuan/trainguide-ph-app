@@ -7,7 +7,7 @@ slide-group(selected-item='selectedItem', selected-stop='selected.stop', selecte
 
 						slideshow(images='selectedItem.images')
 
-						nearby
+						nearby(selected='selected', selected-dest="selected.dest")
 							
 					#line-content(ng-class="{true:'nodetails', false:'showdetails'}[showDetails]")
 						line-stops(selected-item="selectedItem", selected-line='selected.line', selected-stop='selected.stop', show-details='showDetails', transfers='transfers')
