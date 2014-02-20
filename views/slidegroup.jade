@@ -35,7 +35,7 @@ slide-group(selected-item='selectedItem', selected-stop='selected.stop', selecte
 					ul
 						li(ng-repeat='place in featuredPlaces')
 							.landmark
-								img(src='{{place.image}}').{{place.line}}
+								img(src='{{place.image}}', class='{{place.line}}')
 								info
 									span
 										h4 {{place.name}}

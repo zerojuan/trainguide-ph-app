@@ -1,33 +1,32 @@
-
 /**
  * Module dependencies.
  */
 
-var express = require('express')
-  , mongoose = require('mongoose')
-  , routes = require('./routes')
-  , user = require('./routes/user')
-  , http = require('http')
-  , path = require('path');
+var express = require('express'),
+    mongoose = require('mongoose'),
+    routes = require('./routes'),
+    user = require('./routes/user'),
+    http = require('http'),
+    path = require('path');
 
 
 exports = module.exports = createApplication;
 
 
-function createApplication(env){
-//    var options = {
-//        server: {},
-//        replset: {}
-//    };
-//    options.server.socketOptions = options.replset.socketOptions = {keepAlive: 1};
+function createApplication(env) {
+    //    var options = {
+    //        server: {},
+    //        replset: {}
+    //    };
+    //    options.server.socketOptions = options.replset.socketOptions = {keepAlive: 1};
 
-    mongoose.connection.on('open', function(){
+    mongoose.connection.on('open', function() {
         console.log('Connected to database');
     });
 
-    mongoose.connection.on('error', function(err){
-//        console.log('Connection could not connect');
-//        console.log(err);
+    mongoose.connection.on('error', function(err) {
+        //        console.log('Connection could not connect');
+        //        console.log(err);
     });
     connectToDatabase(env);
 
@@ -39,10 +38,18 @@ function createApplication(env){
     var app = express();
 
 
+
+
+    app.locals({
+        isProduction: function() {
+            return 'production' == env.NODE_ENV;
+        }
+    });
     // all environments
     app.set('port', env.PORT || 3000);
     app.set('views', __dirname + '/views');
     app.set('view engine', 'jade');
+
     app.use(express.favicon());
     app.use(express.logger('dev'));
     app.use(express.bodyParser());
@@ -50,23 +57,21 @@ function createApplication(env){
     app.use(express.cookieParser('supersecretive'));
     app.use(express.session());
     app.use(app.router);
-    app.use(require('less-middleware')({ src: __dirname + '/public' }));
+    app.use(require('less-middleware')({
+        src: __dirname + '/public'
+    }));
 
     // development only
     if ('production' == env.NODE_ENV) {
         app.use(express.static(path.join(__dirname, 'dist')));
-    }else{
+    } else {
         app.use(express.static(path.join(__dirname, 'public')));
         app.use(express.errorHandler());
     }
 
-    app.locals.isProduction = function(){
-        return 'production' == env.NODE_ENV;
-    }
-
     app.get('/viewer', viewer.index);
 
-    app.get('/', function(req, res){
+    app.get('/', function(req, res) {
         routes.index(req, res);
     });
     app.get('/views', routes.partials);
@@ -107,8 +112,7 @@ function createApplication(env){
     return app;
 }
 
-function connectToDatabase(env){
+function connectToDatabase(env) {
     console.log('Connecting to DB: ' + env.MONGOHQ_URL);
     mongoose.connect(env.MONGOHQ_URL);
 }
-
