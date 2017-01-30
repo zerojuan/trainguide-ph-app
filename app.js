@@ -57,9 +57,9 @@ function createApplication(env) {
     app.use(express.cookieParser('supersecretive'));
     app.use(express.session());
     app.use(app.router);
-    app.use(require('less-middleware')({
-        src: __dirname + '/public'
-    }));
+    app.use(require('less-middleware')(
+        __dirname + '/public'
+    ));
 
     // development only
     if ('production' == env.NODE_ENV) {
